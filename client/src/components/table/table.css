@@ -1,0 +1,28 @@
+.like-file-surf {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px;
+    color: blue;
+}
+
+.like-file-surf div:hover {
+    cursor: pointer;
+    text-decoration: line-through;
+}
+
+tr {
+    border: none;
+    outline: none;
+}
+
+table {
+    border: none;
+    outline: none;
+}
+
+tbody {
+    border: none;
+    outline: none;
+}
+
