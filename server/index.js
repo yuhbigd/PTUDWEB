@@ -17,7 +17,9 @@ app.use(cookie_Parse());
 app.use(express.static("public"));
 
 const authRouter = require("./routes/authRouter");
-
+const countryRouter = require("./routes/countryRouter");
+// check user middleware
+const { checkUser } = require("./middlewares/authMiddleWare");
 mongoose
   .connect(process.env.DB_HOST, {
     useNewUrlParser: true,
@@ -45,6 +47,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use("/", authRouter.router);
+app.use("/country", [checkUser], countryRouter.router);
 app.listen(3001, () => {
   console.log("server is listen on port 3001");
 });
