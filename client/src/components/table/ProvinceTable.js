@@ -10,6 +10,12 @@ const ProvinceTable = (props) => {
     const [keyIndex, setKeyIndex] = useState(null)
     const dispatch = useDispatch()
 
+    const provinceOnclick = (id, index, e) => {
+        console.log('this')
+        props.setDir(state => [...state, province[index]])
+        props.setLastLevel(1)
+    }
+
     const [request, setRequest] = useAsyncFn(async() => {
         const res = await fetch('http://localhost:3001/country', {
             method: 'GET',
@@ -20,20 +26,21 @@ const ProvinceTable = (props) => {
             credentials: 'include'
         })
         const result = await res.text()
-        console.log(result)
         return result
     })
 
     useEffect(() => {
         setRequest()
     }, [])
+
+    useEffect(() =>{
+        if(request.value) {
+            const action = actions.set_province([...JSON.parse(request.value).data])
+            dispatch(action)
+        }
+    }, [request])
     
-    const provinceOnclick = (id, index, e) => {
-        // <InfoLog data={province}></InfoLog>
-        console.log('this')
-        props.setDir(state => [...state, province[index]])
-        props.setLastLevel(1)
-    }
+    
 
     const buttonOnclick = (id, index ,e) => {
         setKeyIndex(index)

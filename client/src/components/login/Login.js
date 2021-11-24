@@ -6,7 +6,6 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Login = (props) => {
-<<<<<<< HEAD
     const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -30,31 +29,6 @@ const Login = (props) => {
         const result = await res.text()
         return result
     })
-=======
-  const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const dispatch = useDispatch();
->>>>>>> abae07e2bf4ec0715e547e06f99df09cf85b77ba
-
-  const [loginRequest, setLoginRequest] = useAsyncFn(async (user, pass) => {
-    const res = await fetch("http://localhost:3001/login", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user: {
-          userName: user,
-          password: pass,
-        },
-      }),
-      credentials: "include",
-    });
-    const result = await res.text();
-    return result;
-  });
 
   const handleLoginOnclick = (e) => {
     e.preventDefault();
