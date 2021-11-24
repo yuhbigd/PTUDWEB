@@ -22,3 +22,16 @@ export const set_town = (town) => {
     }
 }
 
+export const set_user = (user) => {
+    return {
+        type: types.SET_USER,
+        user: user
+    }
+}
+
+export const drop_user = (user) => {
+    return {
+        type: types.DROP_USER
+    }
+}
+

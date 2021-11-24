@@ -20,6 +20,11 @@
     width: 240px;
 }
 
+#login .pop-err {
+    color: rgb(172, 18, 18);
+    font-size: 1.1rem;
+}
+
 
 
 
