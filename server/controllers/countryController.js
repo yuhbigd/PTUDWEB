@@ -10,7 +10,6 @@ require("dotenv").config();
 getCountry = async (req, res) => {
   try {
     const parent = req.user;
-    await User.checkIsBanned;
 
     let countries;
 
@@ -50,7 +49,6 @@ getCountryByParameter = async (req, res) => {
     // id cua cap duoi dc truyen dua tren parameter
     const paramId = sanitize(req.params.id);
     const parent = req.user;
-    await User.checkIsBanned;
     if (
       parent.tier !== 0 &&
       (parent.userName.length >= paramId.length ||
@@ -100,7 +98,7 @@ getCountryByParameter = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-//sign-up controller
+//tao ra don vi hanh chinh ms controller
 /* ding dang gui len
 {data: {
   id: 01 -> 2 so,
@@ -179,4 +177,129 @@ postCountry = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-module.exports = { getCountry, getCountryByParameter, postCountry };
+
+putCountry = async (req, res) => {
+  try {
+    // id cua cap duoi dc truyen dua tren parameter
+    const paramId = sanitize(req.params.id);
+    const parent = req.user;
+    await User.checkIsBanned(parent.userName);
+    const name = sanitize(req.body.data.name);
+    if (paramId.length > 8 || paramId.length % 2 !== 0) {
+      throw new Error("Id không đúng định dạng");
+    }
+    if (
+      parent.tier !== 0 &&
+      (parent.userName.length >= paramId.length ||
+        paramId.indexOf(parent.userName) !== 0)
+    ) {
+      throw new Error(
+        "Không đủ thẩm quyền để thay đổi dữ liệu hoặc mã đơn vị không đúng định dạng",
+      );
+    }
+
+    let tier = paramId.length / 2;
+    let unit;
+    // lay danh sach cac don vi hanh chinh nam ben duoi paramId (ma don vi) dua tren tier
+    switch (tier) {
+      case 1:
+        unit = await Tinh.findOneAndUpdate(
+          {
+            id: paramId,
+          },
+          {
+            $set: {
+              name: name,
+            },
+          },
+          {
+            // For adding new user to be updated
+            new: true,
+            // upsert: true,
+            // Active validating rules from Schema model when updating
+            runValidators: true,
+            context: "query",
+          },
+        );
+        break;
+      case 2:
+        unit = await Huyen.findOneAndUpdate(
+          {
+            id: paramId,
+          },
+          {
+            $set: {
+              name: name,
+            },
+          },
+          {
+            // For adding new user to be updated
+            new: true,
+            // upsert: true,
+            // Active validating rules from Schema model when updating
+            runValidators: true,
+            context: "query",
+          },
+        );
+        break;
+      case 3:
+        unit = await Phuong.findOneAndUpdate(
+          {
+            id: paramId,
+          },
+          {
+            $set: {
+              name: name,
+            },
+          },
+          {
+            // For adding new user to be updated
+            new: true,
+            // upsert: true,
+            // Active validating rules from Schema model when updating
+            runValidators: true,
+            context: "query",
+          },
+        );
+        break;
+      case 4:
+        unit = await Xa.findOneAndUpdate(
+          {
+            id: paramId,
+          },
+          {
+            $set: {
+              name: name,
+            },
+          },
+          {
+            // For adding new user to be updated
+            new: true,
+            // upsert: true,
+            // Active validating rules from Schema model when updating
+            runValidators: true,
+            context: "query",
+          },
+        );
+        break;
+    }
+    // neu khong tim thay don vi hanh chinh ben duoi trong db
+    if (!unit || _.isEmpty(unit)) {
+      throw new Error("Không tìm thấy dữ liệu (đơn vị này bị trống)");
+    }
+
+    res.status(200).json({
+      data: unit,
+    });
+  } catch (error) {
+    if (error.code) {
+      if (error.code === 11000) {
+        res.status(400).json({ error: "Mã này đã được cấp trước đó" });
+        return;
+      }
+    }
+    res.status(400).json({ error: error.message });
+  }
+};
+
+module.exports = { getCountry, getCountryByParameter, postCountry, putCountry };
