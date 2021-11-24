@@ -1,40 +1,50 @@
 import React, { useState, useEffect } from 'react'
 import './login.css'
-import axios from 'axios'
-import { useAsync } from 'react-use'
+import { useAsyncFn } from 'react-use'
+import * as actions from './../../actions/index'
+import { useDispatch } from 'react-redux'
 
-s
-const Login = () => {
-    const [username, setUsername] = useState(null)
-    const [password, setPassword] = useState(null)
-    const setting = {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        data: {
-            username: username,
-            password: password
-        }
-    }
-    
-    const Request = () =>{
-        const loginRequest = useAsync(async () => {
-            const res = await fetch('https//:localhost:3001/login', setting)
-            const result = await res.text()
-            return result
+const Login = (props) => {
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const dispatch = useDispatch()
+    const [loginRequest, setLoginRequest] = useAsyncFn(async(user, pass) => {
+        const res = await fetch('http://localhost:3001/login', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "user": {
+                    "userName": user,
+                    "password": pass,
+                }
+            })
         })
-        return null
-    }
-    
+        const result = await res.text()
+        return result
+    })
+
     const handleLoginOnclick = (e) => {
         e.preventDefault()
-        Request()
+        setLoginRequest(username, password)
     }
 
+    useEffect(() => {
+        const value = loginRequest.value
+        if(value) {
+            const user = JSON.parse(value).user
+            if(user) {
+                const action = actions.set_user()
+                dispatch(action)
+                console.log('ok')
+            }
+        }
+    },[loginRequest])
+
     return (
-        <div id="login" onSubmit={(e) => handleLoginOnclick(e)}>
+        <div id="login">
             <div className="form-container">
                 <form >
                     <div>
@@ -46,7 +56,15 @@ const Login = () => {
                     <div>
                         <input type="password" placeholder="password" name="password" value={password ? password: ''} onChange={e => setPassword(e.target.value)}></input>
                     </div>
-                    <button type="submit">Login</button>
+                    <button onClick={(e) => handleLoginOnclick(e)}>Login</button>
+                    <div className="pop-err">
+                        <span>
+                            {
+                                loginRequest.value ? <div>{JSON.parse(loginRequest.value).error}</div> : 
+                                null
+                            }
+                        </span>
+                    </div>
                 </form>
             </div>
         </div>
