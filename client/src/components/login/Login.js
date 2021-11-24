@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import './login.css'
-import { useAsyncFn } from 'react-use'
+import { useAsyncFn, useShallowCompareEffect } from 'react-use'
 import * as actions from './../../actions/index'
 import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 const Login = (props) => {
+    const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const dispatch = useDispatch()
+   
     const [loginRequest, setLoginRequest] = useAsyncFn(async(user, pass) => {
         const res = await fetch('http://localhost:3001/login', {
             method: 'POST',
@@ -36,9 +39,9 @@ const Login = (props) => {
         if(value) {
             const user = JSON.parse(value).user
             if(user) {
-                const action = actions.set_user()
+                const action = actions.set_user(user)
                 dispatch(action)
-                console.log('ok')
+                navigate('/table')
             }
         }
     },[loginRequest])
