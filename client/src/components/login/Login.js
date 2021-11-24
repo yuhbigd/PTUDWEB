@@ -24,7 +24,6 @@ const Login = (props) => {
           password: pass,
         },
       }),
-      credentials: "include",
     });
     const result = await res.text();
     return result;
