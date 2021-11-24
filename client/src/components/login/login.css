@@ -1,0 +1,25 @@
+#login {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+#login .form-container {
+    position: absolute;
+    top: 25%;
+    right: 20%;
+    padding: 32px;
+    background-color: rgb(200, 200, 200);
+}
+
+#login form div:nth-child(3), #login form div:nth-child(2), #login form button{
+    margin-top: 20px;
+}
+
+#login form input {
+    width: 240px;
+}
+
+
+
+
