@@ -1,3 +1,5 @@
 export const SET_PROVINCE = 'SET_PROVINCE'
 export const SET_DISTRICT = 'SET_DISTRICT'
 export const SET_TOWN = 'SET_TOWN'
+export const SET_USER = 'SET_USER'
+export const DROP_USER = 'DROP_USER'
