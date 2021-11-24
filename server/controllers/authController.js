@@ -1,4 +1,4 @@
-const User = require("../models/userModel");
+﻿const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const sanitize = require("mongo-sanitize");
 require("dotenv").config();
@@ -46,6 +46,7 @@ login_get = async (req, res) => {
 
 // login controller
 login_post = async (req, res) => {
+	console.log(req.body)
   try {
     let { userName, password } = req.body.user;
     const user = await User.login(userName, password);
