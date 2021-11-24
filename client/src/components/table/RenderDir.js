@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
-
+import React from 'react'
 
 const RenderDir = (props) => {
     const {dir} = props
-    const [dirName, setDirName] = useState([])
     console.log(dir)
     const handleDirOnclick = (level, id) => {
         const temp = dir

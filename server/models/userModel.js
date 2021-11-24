@@ -68,7 +68,6 @@ userSchema.statics.checkUser = async function (userId) {
 };
 // kiem tra tai khoan co bi ban hay khong
 userSchema.statics.checkIsBanned = async function (userName) {
-  console.log(userName);
   const sanitizedUserName = sanitize(userName);
   const length = sanitizedUserName.length;
   const n = length / 2;
@@ -76,13 +75,12 @@ userSchema.statics.checkIsBanned = async function (userName) {
     throw new Error("Tài khoản của bạn không hợp lệ");
   }
   let stringArray = [];
+  // 01020304 -> 01 0102 010203 01020304
   for (let i = 1; i <= n; i++) {
     stringArray.push(sanitizedUserName.slice(0, 2 * i));
   }
-  console.log(stringArray);
   for (let i = 0; i < n; i++) {
     const user = await this.findOne({ userName: stringArray[i] });
-    console.log(user);
     if (!user) {
       throw new Error("Tài khoản của bạn đã bị cấm");
     } else if (user) {

@@ -8,6 +8,7 @@ const appReducers = combineReducers({
   provinceRe: provinceRe,
   districtRe: districtRe,
   townRe: townRe,
+  userRe: userRe
 });
 
 export default appReducers;

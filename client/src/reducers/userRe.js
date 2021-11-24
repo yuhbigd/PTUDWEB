@@ -8,7 +8,7 @@ var userRe = (state = initialState, actions) => {
             const user = actions.user
             if(user) {
                 state = {
-                    user: actions.user,
+                    user: user,
                     auth: true
                 }
             }else {
@@ -16,10 +16,10 @@ var userRe = (state = initialState, actions) => {
                     auth: false
                 }
             }
-            return state
+            return {...state}
         case types.DROP_USER:
             state = {}
-            return state
+            return {...state}
         default:
             return {}
     }
