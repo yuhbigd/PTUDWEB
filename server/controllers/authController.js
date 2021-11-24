@@ -58,13 +58,13 @@ login_post = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 1000 * 60,
-      /*secure: true,*/
+      secure: true,
       sameSite: "none",
     });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 3,
-      /*secure: true,*/
+      secure: true,
       sameSite: "none",
     });
 
@@ -79,8 +79,8 @@ login_post = async (req, res) => {
 //logout
 function logout_get(req, res) {
   //http
-  res.clearCookie("refreshToken", { /*secure: true,*/ sameSite: "none" });
-  res.clearCookie("token", { /*secure: true,*/ sameSite: "none" });
+  res.clearCookie("refreshToken", { secure: true, sameSite: "none" });
+  res.clearCookie("token", { secure: true, sameSite: "none" });
   res.status(200).json({
     message: "Logged out",
   });

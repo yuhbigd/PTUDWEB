@@ -13,7 +13,7 @@ const checkUser = async (req, res, next) => {
         req.user = await User.findOne({ userName: user.userName });
         next();
       } else {
-        res.clearCookie("token", { /*secure: true,*/ sameSite: "none" });
+        res.clearCookie("token", { secure: true, sameSite: "none" });
         res.status(401).json({
           error: "invalid token",
         });
@@ -33,19 +33,19 @@ const checkUser = async (req, res, next) => {
         res.cookie("token", newToken.token, {
           httpOnly: true,
           maxAge: 1000 * 60,
-          /*secure: true,*/
+          secure: true,
           sameSite: "none",
         });
         res.cookie("refreshToken", newToken.refreshToken, {
           httpOnly: true,
           maxAge: 1000 * 60 * 60 * 24 * 3,
-          /*secure: true,*/
+          secure: true,
           sameSite: "none",
         });
         req.user = newToken.user;
         next();
       } else {
-        res.clearCookie("refreshToken", { /*secure: true,*/ sameSite: "none" });
+        res.clearCookie("refreshToken", { secure: true, sameSite: "none" });
         res.status(401).json({
           error: "invalid refreshToken",
         });
