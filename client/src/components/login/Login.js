@@ -23,7 +23,8 @@ const Login = (props) => {
                     "userName": user,
                     "password": pass,
                 }
-            })
+            }),
+            credentials: 'include'
         })
         const result = await res.text()
         return result

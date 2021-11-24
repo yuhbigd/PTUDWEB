@@ -1,10 +1,33 @@
-import React, {useRef, useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { useSelector } from 'react-redux'
 import InfoLog from '../infoLog/InfoLog'
+import { useAsyncFn } from 'react-use'
+import { useDispatch } from 'react-redux'
+import * as actions from './../../actions/index'
+
 const ProvinceTable = (props) => {
     const province = useSelector(state => state.provinceRe)
     const [keyIndex, setKeyIndex] = useState(null)
+    const dispatch = useDispatch()
 
+    const [request, setRequest] = useAsyncFn(async() => {
+        const res = await fetch('http://localhost:3001/country', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        })
+        const result = await res.text()
+        console.log(result)
+        return result
+    })
+
+    useEffect(() => {
+        setRequest()
+    }, [])
+    
     const provinceOnclick = (id, index, e) => {
         // <InfoLog data={province}></InfoLog>
         console.log('this')
@@ -15,7 +38,6 @@ const ProvinceTable = (props) => {
     const buttonOnclick = (id, index ,e) => {
         setKeyIndex(index)
     }
-
 
     return (
         <table className="table">
