@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Xa = require("./xaModel");
-const phuongSchema = new mongoose.Schema({
+const toSchema = new mongoose.Schema({
   id: {
     type: String,
     required: [true, "Hãy nhập mã phường"],
@@ -23,7 +23,7 @@ const phuongSchema = new mongoose.Schema({
     required: [true, "Hãy nhập mã của xã"],
   },
 });
-phuongSchema.pre("save", async function (next) {
+toSchema.pre("save", async function (next) {
   const xa = await Xa.findOne({
     id: this.xa,
   });
@@ -38,6 +38,6 @@ phuongSchema.pre("save", async function (next) {
     },
   );
 });
-const phuong = mongoose.model("phuongs", phuongSchema);
+const To = mongoose.model("tos", toSchema);
 
-module.exports = phuong;
+module.exports = To;

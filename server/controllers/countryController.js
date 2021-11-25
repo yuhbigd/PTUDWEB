@@ -2,7 +2,7 @@ const User = require("../models/userModel");
 const Tinh = require("../models/tinhModel");
 const Huyen = require("../models/huyenModel");
 const Xa = require("../models/xaModel");
-const Phuong = require("../models/phuongModel");
+const To = require("../models/toModel");
 const sanitize = require("mongo-sanitize");
 require("dotenv").config();
 
@@ -26,7 +26,7 @@ getCountry = async (req, res) => {
           id: { $regex: `^${id}`, $options: "i" },
         });
       } else if (parent.tier === 3) {
-        countries = await Phuong.find({
+        countries = await To.find({
           id: { $regex: `^${id}`, $options: "i" },
         });
       }
@@ -59,7 +59,11 @@ getCountryByParameter = async (req, res) => {
       );
     }
 
-    if (paramId.length > 8) {
+    if (
+      paramId.length > 8 ||
+      paramId.length % 2 !== 0 ||
+      !/^[0-9]*$/gi.test(paramId)
+    ) {
       throw new Error("Id không đúng định dạng");
     }
 
@@ -78,12 +82,12 @@ getCountryByParameter = async (req, res) => {
         });
         break;
       case 3:
-        countries = await Phuong.find({
+        countries = await To.find({
           id: { $regex: `^${paramId}`, $options: "i" },
         });
         break;
       case 4:
-        // ko co cai nao be hon cap phuong
+        // ko co cai nao be hon cap To
         throw new Error("Không có đơn vị hành chính nào bé hơn");
     }
     // neu khong tim thay don vi hanh chinh ben duoi trong db
@@ -99,7 +103,7 @@ getCountryByParameter = async (req, res) => {
   }
 };
 //tao ra don vi hanh chinh ms controller
-/* ding dang gui len
+/* dinh dang gui len
 {data: {
   id: 01 -> 2 so,
   name
@@ -110,7 +114,7 @@ postCountry = async (req, res) => {
     // lay du lieu tu node ben tren
     const parent = req.user;
     // kiem tra xem tai khoan co bi cam tu truoc ko
-    await User.checkIsBanned(parent.userName);
+    await User.checkIsBanned(parent);
     const { id, name } = req.body.data;
     let tier = parent.tier;
     if (tier <= 3 && tier >= 0) {
@@ -154,7 +158,7 @@ postCountry = async (req, res) => {
         });
         break;
       case 4:
-        data = await Phuong.create({
+        data = await To.create({
           id: finalName,
           name: sanitizedName,
           xa: parent.userName,
@@ -178,14 +182,19 @@ postCountry = async (req, res) => {
   }
 };
 
+//dinh dang data {data: {name: ""}}
 putCountry = async (req, res) => {
   try {
     // id cua cap duoi dc truyen dua tren parameter
     const paramId = sanitize(req.params.id);
     const parent = req.user;
-    await User.checkIsBanned(parent.userName);
+    await User.checkIsBanned(parent);
     const name = sanitize(req.body.data.name);
-    if (paramId.length > 8 || paramId.length % 2 !== 0) {
+    if (
+      paramId.length > 8 ||
+      paramId.length % 2 !== 0 ||
+      !/^[0-9]*$/gi.test(paramId)
+    ) {
       throw new Error("Id không đúng định dạng");
     }
     if (
@@ -243,7 +252,7 @@ putCountry = async (req, res) => {
         );
         break;
       case 3:
-        unit = await Phuong.findOneAndUpdate(
+        unit = await To.findOneAndUpdate(
           {
             id: paramId,
           },

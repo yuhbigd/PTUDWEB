@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Hãy nhập tên tài khoản"],
     unique: [true, "Tài khoản đã được cấp trước đó"],
+    index: true,
   },
   password: {
     type: String,
@@ -14,6 +15,7 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Hãy nhập tên của tài khoản"],
+    index: true,
   },
   tier: {
     type: Number,
@@ -22,6 +24,11 @@ const userSchema = new mongoose.Schema({
   isBanned: {
     type: Boolean,
     default: false,
+    index: true,
+  },
+  userTimeOut: {
+    type: Date,
+    index: true,
   },
 });
 // hash mat khau
@@ -32,11 +39,14 @@ userSchema.pre("save", async function (next) {
 });
 
 //pre update user middleware
-userSchema.pre("updateOne", async function (next) {
+userSchema.pre("findOneAndUpdate", async function (next) {
   try {
-    if (this._update.password) {
+    if (this._update["$set"].password) {
       const salt = await bcrypt.genSalt();
-      this._update.password = await bcrypt.hash(this._update.password, salt);
+      this._update["$set"].password = await bcrypt.hash(
+        this._update["$set"].password,
+        salt,
+      );
     }
     next();
   } catch (err) {
@@ -67,8 +77,11 @@ userSchema.statics.checkUser = async function (userId) {
   return true;
 };
 // kiem tra tai khoan co bi ban hay khong
-userSchema.statics.checkIsBanned = async function (userName) {
-  const sanitizedUserName = sanitize(userName);
+userSchema.statics.checkIsBanned = async function (parent) {
+  if (parent.tier === 0) {
+    return;
+  }
+  const sanitizedUserName = sanitize(parent.userName);
   const length = sanitizedUserName.length;
   const n = length / 2;
   if (n > 4) {
