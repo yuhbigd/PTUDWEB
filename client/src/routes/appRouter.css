@@ -1,0 +1,19 @@
+#app-router {
+    display: flex;
+}
+
+.nav-bar-container {
+    width: 200px;
+}
+
+.nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+}
+
+.main-container {
+    width: 0;
+    flex: 1;
+}

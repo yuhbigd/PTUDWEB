@@ -1,23 +1,22 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import CityzenTable from './../cityzenTable/CitizenTable'
+import CreateUnit from './../createUnit/CreateUnit'
 
-const InfoLog = (props) => {
-    const showCityzen = (id) => {
-        setAreaId(id)
-        setClose(null)
-    }   
-    const handleClose = (id) => {
-        setClose(id)
-        setAreaId(null)
-    }
-
-    const handleCloseInfo = () => {
-        props.setKeyIndex(null)
-    }
-
-    const [areaId, setAreaId] = useState(null)
+const Alog = (props) => {
+    const [createUnit, setCreateUnit] = useState(null)
     const [close, setClose] = useState(null)
-    
+
+    const showCreateUnit = (id) => {
+        console.log(id)
+        setCreateUnit(id)
+        setClose(null)
+    }
+    const handleClose = (id) => {
+        console.log(id)
+        setClose(id)
+        setCreateUnit(null)
+    }
+
     return (
         <div>
             <div>
@@ -29,22 +28,17 @@ const InfoLog = (props) => {
                 <span>{props.data.name}</span>
             </div>
             <div>
-                <span>Tong</span>
-                <span>{props.data.count}</span>
+                <span>Dan So</span>
+                <span>9999999999</span>
             </div>
             <div>
                 <span>Ghi chu</span>
                 <span>tuyet voi</span>
             </div>
             <div>
-                <button onClick={() => {handleCloseInfo()}}> 
-                    dong
-                </button>
-            </div>
-            <div>
-                <button onClick={() => showCityzen(props.data.id)}>xem dan so</button>
+                <button onClick={() => showCreateUnit(props.data.id)}>Tạo đơn vị cho {props.data.name}</button>            
                 {
-                    areaId ? 
+                    createUnit ||createUnit === 0? 
                     <button onClick={() => handleClose(props.data.id)}>Dong</button>
                     :
                     null
@@ -52,11 +46,11 @@ const InfoLog = (props) => {
             </div>
             <div>
                 {
-                    areaId === props.data.id ? <CityzenTable></CityzenTable>: null
+                    createUnit === props.data.id ? <CreateUnit></CreateUnit>: null
                 }
             </div>
         </div>
     )
 }
 
-export default InfoLog
+export default Alog
