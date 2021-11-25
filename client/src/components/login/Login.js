@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Login = (props) => {
+
     const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -29,6 +30,7 @@ const Login = (props) => {
         const result = await res.text()
         return result
     })
+
 
   const handleLoginOnclick = (e) => {
     e.preventDefault();
