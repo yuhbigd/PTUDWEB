@@ -527,7 +527,9 @@ account_getChildrenOfChild = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-//cai nay de cuoi lam
+//cai nay de cuoi lam 
+//
+//
 account_delete = async (req, res) => {
   let parent = req.user;
   let subUser = await getChildrenAndUnitOfIt("", "tinhs");
