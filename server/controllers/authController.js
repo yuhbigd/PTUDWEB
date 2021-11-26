@@ -51,6 +51,7 @@ login_get = async (req, res) => {
 
 // login controller
 login_post = async (req, res) => {
+	console.log(req.body)
   try {
     let { userName, password } = req.body.user;
     const user = await User.login(userName, password);

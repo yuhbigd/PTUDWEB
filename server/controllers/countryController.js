@@ -193,7 +193,8 @@ putCountry = async (req, res) => {
     if (
       paramId.length > 8 ||
       paramId.length % 2 !== 0 ||
-      !/^[0-9]*$/gi.test(paramId)
+      !/^[0-9]*$/gi.test(paramId) ||
+      !name
     ) {
       throw new Error("Id không đúng định dạng");
     }

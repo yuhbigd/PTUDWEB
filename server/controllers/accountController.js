@@ -110,9 +110,6 @@ account_post = async (req, res) => {
         tier,
         userTimeOut: timeout,
       });
-      // console.log(
-      //   moment(user.userTimeOut).utcOffset("+0700").format("HH:mm DD-MM-YYYY"),
-      // );
       res.status(201).json({
         user: _.pick(user, [
           "userName",
@@ -219,19 +216,22 @@ account_put = async (req, res) => {
         tempUser.isBanned = data.isBanned;
       }
     }
-
     user = await updateUser(paramId, tempUser);
     if (!user) {
       throw new Error("Không tìm thấy tài khoản này");
     }
+    let obj = _.pick(user, [
+      "userName",
+      "name",
+      "tier",
+      "isBanned",
+      "userTimeOut",
+    ]);
+    if (data.password) {
+      obj.password = data.password.trim();
+    }
     res.status(201).json({
-      user: _.pick(user, [
-        "userName",
-        "name",
-        "tier",
-        "isBanned",
-        "userTimeOut",
-      ]),
+      user: obj,
     });
   } catch (error) {
     if (error.code) {
