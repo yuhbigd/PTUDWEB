@@ -12,13 +12,13 @@ const AppRouter = () => {
             <div className='nav-bar-container'>
                 <div className='nav-bar'>
                     <button>
-                        <Link to='/app'>bang</Link>
+                        <Link to='/app'>Home</Link>
                     </button>
                     <button>
-                        <Link to='/app/create-unit'>Tao don vi hanh chinh</Link>
+                        <Link to='/app/create-unit'>Quản lí đơn vị hành chính</Link>
                     </button>
                     <button>
-                        <Link to='/app/create-account'>Tao tai khoan</Link>
+                        <Link to='/app/create-account'>Quản lí tài khoản</Link>
                     </button>
                 </div>
             </div>

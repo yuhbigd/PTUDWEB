@@ -1,9 +1,10 @@
 import React from 'react'
+import CreateUnit from '../components/createUnit/CreateUnit'
 
 const CreateUnitPage = () => {
     return (
         <div>
-            create unit
+            <CreateUnit></CreateUnit>
         </div>
     )
 }

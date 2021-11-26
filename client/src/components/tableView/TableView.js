@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 const TableView = (props) => {
     const mutiSelected = useSelector(state => state.multiRe)
     return (
-        <table>
+        <table className='table'>
             <thead>
                 <tr>
                     <th>Mã</th>

@@ -1,0 +1,67 @@
+#create-unit {
+
+}
+
+#create-unit input.code-input{
+  
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+#create-unit div > span,
+#create-unit .update-input-container span{
+    display: block;       
+}
+
+#create-unit .input-title {
+    width: 88px;
+    line-height: 26px;
+}
+
+#create-unit form > div,
+#create-unit .update-input-container > div{
+    margin-top: 4px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+#create-unit span.error-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgb(199, 3, 3);
+    line-height: 18px;
+}
+
+#create-unit .error-container {
+    height: 20px;
+}
+
+#create-unit form.create {
+    padding: 16px 32px;
+    background-color: rgb(226, 226, 226);
+    margin-top: 16px;
+}
+
+#create-unit .submit {
+    height: 32px;
+}
+
+#create-unit .form-container {
+    display: flex;
+}
+
+
+
+
+
+
+

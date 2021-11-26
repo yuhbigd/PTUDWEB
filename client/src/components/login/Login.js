@@ -40,6 +40,7 @@ const Login = (props) => {
     if (value) {
       const user = JSON.parse(value).user;
       if (user) {
+        console.log(user)
         const action = actions.set_user(user);
         dispatch(action);
         navigate("/app");
