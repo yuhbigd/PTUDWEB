@@ -1,14 +1,13 @@
 import { combineReducers } from "redux";
 import provinceRe from "./provinceRe";
-import districtRe from "./districtRe";
-import townRe from './townRe'
 import userRe from './userRe'
+import multiRe from "./mutiRe";
 
 const appReducers = combineReducers({
-  provinceRe: provinceRe,
-  districtRe: districtRe,
-  townRe: townRe,
-  userRe: userRe
+    provinceRe: provinceRe,
+    userRe: userRe,
+    multiRe: multiRe
+
 });
 
 export default appReducers;

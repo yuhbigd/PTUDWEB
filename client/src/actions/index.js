@@ -8,20 +8,6 @@ export const set_province = (province) => {
     }
 }
 
-export const set_district = (district) => {
-    return {
-        type: types.SET_DISTRICT,
-        district: district
-    }
-}
-
-export const set_town = (town) => {
-    return {
-        type: types.SET_TOWN,
-        town: town
-    }
-}
-
 export const set_user = (user) => {
     return {
         type: types.SET_USER,
@@ -35,3 +21,15 @@ export const drop_user = (user) => {
     }
 }
 
+export const set_multi = (payload) => {
+    return {
+        type: types.SET_MULTI,
+        payload: payload
+    }
+}
+
+export const drop_multi = (payload) => {
+    return {
+        type: types.DROP_MULTI
+    }
+}

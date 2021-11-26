@@ -26,3 +26,12 @@ tbody {
     outline: none;
 }
 
+.unit-table {
+    margin-top: 44px;
+}
+
+.option-container {
+    height: 64px;
+    width: 100%;
+}
+
