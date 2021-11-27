@@ -2,7 +2,6 @@ import React from 'react'
 
 const RenderDir = (props) => {
     const {dir} = props
-    console.log(dir)
     const handleDirOnclick = (level, id) => {
         const temp = dir
         props.setDir([])
@@ -10,7 +9,6 @@ const RenderDir = (props) => {
             if(index <= level) {
                 props.setDir(state => [...state, item])
                 props.setLastLevel(level)
-                console.log(dir)
             }
         })
     }

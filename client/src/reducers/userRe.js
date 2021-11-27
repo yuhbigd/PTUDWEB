@@ -21,7 +21,7 @@ var userRe = (state = initialState, actions) => {
             state = {}
             return {...state}
         default:
-            return {}
+            return {...state}
     }
 }
 

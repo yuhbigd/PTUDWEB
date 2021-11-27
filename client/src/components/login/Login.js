@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./login.css";
-import { useAsyncFn, useShallowCompareEffect } from "react-use";
+import { useAsyncFn } from "react-use";
 import * as actions from "./../../actions/index";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -42,9 +42,10 @@ const Login = (props) => {
     if (value) {
       const user = JSON.parse(value).user;
       if (user) {
+        console.log(user)
         const action = actions.set_user(user);
         dispatch(action);
-        navigate("/table");
+        navigate("/app");
       }
     }
   }, [loginRequest]);
