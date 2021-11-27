@@ -10,14 +10,26 @@ require("dotenv").config();
 getCountry = async (req, res) => {
   try {
     const parent = req.user;
+    const id = parent.userName;
 
     let countries;
+    let cacheCountries;
 
     if (parent.tier === 0) {
-      countries = await Tinh.find({});
+      // lay data trong redis
+      cacheCountries = JSON.parse(await redisClient.get("country:"));
+      // neu khong co data -> tra ve
+      if (cacheCountries) {
+        countries = cacheCountries;
+      } else {
+        // ko co data trong redis -> query db
+        countries = await Tinh.find({});
+      }
     } else if (parent.tier < 4) {
-      const id = parent.userName;
-      if (parent.tier === 1) {
+      cacheCountries = JSON.parse(await redisClient.get(`country:${id}`));
+      if (cacheCountries) {
+        countries = cacheCountries;
+      } else if (parent.tier === 1) {
         countries = await Huyen.find({
           id: { $regex: `^${id}`, $options: "i" },
         });
@@ -35,7 +47,14 @@ getCountry = async (req, res) => {
     if (!countries || _.isEmpty(countries)) {
       throw new Error("Không tìm thấy dữ liệu");
     }
-
+    if (!cacheCountries) {
+      if (parent.tier === 0) {
+        redisClient.set("country:", JSON.stringify(countries));
+        redisClient.expire("country:", 3600);
+      } else if (parent.tier < 4) {
+        redisClient.setEx(`country:${id}`, 3600, JSON.stringify(countries));
+      }
+    }
     res.status(200).json({
       data: countries,
     });
@@ -69,32 +88,43 @@ getCountryByParameter = async (req, res) => {
 
     let tier = paramId.length / 2;
     let countries;
-    // lay danh sach cac don vi hanh chinh nam ben duoi paramId (ma don vi) dua tren tier
-    switch (tier) {
-      case 1:
-        countries = await Huyen.find({
-          id: { $regex: `^${paramId}`, $options: "i" },
-        });
-        break;
-      case 2:
-        countries = await Xa.find({
-          id: { $regex: `^${paramId}`, $options: "i" },
-        });
-        break;
-      case 3:
-        countries = await To.find({
-          id: { $regex: `^${paramId}`, $options: "i" },
-        });
-        break;
-      case 4:
-        // ko co cai nao be hon cap To
-        throw new Error("Không có đơn vị hành chính nào bé hơn");
+    // tim data trong cache dua tren paramId
+    let cacheCountries = JSON.parse(
+      await redisClient.get(`country:${paramId}`),
+    );
+    if (cacheCountries) {
+      countries = cacheCountries;
+    } else {
+      // lay danh sach cac don vi hanh chinh nam ben duoi paramId (ma don vi) dua tren tier
+      switch (tier) {
+        case 1:
+          countries = await Huyen.find({
+            id: { $regex: `^${paramId}`, $options: "i" },
+          });
+          break;
+        case 2:
+          countries = await Xa.find({
+            id: { $regex: `^${paramId}`, $options: "i" },
+          });
+          break;
+        case 3:
+          countries = await To.find({
+            id: { $regex: `^${paramId}`, $options: "i" },
+          });
+          break;
+        case 4:
+          // ko co cai nao be hon cap To
+          throw new Error("Không có đơn vị hành chính nào bé hơn");
+      }
     }
     // neu khong tim thay don vi hanh chinh ben duoi trong db
     if (!countries || _.isEmpty(countries)) {
       throw new Error("Không tìm thấy dữ liệu (đơn vị này bị trống)");
     }
-
+    // neu khong co trong cache thi luu vao trong cache
+    if (!cacheCountries) {
+      redisClient.setEx(`country:${paramId}`, 3600, JSON.stringify(countries));
+    }
     res.status(200).json({
       data: countries,
     });
@@ -167,6 +197,12 @@ postCountry = async (req, res) => {
     }
     if (!data) {
       throw new Error("Có lỗi đã xảy ra trên server");
+    }
+    //xoa cache cua parent de dam bao consistency
+    if (parent.tier === 0) {
+      await redisClient.DEL("country:");
+    } else {
+      await redisClient.DEL(`country:${parent.userName}`);
     }
     res.status(201).json({
       data: data,
@@ -253,7 +289,7 @@ putCountry = async (req, res) => {
         );
         break;
       case 3:
-        unit = await To.findOneAndUpdate(
+        unit = await Xa.findOneAndUpdate(
           {
             id: paramId,
           },
@@ -273,7 +309,7 @@ putCountry = async (req, res) => {
         );
         break;
       case 4:
-        unit = await Xa.findOneAndUpdate(
+        unit = await To.findOneAndUpdate(
           {
             id: paramId,
           },
@@ -297,6 +333,9 @@ putCountry = async (req, res) => {
     if (!unit || _.isEmpty(unit)) {
       throw new Error("Không tìm thấy dữ liệu (đơn vị này bị trống)");
     }
+    // xoa cache de dam bao consistency
+    let parentId = paramId.slice(0, -2);
+    await redisClient.DEL(`country:${parentId}`);
 
     res.status(200).json({
       data: unit,
