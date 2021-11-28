@@ -30,7 +30,7 @@ signup_get = async (req, res) => {
 // getting data when first time going to the website
 login_get = async (req, res) => {
   try {
-    const user = await User.findOne({ userName: req.user.userName });
+    const user = req.user;
     if (!user) {
       throw new Error("Tài khoản không tồn tại");
     }

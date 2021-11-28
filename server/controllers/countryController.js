@@ -198,11 +198,13 @@ postCountry = async (req, res) => {
     if (!data) {
       throw new Error("Có lỗi đã xảy ra trên server");
     }
-    //xoa cache cua parent de dam bao consistency
+    //xoa cache cua parent de dam bao consistency va xoa cache children account cua parent account
     if (parent.tier === 0) {
-      await redisClient.DEL("country:");
+      redisClient.DEL("country:");
+      redisClient.DEL(`account::children`);
     } else {
-      await redisClient.DEL(`country:${parent.userName}`);
+      redisClient.DEL(`country:${parent.userName}`);
+      redisClient.DEL(`account:${parent.userName}:children`);
     }
     res.status(201).json({
       data: data,
@@ -334,8 +336,13 @@ putCountry = async (req, res) => {
       throw new Error("Không tìm thấy dữ liệu (đơn vị này bị trống)");
     }
     // xoa cache de dam bao consistency
+    // xoa cache children account cua parent account va
+    // chinh account cua don vi duoc chinh sua
+
     let parentId = paramId.slice(0, -2);
-    await redisClient.DEL(`country:${parentId}`);
+    redisClient.DEL(`country:${parentId}`);
+    redisClient.DEL(`account:${parentId}:children`);
+    redisClient.DEL(`account:${paramId}`);
 
     res.status(200).json({
       data: unit,
