@@ -14,7 +14,7 @@ const DistrictTable = (props) => {
 
     const districtOnclick = (id, index) => {
         props.setDir(state => [...state, district[index]])
-        props.setLastLevel(2)
+        props.setLastLevel(props.dir.length)
     }
 
     const [request, setRequest] = useAsyncFn(async(id) => {

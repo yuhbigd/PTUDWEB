@@ -1,28 +1,29 @@
 import React, {useState, useEffect} from 'react'
-import { useSelector } from 'react-redux'
 import InfoLog from '../infoLog/InfoLog'
 import { useAsyncFn} from 'react-use'
-import { useDispatch } from 'react-redux'
-import * as actions from './../../actions/index'
 import {useMountedState} from 'react-use'
-import Alog from '../Alog/Alog'
 import MultiOption from '../options/MultiOption'
+import Loading from '../loading/Loading'
+import ExportToExcel from '../exportToExcel/ExportToExcel'
 
 const ProvinceTable = (props) => {
-    const province = useSelector(state => state.provinceRe)
+    const [province, setProvince] = useState([])
     const [keyIndex, setKeyIndex] = useState(null)
-    const dispatch = useDispatch()
     const isMounted = useMountedState()
     const [multiOption, setMultiOption] = useState(false)
     const [selectedUnit, setSelectedUnit] = useState([])
+    const [serverErr, setServerErr] = useState(null)
 
     const provinceOnclick = (id, index, e) => {
-        props.setDir(state => [...state, province[index]])
-        props.setLastLevel(1)
+        if(province[index].id !== props.dir[props.dir.length-1].id && province[index].count) {
+                props.setDir(state => [...state, province[index]])
+                props.setLastLevel(props.dir.length)
+        }
     }
 
-    const [request, setRequest] = useAsyncFn(async() => {
-        const res = await fetch('http://localhost:3001/country', {
+    const [request, setRequest] = useAsyncFn(async(id) => {
+    
+        const res = await fetch(`http://localhost:3001/country/${id === 'root' ? '' : id}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -35,15 +36,19 @@ const ProvinceTable = (props) => {
     })
 
     useEffect(() => {
-        if(isMounted) {
-            setRequest()
+        const lastDir = props.dir[props.dir.length - 1]
+        if(isMounted && lastDir) {
+            setRequest(lastDir.id)
         }
-    }, [])
+    }, [props.dir])
 
     useEffect(() =>{
         if(request.value) {
-            const action = actions.set_province([...JSON.parse(request.value).data])
-            dispatch(action)
+            if(!JSON.parse(request.value).error) {
+                setProvince([...JSON.parse(request.value).data])   
+            }else {
+                setServerErr(JSON.parse(request.value).error)
+            }
         }
     }, [request])
 
@@ -68,57 +73,57 @@ const ProvinceTable = (props) => {
     
     return (
         <div id='unit-table-container'>
-            <div className='overall-info-container'>
-                <Alog data={props.dir[props.dir.length - 1]}></Alog>
-            </div>
-            <div className='unit-table'>
-                <div className='option-container'>
-                    <button onClick={() => {multiOptionToggle()}}>
-                        {multiOption ? 'close multiselect' : 'multiSelect' } 
-                    </button>
-                    {   
-                        selectedUnit.length || !multiOption ? <MultiOption selectedUnit={multiOption ? selectedUnit : province}></MultiOption> : null
-                    }
+            {request.loading ? <Loading></Loading>:
+                <div className='unit-table'>
+                    <div className='option-container'>
+                        <div>
+                            <ExportToExcel csvData={province} fileName={'this'}/>
+                            <div onClick={() => {multiOptionToggle()}} className='select-multiple-button'>
+                                {multiOption ? <i className='bx bxs-select-multiple'></i> : <i className='bx bx-select-multiple' ></i> } 
+                            </div>
+                            <MultiOption multiOption={multiOption} selectedUnit={multiOption ? selectedUnit : province}></MultiOption>
+                        </div>
+                    </div>
+                    <div className='table-container'>
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>Mã</th>
+                                    <th>tên</th>
+                                    <th>Đơn vị cấp dưới</th>
+                                    <th></th>
+                                    <th>
+                                        {multiOption ? 'multiselect': null}
+                                    </th>
+                                </tr>
+                            </thead>
+                            {province.map((item, index) => {
+                                return(
+                                    <tbody key={index}>
+                                        <tr>
+                                            <td>{item.id}</td>
+                                            <td onClick={(e) => provinceOnclick(item.id, index, e)}>{item.name}</td>
+                                            <td>{item.count}</td>
+                                            <td>
+                                                <button onClick={(e) => buttonOnclick(item.id, index, e)}>Chi tiết</button>
+                                            </td>
+                                            <td>
+                                                {multiOption ? <input type='checkbox' value={item} onChange={(e) => {handleMultiOption(e, item)}}></input>: null}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            {index === keyIndex ? 
+                                                <td colSpan="4"><InfoLog data={province[index]} setKeyIndex={setKeyIndex}></InfoLog></td>
+                                            : null}
+                                        </tr>
+                                    </tbody>            
+                                )
+                            })}
+                        </table>
+                    </div>
                 </div>
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>Mã</th>
-                                <th>tên</th>
-                                <th>cấp</th>
-                                <th></th>
-                                <th>
-                                    {multiOption ? 'multiselect': null}
-                                </th>
-                            </tr>
-                        </thead>
-                        {province.map((item, index) => {
-                            return(
-                                <tbody key={index}>
-                                    <tr>
-                                        <td>{item.id}</td>
-                                        <td onClick={(e) => provinceOnclick(item.id, index, e)}>{item.name}</td>
-                                        <td>{item.level}</td>
-                                        <td>
-                                            <button onClick={(e) => buttonOnclick(item.id, index, e)}>Chi tiết</button>
-                                        </td>
-                                        <td>
-                                            {multiOption ? <input type='checkbox' value={item} onChange={(e) => {handleMultiOption(e, item)}}></input>: null}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        {index === keyIndex ? 
-                                            <td colSpan="4"><InfoLog data={province[index]} setKeyIndex={setKeyIndex}></InfoLog></td>
-                                        : null}
-                                    </tr>
-                                </tbody>            
-                            )
-                        })}
-                    </table>
-                </div>
-            </div>
-            
-       
+            }
+        </div>  
     )
 }
 

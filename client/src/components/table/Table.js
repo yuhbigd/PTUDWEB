@@ -1,28 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProvinceTable from './ProvinceTable';
-import DistrictTable from './DistrictTable';
-import TownTable from './TownTable'
 import RenderDir from './RenderDir';
 import './table.css'
-
+import { useSelector } from 'react-redux';
+import Loading from '../loading/Loading';
 
 const Table = () => {
+    const user = useSelector (state => state.userRe)
     const [lastLevel, setLastLevel] = useState(0);
-    const [dir, setDir] = useState([{id: 0, name: 'Viet Nam'}])
+    const [dir, setDir] = useState([])
 
+    useEffect(() => {
+        setDir(state => [{id: 'root', name: 'root'}])
+    }, [user])
+   
     return (
-        <div>
-            <div className="like-file-surf">
-                <RenderDir dir={dir} setDir = {setDir} setLastLevel={setLastLevel}></RenderDir>
+        <div id='app'>
+            <div className='explorer-container'> 
+                <div className="like-file-surf">
+                    <RenderDir dir={dir} setDir = {setDir} setLastLevel={setLastLevel}></RenderDir>
+                </div>
+                <div className='line-break'></div>
             </div>
-            <div className="table-container"> 
-                {lastLevel === 0 ?
-                        <ProvinceTable setDir={setDir} dir ={dir} setLastLevel={setLastLevel}></ProvinceTable>: lastLevel === 1 ?
-                        <DistrictTable setDir={setDir} dir ={dir}  setLastLevel={setLastLevel}></DistrictTable>: lastLevel === 2 ?
-                        <TownTable setDir={setDir} dir={dir} setLastLevel={setLastLevel}></TownTable>: null       
-                }
-            </div>
-
+            <ProvinceTable setDir={setDir} dir ={dir} setLastLevel={setLastLevel}></ProvinceTable>
         </div>
     )
 }

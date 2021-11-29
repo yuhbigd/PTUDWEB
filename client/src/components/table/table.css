@@ -1,9 +1,17 @@
+:root {
+    --padding-exploreer: 40px;
+    --explorer-line-break: 60%;   
+    --app-padding: 24px 24px
+}
+
 .like-file-surf {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     gap: 5px;
     color: blue;
+    font-size: 1.3rem;
+    font-weight: 500;
 }
 
 .like-file-surf div:hover {
@@ -26,12 +34,50 @@ tbody {
     outline: none;
 }
 
-.unit-table {
+#app .unit-table {
     margin-top: 44px;
 }
 
-.option-container {
-    height: 64px;
+#app .option-container {
     width: 100%;
+    display: flex;
+    justify-content: flex-end;
 }
+
+#app .option-container > div {
+    display: flex;
+}
+
+#app i {
+    font-size: 2rem;
+}
+
+/* explorer */
+#app .explorer-container {
+    padding-left: var(--padding-exploreer);
+}
+
+#app .line-break {
+    width: var(--explorer-line-break);
+    height: 1px;
+    background-color: blue;
+}
+
+#app {
+    padding: var(--app-padding);
+    background: rgb(255, 255, 255);
+    position: relative;
+    box-sizing: border-box;
+    min-height: calc(100vh - 60px);
+}
+
+#app .select-multiple-button {
+    padding: 4px 16px;
+}
+
+
+#app .unit-table-container {
+    position: relative;
+}
+
 

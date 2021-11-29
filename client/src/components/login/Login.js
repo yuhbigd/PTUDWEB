@@ -31,7 +31,6 @@ const Login = (props) => {
         return result
     })
 
-
   const handleLoginOnclick = (e) => {
     e.preventDefault();
     setLoginRequest(username, password);
