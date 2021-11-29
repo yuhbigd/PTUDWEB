@@ -1,0 +1,28 @@
+#option-button-container {
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+#option-button-container > div {
+    padding: 4px 16px;
+}
+
+#option-button-container div {
+    color: rgb(63, 63, 63);
+}
+
+#option-button-container .option-button:hover{
+    cursor: pointer;
+    background-color: rgb(223, 223, 223);
+}
+
+#option-button-container div > span {
+    display: block;
+    width: 112px;
+}
+
+#option-button-container .blur{
+    color: rgb(121, 121, 121);
+}
+
