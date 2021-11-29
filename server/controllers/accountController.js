@@ -53,22 +53,26 @@ account_post = async (req, res) => {
     // kiem tra co ton tai ko
     switch (tier) {
       case 1:
-        data = await Tinh.findOne({ userName: finalName });
+        data = await Tinh.findOne({ id: finalName });
         break;
       case 2:
-        data = await Huyen.findOne({ userName: finalName });
+        data = await Huyen.findOne({ id: finalName });
         break;
       case 3:
-        data = await Xa.findOne({ userName: finalName });
+        data = await Xa.findOne({ id: finalName });
         break;
       case 4:
-        data = await To.findOne({ userName: finalName });
+        data = await To.findOne({ id: finalName });
         break;
     }
-
     if (!data) {
       throw new Error("Nơi này không tồn tại");
     }
+
+    // xoa cache parent children dam bao tinh consistency
+
+    const parentId = finalName.slice(0, -2);
+    redisClient.DEL(`account:${parentId}:children`);
 
     //tao tai khoan
     if (!userTimeOut) {
@@ -230,6 +234,13 @@ account_put = async (req, res) => {
     if (data.password) {
       obj.password = data.password.trim();
     }
+    // xoa cache cua account va parent account de dam bao tinh consistency
+
+    redisClient.DEL(`account:${paramId}`);
+    // vi admin co username !== id cua don vi
+    let parentId = paramId.slice(0, -2);
+    redisClient.DEL(`account:${parentId}:children`);
+
     res.status(201).json({
       user: obj,
     });
@@ -346,26 +357,59 @@ account_get = async (req, res) => {
   try {
     const user = req.user;
     let unit;
+    let userCache;
     if (user.tier > 0) {
       let userName = user.userName;
       let tier = user.tier;
-      switch (tier) {
-        case 1:
-          unit = await Tinh.findOne({ id: userName });
-          break;
-        case 2:
-          unit = await Huyen.findOne({ id: userName });
-          break;
-        case 3:
-          unit = await Xa.findOne({ id: userName });
-          break;
-        case 4:
-          unit = await To.findOne({ id: userName });
-          break;
+      // tim cache cua account
+      userCache = JSON.parse(await redisClient.GET(`account:${userName}`));
+      if (userCache) {
+        unit = userCache;
+      } else {
+        switch (tier) {
+          case 1:
+            unit = await Tinh.findOne({ id: userName });
+            break;
+          case 2:
+            unit = await Huyen.findOne({ id: userName });
+            break;
+          case 3:
+            unit = await Xa.findOne({ id: userName });
+            break;
+          case 4:
+            unit = await To.findOne({ id: userName });
+            break;
+        }
       }
       if (!unit) {
         throw new Error("Không tìm thấy thông tin của đơn vị này");
       }
+      if (userCache) {
+        // neu co cache thi tra ve
+        res.status(200).json(unit);
+        return;
+      } else {
+        // tim trong db neu ko co cache
+        let returnUser = {
+          user: _.pick(user, [
+            "userName",
+            "name",
+            "tier",
+            "isBanned",
+            "userTimeOut",
+          ]),
+        };
+        returnUser.user.unit = [unit];
+        redisClient.setEx(
+          `account:${userName}`,
+          3600,
+          JSON.stringify(returnUser),
+        );
+        res.status(200).json(returnUser);
+        return;
+      }
+    } else if (user.tier === 0) {
+      // tier 0 thi ko can vi unit cua tier 0 la duy nhat
       res.status(200).json({
         user: _.pick(user, [
           "userName",
@@ -374,12 +418,6 @@ account_get = async (req, res) => {
           "isBanned",
           "userTimeOut",
         ]),
-        unit,
-      });
-      return;
-    } else if (user.tier === 0) {
-      res.status(200).json({
-        message: "admin",
       });
     }
   } catch (error) {
@@ -394,30 +432,63 @@ account_getChildren = async (req, res) => {
 
     let userName = user.userName;
     let tier = user.tier;
-    switch (tier) {
-      case 0:
-        children = await getChildrenAndUnitOfIt("", "tinhs");
-        break;
-      case 1:
-        children = await getChildrenAndUnitOfIt(userName, "huyens");
-        break;
-      case 2:
-        children = await getChildrenAndUnitOfIt(userName, "xas");
-        break;
-      case 3:
-        children = await getChildrenAndUnitOfIt(userName, "tos");
-        break;
-      case 4:
-        throw new Error("Bạn không có đơn vị hành chính cấp dưới");
+    let childrenCache;
+    if (tier === 0) {
+      childrenCache = JSON.parse(await redisClient.GET(`account::children`));
+    } else {
+      childrenCache = JSON.parse(
+        await redisClient.GET(`account:${userName}:children`),
+      );
+    }
+    if (childrenCache) {
+      children = childrenCache;
+    } else {
+      switch (tier) {
+        case 0:
+          children = await getChildrenAndUnitOfIt("", "tinhs");
+          break;
+        case 1:
+          children = await getChildrenAndUnitOfIt(userName, "huyens");
+          break;
+        case 2:
+          children = await getChildrenAndUnitOfIt(userName, "xas");
+          break;
+        case 3:
+          children = await getChildrenAndUnitOfIt(userName, "tos");
+          break;
+        case 4:
+          throw new Error("Bạn không có đơn vị hành chính cấp dưới");
+      }
     }
     if (!children || _.isEmpty(children)) {
       throw new Error(
         "Không tìm thấy thông tin của đơn vị này hoặc đơn vị này không có đơn vị con",
       );
     }
-    res.status(200).json({
-      data: children,
-    });
+
+    if (!childrenCache) {
+      // neu khong co cache cua account children
+      let data = {
+        data: children,
+      };
+      if (tier > 0) {
+        await redisClient.setEx(
+          `account:${userName}:children`,
+          3600,
+          JSON.stringify(data),
+        );
+      } else {
+        // tier 0 la dac biet vi no co username ko phai la id cua don vi hanh chinh
+        await redisClient.setEx(
+          `account::children`,
+          3600,
+          JSON.stringify(data),
+        );
+      }
+      res.status(200).json(data);
+      return;
+    }
+    res.status(200).json(childrenCache);
     return;
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -447,6 +518,11 @@ account_getChild = async (req, res) => {
 
     let tier = paramId.length / 2;
     let child;
+    let cachedChild = JSON.parse(await redisClient.GET(`account:${paramId}`));
+    if (cachedChild) {
+      res.status(200).json(cachedChild);
+      return;
+    }
     switch (tier) {
       case 1:
         child = await getChildAndUnitOfIt(paramId, "tinhs");
@@ -468,9 +544,13 @@ account_getChild = async (req, res) => {
         "Không tìm thấy thông tin của đơn vị này hoặc đơn vị này không có đơn vị con",
       );
     }
-    res.status(200).json({
+    let data = {
       data: child,
-    });
+    };
+    if (!cachedChild) {
+      await redisClient.setEx(`account:${paramId}`, 3600, JSON.stringify(data));
+    }
+    res.status(200).json(data);
     return;
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -501,6 +581,13 @@ account_getChildrenOfChild = async (req, res) => {
 
     let tier = paramId.length / 2;
     let children;
+    let cachedChildren = JSON.parse(
+      await redisClient.get(`account:${paramId}:children`),
+    );
+    if (cachedChildren) {
+      res.status(200).json(cachedChildren);
+      return;
+    }
     switch (tier) {
       case 1:
         children = await getChildrenAndUnitOfIt(paramId, "huyens");
@@ -519,15 +606,23 @@ account_getChildrenOfChild = async (req, res) => {
         "Không tìm thấy thông tin của đơn vị này hoặc đơn vị này không có đơn vị con",
       );
     }
-    res.status(200).json({
+    let data = {
       data: children,
-    });
+    };
+    if (!cachedChildren) {
+      await redisClient.setEx(
+        `account:${paramId}:children`,
+        3600,
+        JSON.stringify(data),
+      );
+    }
+    res.status(200).json(data);
     return;
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
-//cai nay de cuoi lam 
+//cai nay de cuoi lam
 //
 //
 account_delete = async (req, res) => {
@@ -537,7 +632,6 @@ account_delete = async (req, res) => {
     subUser,
   });
 };
-// mai viet docs nua
 module.exports = {
   account_post,
   account_put,

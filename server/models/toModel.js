@@ -3,19 +3,19 @@ const Xa = require("./xaModel");
 const toSchema = new mongoose.Schema({
   id: {
     type: String,
-    required: [true, "Hãy nhập mã phường"],
-    unique: [true, "mã phường đã được cấp"],
+    required: [true, "Hãy nhập mã tổ dân phố"],
+    unique: [true, "mã tổ dân phố đã được cấp"],
     validate: {
       validator: function (v) {
         return /^([0-9][1-9][0-9][1-9][0-9][1-9][0-9][1-9])$/.test(v);
       },
-      message: "Mã phường không hợp lệ",
+      message: "Mã tổ dân phố không hợp lệ",
     },
     index: true,
   },
   name: {
     type: String,
-    required: [true, "Hãy nhập tên của phường"],
+    required: [true, "Hãy nhập tên của tổ dân phố"],
     index: true,
   },
   xa: {
@@ -37,6 +37,9 @@ toSchema.pre("save", async function (next) {
       },
     },
   );
+});
+toSchema.post("findOneAndDelete", async function (doc) {
+  console.log(doc);
 });
 const To = mongoose.model("tos", toSchema);
 
