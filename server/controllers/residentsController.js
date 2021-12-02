@@ -789,7 +789,7 @@ deleteManyResident = async (req, res) => {
     if (req.body.data) {
       residentArray = req.body.data.residents;
     }
-    if (!residentArray) {
+    if (!residentArray || _.isEmpty(residentArray)) {
       throw new Error("Không có thông tin người dân để xóa");
     }
     // remove duplicate
