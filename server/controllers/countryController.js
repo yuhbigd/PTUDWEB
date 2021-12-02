@@ -4,9 +4,10 @@ const Huyen = require("../models/huyenModel");
 const Xa = require("../models/xaModel");
 const To = require("../models/toModel");
 const sanitize = require("mongo-sanitize");
+const updateAnalyticsAfterDelete = require("../models/trigger_country/postDelete");
 require("dotenv").config();
 
-//lay danh sach cac don vi hanh chinh cap ngay duoi cap nguoi goi
+//lay danh sach cac don vi hanh chinh cap ngay duoi cap nguoi goi va thong ke cua chung
 getCountry = async (req, res) => {
   try {
     const parent = req.user;
@@ -201,10 +202,12 @@ postCountry = async (req, res) => {
     //xoa cache cua parent de dam bao consistency va xoa cache children account cua parent account
     if (parent.tier === 0) {
       redisClient.DEL("country:");
+      redisClient.DEL("account:");
       redisClient.DEL(`account::children`);
     } else {
       redisClient.DEL(`country:${parent.userName}`);
       redisClient.DEL(`account:${parent.userName}:children`);
+      redisClient.DEL(`account:${parent.userName}`);
     }
     res.status(201).json({
       data: data,
@@ -358,4 +361,57 @@ putCountry = async (req, res) => {
   }
 };
 
-module.exports = { getCountry, getCountryByParameter, postCountry, putCountry };
+deleteCountry = async (req, res) => {
+  try {
+    const paramId = sanitize(req.params.id);
+    const parent = req.user;
+    await User.checkIsBanned(parent);
+    let parentId = parent.userName;
+    if (parent.tier === 0) {
+      parentId = "";
+    }
+    if (parentId.length >= paramId.length || paramId.indexOf(parentId) !== 0) {
+      throw new Error(
+        "Không đủ thẩm quyền để xóa dữ liệu hoặc mã đơn vị không đúng định dạng",
+      );
+    }
+    if (
+      paramId.length > 8 ||
+      paramId.length % 2 !== 0 ||
+      !/^[0-9]*$/gi.test(paramId)
+    ) {
+      throw new Error("Id không đúng định dạng");
+    }
+    let tier = paramId.length / 2;
+    switch (tier) {
+      case 1:
+        data = await Tinh.findOneAndDelete({ id: paramId });
+        break;
+      case 2:
+        data = await Huyen.findOneAndDelete({ id: paramId });
+        break;
+      case 3:
+        data = await Xa.findOneAndDelete({ id: paramId });
+        break;
+      case 4:
+        data = await To.findOneAndDelete({ id: paramId });
+        break;
+    }
+    if (!data) {
+      throw new Error("Không tìm thấy đơn vị này");
+    }
+    await updateAnalyticsAfterDelete(data);
+    res.status(200).json({ message: "done" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: error.message });
+  }
+};
+
+module.exports = {
+  getCountry,
+  getCountryByParameter,
+  postCountry,
+  putCountry,
+  deleteCountry,
+};

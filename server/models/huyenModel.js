@@ -23,14 +23,28 @@ const huyenSchema = new mongoose.Schema({
     required: [true, "Hãy nhập mã của tỉnh"],
   },
   count: { type: Number, default: 0 },
+  // thong ke chung cua don vi
+  soDan: { type: Number, default: 0 },
+  soNam: { type: Number, default: 0 },
+  soNu: { type: Number, default: 0 },
+  nhoHon15: { type: Number, default: 0 },
+  tu15_64: { type: Number, default: 0 },
+  hon64: { type: Number, default: 0 },
+  daKetHon: { type: Number, default: 0 },
+  chuaKetHon: { type: Number, default: 0 },
+  lyHon: { type: Number, default: 0 },
+  danToc: { type: Object },
+  quocTich: { type: Object },
+  tonGiao: { type: Object },
+  nhomMau: { type: Object },
 });
-huyenSchema.pre("save", async function (next) {
+huyenSchema.post("save", async function (doc) {
   const tinh = await Tinh.findOne({
-    id: this.tinh,
+    id: doc.tinh,
   });
   await Tinh.findOneAndUpdate(
     {
-      id: this.tinh,
+      id: doc.tinh,
     },
     {
       $set: {
@@ -39,6 +53,7 @@ huyenSchema.pre("save", async function (next) {
     },
   );
 });
+
 const Huyen = mongoose.model("huyens", huyenSchema);
 
 module.exports = Huyen;

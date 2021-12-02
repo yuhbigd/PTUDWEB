@@ -1,0 +1,11 @@
+const { Router } = require("express");
+const residentsController = require("../controllers/residentsController");
+const router = Router();
+router.post("/", residentsController.postResident);
+router.get("/", residentsController.getAllResidents);
+router.get("/country/children", residentsController.getChildrenResidents);
+router.get("/:id", residentsController.getResident);
+router.put("/:id", residentsController.putResident);
+router.delete("/:id", residentsController.deleteResident);
+router.delete("/", residentsController.deleteManyResident);
+module.exports = { router };

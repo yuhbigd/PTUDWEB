@@ -20,6 +20,7 @@ app.use(express.static("public"));
 const authRouter = require("./routes/authRouter");
 const countryRouter = require("./routes/countryRouter");
 const accountRouter = require("./routes/accountRouter");
+const residentsRouter = require("./routes/residentsRouter");
 // check user middleware
 const { checkUser } = require("./middlewares/authMiddleWare");
 
@@ -65,6 +66,7 @@ const { checkUser } = require("./middlewares/authMiddleWare");
   app.use("/", authRouter.router);
   app.use("/country", [checkUser], countryRouter.router);
   app.use("/account", [checkUser], accountRouter.router);
+  app.use("/residents", [checkUser], residentsRouter.router);
   app.listen(3001, () => {
     console.log("server is listen on port 3001");
   });

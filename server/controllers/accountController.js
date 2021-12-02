@@ -3,10 +3,12 @@ const Tinh = require("../models/tinhModel");
 const Huyen = require("../models/huyenModel");
 const Xa = require("../models/xaModel");
 const To = require("../models/toModel");
+const TkCaNuoc = require("../models/tkCaNuocModel");
 const sanitize = require("mongo-sanitize");
 const moment = require("moment");
 require("dotenv").config();
 const CronJob = require("cron").CronJob;
+const { promisify } = require("util");
 //post account controller
 /* dinh dang data can gui
 {user: {
@@ -23,6 +25,9 @@ account_post = async (req, res) => {
     // kiem tra xem tai khoan co bi cam tu truoc ko
     await User.checkIsBanned(parent);
     const { userName, password, name } = req.body.user;
+    if (!userName || !password || !name) {
+      throw new Error("Nhập thiếu môt trong các trường bắt buộc");
+    }
     const userTimeOut = req.body.user.userTimeOut;
     let tier = parent.tier;
     if (tier <= 3 && tier >= 0) {
@@ -409,16 +414,26 @@ account_get = async (req, res) => {
         return;
       }
     } else if (user.tier === 0) {
-      // tier 0 thi ko can vi unit cua tier 0 la duy nhat
-      res.status(200).json({
-        user: _.pick(user, [
-          "userName",
-          "name",
-          "tier",
-          "isBanned",
-          "userTimeOut",
-        ]),
-      });
+      userCache = JSON.parse(await redisClient.GET(`account:`));
+      if (userCache) {
+        unit = userCache;
+        res.status(200).json(unit);
+      } else {
+        unit = await TkCaNuoc.findOne({ id: "0" });
+        let returnUser = {
+          user: _.pick(user, [
+            "userName",
+            "name",
+            "tier",
+            "isBanned",
+            "userTimeOut",
+          ]),
+        };
+        returnUser.user.unit = [unit];
+        redisClient.setEx(`account:`, 3600, JSON.stringify(returnUser));
+        res.status(200).json(returnUser);
+        return;
+      }
     }
   } catch (error) {
     res.status(400).json({ error: error.message });

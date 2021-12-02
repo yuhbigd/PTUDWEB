@@ -23,14 +23,28 @@ const xaSchema = new mongoose.Schema({
     required: [true, "Hãy nhập mã của huyện,quận"],
   },
   count: { type: Number, default: 0 },
+  // thong ke chung cua don vi
+  soDan: { type: Number, default: 0 },
+  soNam: { type: Number, default: 0 },
+  soNu: { type: Number, default: 0 },
+  nhoHon15: { type: Number, default: 0 },
+  tu15_64: { type: Number, default: 0 },
+  hon64: { type: Number, default: 0 },
+  daKetHon: { type: Number, default: 0 },
+  chuaKetHon: { type: Number, default: 0 },
+  lyHon: { type: Number, default: 0 },
+  danToc: { type: Object },
+  quocTich: { type: Object },
+  tonGiao: { type: Object },
+  nhomMau: { type: Object },
 });
-xaSchema.pre("save", async function (next) {
+xaSchema.post("save", async function (doc) {
   const huyen = await Huyen.findOne({
-    id: this.huyen,
+    id: doc.huyen,
   });
   await Huyen.findOneAndUpdate(
     {
-      id: this.huyen,
+      id: doc.huyen,
     },
     {
       $set: {
@@ -39,6 +53,7 @@ xaSchema.pre("save", async function (next) {
     },
   );
 });
+
 const Xa = mongoose.model("xas", xaSchema);
 
 module.exports = Xa;

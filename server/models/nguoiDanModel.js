@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const postInsert = require("./trigger_resident/postInsert");
+// cai nao co index true la dung de sap xep, tim kiem thi tim theo ten hoac the so cccd
 const residentSchema = new mongoose.Schema({
   hoTen: {
     type: String,
@@ -8,15 +10,17 @@ const residentSchema = new mongoose.Schema({
   ngaySinh: {
     type: Date,
     require: [true, "Không thể bỏ trống ngày sinh"],
+    index: true,
   },
   gioiTinh: {
     type: String,
-    enum: ["nam", "nữ", "khác"],
+    enum: ["nam", "nữ"],
     require: [true, "Không thể bỏ trống giới tính"],
   },
   nhomMau: {
     type: String,
     enum: ["O", "A", "B", "AB"],
+    index: true,
   },
   honNhan: {
     type: String,
@@ -25,6 +29,7 @@ const residentSchema = new mongoose.Schema({
   },
   noiDangKyKhaiSinh: {
     type: String,
+    require: [true, "Không thể bỏ trống nơi khai sinh"],
   },
   queQuan: {
     type: String,
@@ -33,18 +38,19 @@ const residentSchema = new mongoose.Schema({
   danToc: {
     type: String,
     require: [true, "Không thể bỏ trống tên dân tộc"],
+    index: true,
   },
   quocTich: {
     type: String,
     require: [true, "Không thể bỏ trống quốc tịch"],
+    index: true,
   },
   tonGiao: {
     type: String,
     require: [true, "Không thể bỏ trống tôn giáo"],
+    index: true,
   },
-  soCCCD: {
-    type: String,
-  },
+  soCCCD: { type: String, index: true, unique: true, sparse: true },
   noiThuongTru: {
     type: String,
     require: [true, "Không thể bỏ trống nơi thường trú"],
@@ -100,12 +106,16 @@ const residentSchema = new mongoose.Schema({
   ngayKhai: {
     type: Date,
     default: new Date(),
+    index: true,
   },
   noiKhai: {
     type: String,
     require: [true, "Không thể bỏ trống nơi khai"],
+    index: true,
   },
 });
+// pre create
+residentSchema.post("save", postInsert);
 const Resident = mongoose.model("residents", residentSchema);
 
 module.exports = Resident;
