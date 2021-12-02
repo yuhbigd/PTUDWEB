@@ -403,7 +403,6 @@ deleteCountry = async (req, res) => {
     await updateAnalyticsAfterDelete(data);
     res.status(200).json({ message: "done" });
   } catch (error) {
-    console.log(error);
     res.status(400).json({ error: error.message });
   }
 };
