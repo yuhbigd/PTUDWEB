@@ -1,0 +1,53 @@
+#create-account {
+
+}
+
+#create-account .form-container {
+    padding: 16px 32px;
+    background-color: rgb(226, 226, 226);
+    margin-top: 16px;
+}
+
+#create-account .form-container div {
+    display: flex;
+    margin-bottom: 2px;
+}
+
+#create-account .input-title {
+    width: 100px;
+}
+
+#create-account span {
+    /* display: block; */
+}
+
+#create-account .input-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#create-account .error-container {
+    font-size: 1.1rem;
+    font-weight: 500;
+    height: 20px;
+}
+
+#create-account span.input-error {
+    color: rgb(199, 3, 3);
+}
+
+#create-account span.input-ok {
+    color: rgb(0, 175, 102);
+}
+
+#create-account .submit-container {
+    margin-top: 16px;
+    height: 32px;
+}
+
+#create-account .time-out-container {
+    margin-top: 16px;
+    height: 28px;
+}
+
+

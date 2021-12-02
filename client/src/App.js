@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import AppRouter from './routes/AppRouter'
 import NoteFoundPage from './pages/NoteFoundPage'
 
-
 const App = () => {
     return (
         <Router>

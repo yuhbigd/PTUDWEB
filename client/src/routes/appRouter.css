@@ -1,19 +1,142 @@
-#app-router {
-    display: flex;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root{
+    --top-nav-height: 56px;
+    --nav-item-gap: 20px;
+    --nav-margin-left: 60px;
+    --nav-text-color: rgb(196, 196, 196);
+}
+
+body, html {
+    padding: 0;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
 }
 
 .nav-bar-container {
     width: 200px;
 }
 
-.nav-bar {
+
+/* top nav */
+
+#top-nav {
+    width: 100%;
+    height: var(--top-nav-height);
+}
+
+#top-nav .top-nav-container {
+    background-color: black;
     position: fixed;
     top: 0;
     left: 0;
-    width: 200px;
+    height: var(--top-nav-height);
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    justify-content: space-around;
+    /* gap: 10px; */
 }
 
-.main-container {
-    width: 0;
-    flex: 1;
+#top-nav .app-nav {
+    margin-left: var(--nav-margin-left);
+    flex: 2.5;
+    display: flex;
+    align-items: center;
+    gap: var(--nav-item-gap);
 }
+
+#top-nav .user-nav {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 80px;
+}
+
+#top-nav .nav-app-item {
+    text-decoration: none;
+    color: var(--nav-text-color);
+}
+
+#top-nav .app-nav > div > span > a {
+    padding: 8px 16px; 
+    border-radius: 15px/20px;
+    transition: .1s ease-in-out;
+}
+
+#top-nav .app-nav > div > span > a:hover {
+    background-color: rgb(100, 100, 100);
+    color: white;
+}
+
+#top-nav .user-icon {
+    font-size: 3rem;
+    color: var(--nav-text-color);
+    transition: .1s ease-in-out;
+}
+
+#top-nav .user-icon:hover {
+    cursor: pointer;
+    color: white;
+}
+
+#top-nav .user-nav-container {
+    position: relative;
+}
+
+#top-nav ul.user-popup{
+    position: absolute;
+    right: -50%;
+    top: 40px;
+    list-style-type: none;
+    padding: 0;
+    background-color: white;
+    box-shadow: 0 0 4px 4px rgba(163, 163, 163, 0.7);
+    padding: 8px 0 16px 0; 
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-radius: 4px;
+    visibility: hidden;
+}
+
+#top-nav ul.user-popup.active {
+    visibility: visible;
+}
+
+#top-nav ul.user-popup div {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+#top-nav ul.user-popup li:hover {
+    background-color: rgb(247, 247, 247);
+    cursor: pointer;
+}
+
+#top-nav ul.user-popup li {
+    padding: 4px 16px;
+}
+
+#top-nav ul.user-popup .popup-title {
+    display: block;
+    flex: 1;
+    text-align: center;
+    font-weight: 600;
+}
+
+#top-nav .line-break {
+    width: 100%;
+    height: 1px;
+    background-color: rgb(214, 214, 214);
+}
+
+
+
+
+
+
+

@@ -14,6 +14,7 @@ const CreateUnit = () => {
     const isMounted = useMountedState()
     const [unitNameUpdate, setUnitNameUpdate] = useState(null)
     const [error, setError] = useState(['should not empty', 'should not empty'])
+    const [serverErr, setServerErr] = useState(null)
 
     const [request1, setRequest1] = useAsyncFn(async(name, code) => {
         const res = await fetch('http://localhost:3001/country/', {
@@ -48,13 +49,18 @@ const CreateUnit = () => {
     })
 
     const [request2, setRequest2] = useAsyncFn(async(id, name) => {
-        const res = await fetch('http://localhost:3001/country/', {
-            method: 'POST',
+        const res = await fetch(`http://localhost:3001/country/${id}`, {
+            method: 'PUT',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            credentials: 'include'
+            credentials: 'include',
+            body: JSON.stringify({
+                "data":{
+                    "name" : name
+                }
+            }),
         })
         const result = await res.text()
         return result
@@ -68,14 +74,54 @@ const CreateUnit = () => {
     }
 
     const handleUpdateName = (id, name) => {
-        setRequest2(id, name)
+        if(isMounted) {
+            setRequest2(id, unitNameUpdate)
+        }
     }
 
     useEffect(() => {
         if(request.value){
-            setUnit([...JSON.parse(request.value).data])
+            if(JSON.parse(request.value).error) {
+                setServerErr(JSON.parse(request.value).error)
+            }else {
+                setUnit([...JSON.parse(request.value).data])
+            }
         }
-    }, [request])
+    }, [request.value])
+
+    useEffect(() => {
+        // add to the unit
+        if(request1.value) {
+            setUnitName(null)
+            setUnitCode(null)
+            setError(['should not empty', 'should not empty'])
+            if(JSON.parse(request1.value).error) {
+                setServerErr(JSON.parse(request1.value).error)
+            }else {
+                setUnit([...unit, JSON.parse(request1.value).data].sort((a, b) => {
+                    return a.id - b.id
+                }))
+            }
+        }
+    }, [request1.value])
+
+    useEffect(() => {
+        if(request2.value) {
+           
+            const data = JSON.parse(request2.value).data
+            const temp = [...unit.filter((item) => {
+                return item.id !== data.id
+            }), data]
+            
+            setUnit([...temp].sort((a, b) => {
+                return a.id - b.id
+            }))
+            setUpdateUnit(null)
+            // reset create
+        }
+    }, [request2.value])
+
+    console.log(unitName, unitCode)
 
     useEffect(() => {
         if(isMounted) {
@@ -95,7 +141,6 @@ const CreateUnit = () => {
     const unitCodeOnchange = (e) => {
         setUnitCode(e.target.value)
         setError([error[0], e.target.value.length < 2 ? 'require 2 number' : null])
-
         unit.map((item, index) => {
             if(item.id === e.target.value){
                 setError([error[0], 'code duplicate'])
@@ -119,8 +164,6 @@ const CreateUnit = () => {
             e.target.value = e.target.value.slice(0, e.target.maxLength)
         }
     }
-
-    
 
     return (
         <div id='create-unit'>
@@ -212,7 +255,10 @@ const CreateUnit = () => {
                                                     <div>
                                                         <span className='input-title'>Tên đơn vị</span>
                                                         <div>
-                                                            <input type='text' onChange={(e) => setUnitNameUpdate(e.target.value)}></input>
+                                                            <input 
+                                                                type='text' 
+                                                                onChange={(e) => setUnitNameUpdate(e.target.value)}
+                                                            ></input>
                                                             <div className='error-container'>
                                                                 <span className='error-title'>
                                                                     {!unitNameUpdate ? 'should not be empty' : null}
@@ -222,11 +268,11 @@ const CreateUnit = () => {
                                                     </div>
                                                     <div>
                                                         <span className='input-title'>Mã đơn vị</span>
-                                                        <span className='input-title'>01</span>
+                                                        <span className='input-title'>{item.id}</span>
                                                     </div>
                                                     <div className='submit'>
                                                         {
-                                                            unitNameUpdate? <button onClick={(e) => handleUpdateName(e)} >cập nhật kết quả</button> : null
+                                                            unitNameUpdate? <button onClick={(e) => handleUpdateName(item.id, item.name)} >cập nhật kết quả</button> : null
                                                         }
                                                     </div>
                                                 </div>

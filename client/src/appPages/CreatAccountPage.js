@@ -1,9 +1,12 @@
 import React from 'react'
+import CreateAccount from './../components/createAccount/CreateAccount'
 
 const CreatAccountPage = () => {
     return (
         <div>
-            create account
+            <CreateAccount>
+                
+            </CreateAccount>
         </div>
     )
 }
