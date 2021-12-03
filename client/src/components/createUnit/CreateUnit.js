@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef} from 'react'
 import {useAsyncFn} from 'react-use'
 import {useMountedState} from 'react-use'
-import { useSelector } from 'react-redux'
 import './createUnit.css'
+import WarningModal from '../warningModal/WarningModal'
+import Loading from '../loading/Loading'
 
 const CreateUnit = () => {
     const [unitName, setUnitName] = useState(null)
@@ -10,11 +11,12 @@ const CreateUnit = () => {
     const [unit, setUnit] = useState([])
     const [addUnit, setAddUnit] = useState(false)
     const [updateUnit, setUpdateUnit] = useState(null)
-    const user = useSelector(state => state)
     const isMounted = useMountedState()
     const [unitNameUpdate, setUnitNameUpdate] = useState(null)
     const [error, setError] = useState(['should not empty', 'should not empty'])
     const [serverErr, setServerErr] = useState(null)
+    const [successLog, setSuccessLog] = useState(null)
+    const successRef = useRef(null)
 
     const [request1, setRequest1] = useAsyncFn(async(name, code) => {
         const res = await fetch('http://localhost:3001/country/', {
@@ -32,6 +34,10 @@ const CreateUnit = () => {
             credentials: 'include'
         })
         const result = await res.text()
+        if(JSON.parse(result).error) {
+            setServerErr(JSON.parse(result).error)
+            return
+        }
         return result
     })
 
@@ -45,6 +51,10 @@ const CreateUnit = () => {
             credentials: 'include'
         })
         const result = await res.text()
+        if(JSON.parse(result).error) {
+            setServerErr(JSON.parse(result).error)
+            return
+        }
         return result
     })
 
@@ -63,6 +73,10 @@ const CreateUnit = () => {
             }),
         })
         const result = await res.text()
+        if(JSON.parse(result).error) {
+            setServerErr(JSON.parse(result).error)
+            return
+        }
         return result
     })
 
@@ -70,44 +84,46 @@ const CreateUnit = () => {
         e.preventDefault()
         if(isMounted) {
             setRequest1(unitName, unitCode)
+            setSuccessLog(null)
         }
     }
 
     const handleUpdateName = (id, name) => {
         if(isMounted) {
             setRequest2(id, unitNameUpdate)
+            setSuccessLog(null)
         }
     }
 
     useEffect(() => {
+        if(successLog) {
+            successRef.current.classList.add('active')
+            setTimeout(() => {
+                successRef.current.classList.remove('active')
+            }, 3000)
+        }
+    }, [successLog])
+
+    useEffect(() => {
         if(request.value){
-            if(JSON.parse(request.value).error) {
-                setServerErr(JSON.parse(request.value).error)
-            }else {
-                setUnit([...JSON.parse(request.value).data])
-            }
+            setUnit([...JSON.parse(request.value).data])
         }
     }, [request.value])
 
     useEffect(() => {
-        // add to the unit
         if(request1.value) {
             setUnitName(null)
             setUnitCode(null)
             setError(['should not empty', 'should not empty'])
-            if(JSON.parse(request1.value).error) {
-                setServerErr(JSON.parse(request1.value).error)
-            }else {
-                setUnit([...unit, JSON.parse(request1.value).data].sort((a, b) => {
-                    return a.id - b.id
-                }))
-            }
-        }
+            setUnit([...unit, JSON.parse(request1.value).data].sort((a, b) => {
+                return a.id - b.id
+            }))
+            setSuccessLog('Thêm 1 đơn vị mới thành công')
+        }        
     }, [request1.value])
 
     useEffect(() => {
         if(request2.value) {
-           
             const data = JSON.parse(request2.value).data
             const temp = [...unit.filter((item) => {
                 return item.id !== data.id
@@ -117,11 +133,10 @@ const CreateUnit = () => {
                 return a.id - b.id
             }))
             setUpdateUnit(null)
-            // reset create
+            setSuccessLog('Cập nhật 1 đơn vị mới thành công')
         }
     }, [request2.value])
 
-    console.log(unitName, unitCode)
 
     useEffect(() => {
         if(isMounted) {
@@ -147,7 +162,6 @@ const CreateUnit = () => {
                 return
             }
         })
-        // setError([error[0], null])
     }
 
     const unitNameOnchange = (e) => {
@@ -165,126 +179,149 @@ const CreateUnit = () => {
         }
     }
 
+    const handleCloseUpdate = () => {
+        setUpdateUnit(null)        
+    }
+
     return (
         <div id='create-unit'>
-            <div>
-                <button onClick={() => {handleAddUnit()}}>
-                    them moi
-                </button>
-            </div>
             {
-                addUnit ?
+                !(request.value && !request.loading) ? <Loading></Loading> : 
+                <div>
                     <div className='form-container'>
                         <form onSubmit={(e) => submitForm(e)} className='create'>
-                            <div>
-                                <span className='input-title'>
-                                    Tên đơn vị
+                            <div className='form-title'>
+                                <span>
+                                    Thêm mới đơn vị
                                 </span>
-                                <div>
-                                    <input 
-                                        type='text' 
-                                        value={unitName ? unitName: ''} 
-                                        onChange={(e) => unitNameOnchange(e)}
-                                    ></input>
-                                    <div className='error-container'>
-                                        <span className='error-title'>
-                                            {error[0] ? error[0] : null}
-                                        </span>
+                            </div>
+                            <div className='input-content'> 
+                                <div className='input-wrapper'>
+                                    <span className='input-title'>
+                                        Tên đơn vị
+                                    </span>
+                                    <div>
+                                        <input 
+                                            type='text' 
+                                            value={unitName ? unitName: ''} 
+                                            onChange={(e) => unitNameOnchange(e)}
+                                        ></input>
+                                        <div className='error-container'>
+                                            <span className='error-title'>
+                                                {error[0] ? error[0] : null}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='input-wrapper'>
+                                    <span className='input-title'>
+                                        Mã đơn vị
+                                    </span>
+                                    <div>
+                                        <input 
+                                            className='code-input' 
+                                            type='number'
+                                            maxLength = '2' 
+                                            value={unitCode ? unitCode: ''} 
+                                            onChange={(e) => unitCodeOnchange(e)}
+                                            onInput={(e) => restrictMaxLength(e)}
+                                        ></input>
+                                        <div className='error-container'>
+                                            <span className='error-title'>
+                                                {error[1] ? error[1] : null}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div>
-                                <span className='input-title'>
-                                    Mã đơn vị
-                                </span>
-                                <div>
-                                    <input 
-                                        className='code-input' 
-                                        type='number'
-                                        maxLength = '2' 
-                                        value={unitCode ? unitCode: ''} 
-                                        onChange={(e) => unitCodeOnchange(e)}
-                                        onInput={(e) => restrictMaxLength(e)}
-                                    ></input>
-                                    <div className='error-container'>
-                                        <span className='error-title'>
-                                            {error[1] ? error[1] : null}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                            
                             <div className='submit'>
                                 {
-                                    !error[0] && !error[1] ? <button type='submit'>lưu kết quả</button> : null
+                                    !error[0] && !error[1] ? <button className='button-add' type='submit'>lưu kết quả</button> : null
                                 }
                             </div>
                         </form>
                     </div> 
-                    
-                :
-                null
-            }
-            <div>
-                <table className="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>ma</th>
-                            <th>ten</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                        {unit.map((item, index) => {
-                            return(
-                                <tbody key={index}>
-                                    <tr>
-                                        <td>{item.id}</td>
-                                        <td>{item.name}</td>
-                                        <td>
-                                            <button onClick={() => handleShowUpdate(index)}>
-                                                cap nhat
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        {index === updateUnit ? 
-                                            <td>
-                                                <div className='update-title'>
-                                                    <span>Cập nhật tên đơn vị</span>
-                                                </div>
-                                                <div className='update-input-container'>
-                                                    <div>
-                                                        <span className='input-title'>Tên đơn vị</span>
-                                                        <div>
-                                                            <input 
-                                                                type='text' 
-                                                                onChange={(e) => setUnitNameUpdate(e.target.value)}
-                                                            ></input>
-                                                            <div className='error-container'>
-                                                                <span className='error-title'>
-                                                                    {!unitNameUpdate ? 'should not be empty' : null}
-                                                                </span>
-                                                            </div>
+                    <div className='unit-table-container'>
+                        <div className='success-log' ref={successRef}>
+                            <span className='success-log-title'>
+                                {successLog}
+                            </span>
+                        </div>
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th>ma</th>
+                                    <th>ten</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                                {unit.map((item, index) => {
+                                    return(
+                                        <tbody key={index}>
+                                            <tr>
+                                                <td>{item.id}</td>
+                                                <td>{item.name}</td>
+                                                <td>
+                                                    <button className='update-button' onClick={() => handleShowUpdate(index)}>
+                                                        <i className='bx bx-pencil'></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                {index === updateUnit ? 
+                                                    <td colSpan='3' className='unit-update-wrapper'>
+                                                         <div className='close-update-button'>
+                                                            <button onClick={(e) => handleCloseUpdate(e)}>
+                                                                <i className='bx bxs-x-circle'></i>
+                                                            </button>
                                                         </div>
-                                                    </div>
-                                                    <div>
-                                                        <span className='input-title'>Mã đơn vị</span>
-                                                        <span className='input-title'>{item.id}</span>
-                                                    </div>
-                                                    <div className='submit'>
-                                                        {
-                                                            unitNameUpdate? <button onClick={(e) => handleUpdateName(item.id, item.name)} >cập nhật kết quả</button> : null
-                                                        }
-                                                    </div>
-                                                </div>
-                                            </td>  
-                                            : null
-                                        }
-                                    </tr>
-                                 </tbody>    
-                            )
-                        })}
-                </table> 
-            </div>
+                                                        <div>
+                                                            {/* <div className='update-title'>
+                                                                <span>Cập nhật tên đơn vị</span>
+                                                            </div> */}
+                                                            <div className='unit-update-content'>
+                                                                <div className='update-input-container'>
+                                                                    <div>
+                                                                        <span className='input-title'>Tên đơn vị</span>
+                                                                        <div>
+                                                                            <input 
+                                                                                type='text' 
+                                                                                onChange={(e) => setUnitNameUpdate(e.target.value)}
+                                                                            ></input>
+                                                                            <div className='error-container'>
+                                                                                <span className='error-title'>
+                                                                                    {!unitNameUpdate ? 'should not be empty' : null}
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div>
+                                                                        <span className='input-title'>Mã đơn vị</span>
+                                                                        <span className='input-title'>{item.id}</span>
+                                                                    </div>
+                                                                    <div className='submit'>
+                                                                        {
+                                                                            unitNameUpdate? <button className='button-add' onClick={(e) => handleUpdateName(item.id, item.name)} >cập nhật kết quả</button> : null
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </td>  
+                                                    : null
+                                                }
+                                            </tr>
+                                        </tbody>    
+                                    )
+                                })}
+                        </table> 
+                    </div>
+                </div>
+            }
+            
+            <WarningModal serverErr={serverErr} setServerErr={setServerErr}></WarningModal>
         </div>
     )
 }

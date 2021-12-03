@@ -1,6 +1,7 @@
 import React from 'react'
 import FileSaver from 'file-saver'
 import XLSX from 'xlsx'
+import './exportToExcel.css'
 
 const ExportToExcel = (props) => {
     const {csvData, fileName} = props
@@ -15,8 +16,11 @@ const ExportToExcel = (props) => {
     }
    
     return (
-        <div id='export-log-overlay'>
-           <button variant="warning" onClick={(e) => exportToCSV(csvData,fileName)}>Export</button>
+        <div id='export-excel'>
+           <button className='download' onClick={(e) => exportToCSV(csvData,fileName)}>
+                <i className='bx bx-down-arrow-alt'></i>
+               <span>Excel</span>
+           </button>
         </div>
     )
 }

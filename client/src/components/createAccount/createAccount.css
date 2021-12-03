@@ -1,17 +1,27 @@
 #create-account {
-
+    padding: 24px;
 }
 
 #create-account .form-container {
     padding: 16px 32px;
     background-color: rgb(226, 226, 226);
-    margin-top: 16px;
+    border-radius: 4px;
 }
 
-#create-account .form-container div {
+#create-account .form-container div ,
+#create-account .update-form-container div{
     display: flex;
     margin-bottom: 2px;
 }
+
+#create-account .update-form-container {
+    box-shadow: 0 0 3px 3px rgba(100, 100, 100, .5);
+    border-radius: 4px;
+    padding: 16px 32px;
+    background-color: white;
+}
+
+
 
 #create-account .input-title {
     width: 100px;
@@ -50,4 +60,87 @@
     height: 28px;
 }
 
+#create-account .update-button {
+    border: none;
+    padding: 4px 14px;
+    background-color: rgb(255, 164, 27);
+    border-radius: 3px;
+}
 
+#create-account .account-update-wrapper {
+    background-color: rgb(238, 236, 236);
+    padding: 12px;
+    position: relative;
+}
+
+#create-account .close-update-button {
+    position: absolute;
+    right: 16px;
+    top: 5%;
+    z-index: 9;
+}
+
+#create-account .close-update-button button{
+    border: none;
+    padding: 0;
+    background-color: transparent;
+}
+
+#create-account .close-update-button i {
+    font-size: 3rem;
+    color: black;
+    transition: .1s ease-in-out;
+}
+
+#create-account .close-update-button i:hover {
+    color: rgb(100, 100, 100);
+}
+
+#create-account .table-container {
+    margin-top: 32px;
+    box-shadow: 0 0 3px 3px rgba(100, 100, 100, .5);
+    border-radius: 4px;
+}
+
+#create-account .ok-button {
+    background-color: rgb(1, 145, 228);
+}
+
+#create-account .remove-button {
+    background-color: rgb(228, 137, 1);
+}
+
+#create-account .ok-button i,
+#create-account .remove-button i{
+    font-size: 1.6rem;
+}
+
+#create-account .remove-button,
+#create-account .ok-button{
+    outline: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    padding: 6px 12px;
+    border-radius: 4px;
+    width: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media only screen and (max-width: 800px) {
+    #create-account {
+        padding: 16px;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    #create-account {
+        padding: 8px;
+    }
+    #create-account .form-container div ,
+    #create-account .update-form-container div {
+        flex-direction: column;
+    }
+}

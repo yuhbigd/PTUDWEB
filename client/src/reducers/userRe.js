@@ -18,7 +18,14 @@ var userRe = (state = initialState, actions) => {
             }
             return {...state}
         case types.DROP_USER:
-            state = {}
+            state = {
+                auth: false
+            }
+            return {...state}
+        case types.SET_AUTH_FALSE:
+            state = {
+                auth: false
+            }
             return {...state}
         default:
             return {...state}

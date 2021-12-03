@@ -12,7 +12,7 @@ const MultiOption = (props) => {
         if(selectedUnit.length > 0) {
             console.log(selectedUnit.length)
             dispatch(actions.set_multi(selectedUnit))
-            navigate('/context')
+            navigate('/B1/charts')
         }
     }
 
@@ -27,9 +27,9 @@ const MultiOption = (props) => {
             <div className='option-button'>
                 <i className={selectedUnit.length ? 'bx bxs-bar-chart-alt-2' : 'bx bxs-bar-chart-alt-2 blur'}></i>
             </div>
-            <div>
+            <div className='select-title'>
                 <span>
-                    selected {selectedUnit.length ? ' (' + selectedUnit.length + ')' : ' '}
+                    {selectedUnit.length ? ' (' + selectedUnit.length + ')' : '()'}
                 </span>
             </div>
         </div>

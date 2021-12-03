@@ -6,6 +6,7 @@ import './createAccount.css'
 import moment from 'moment'
 import UpdateAccount from './UpdateAccount'
 import Loading from './../loading/Loading'
+import WarningModal from '../warningModal/WarningModal'
 
 const CreateAccount = () => {
     const [account, setAccount] = useState([])
@@ -45,6 +46,10 @@ const CreateAccount = () => {
             credentials: 'include'
         })
         const result = await res.text()
+        if(JSON.parse(result).error) {
+            setServerErr(JSON.parse(result).error)
+            return
+        }
         return result
     })
 
@@ -58,6 +63,10 @@ const CreateAccount = () => {
             credentials: 'include'
         })
         const result = await res.text()
+        if(JSON.parse(result).error) {
+            setServerErr(JSON.parse(result).error)
+            return
+        }
         return result
     })
 
@@ -71,16 +80,16 @@ const CreateAccount = () => {
             credentials: 'include'
         })
         const result = await res.text()
+        if(JSON.parse(result).error) {
+            setServerErr(JSON.parse(result).error)
+            return
+        }
         return result
     })
 
     useEffect(() => {
-        if(request.value) {
-            if(!JSON.parse(request.value).error){
-                setAccount([...JSON.parse(request.value).data])
-            }else {
-                setServerErr(JSON.parse(request.value).error)
-            }
+        if(request.value && isMounted) {
+            setAccount([...JSON.parse(request.value).data])
         }
     }, [request.value])
 
@@ -89,24 +98,17 @@ const CreateAccount = () => {
             setRequest2()
             setRequest()
         }
-    }, [user])
+    }, [])
 
     useEffect(() => {
-        if(request2.value) {
-            if(!JSON.parse(request2.value).error) {
-                setUnit([...JSON.parse(request2.value).data])
-            }else {
-                setServerErr(JSON.parse(request2.value).error)
-            }
+        if(request2.value && isMounted) {
+            setUnit([...JSON.parse(request2.value).data])
         }
     }, [request2.value])
 
     useEffect(() => {
-        if(request1.value) {
-            if(JSON.parse(request1.value).error) {                
-                setServerErr(JSON.parse(request1.value).error)
-            }else {
-                var temp 
+        if(request1.value && isMounted) {
+            var temp 
                 if(account.length) {
                     temp = [...account, JSON.parse(request1.value).user]
                 }else {
@@ -124,7 +126,6 @@ const CreateAccount = () => {
                 newState[5].isBanned = false
                 setNewAccount(newState)
                 setError(['require 2 number', 'should not be empty', 'should not be empty'])
-            }
         }
     }, [request1.value])
 
@@ -168,6 +169,7 @@ const CreateAccount = () => {
     const handleNameOnchange = (e) => {
         let newState = [...newAccount]
         newState[1].name = e.target.value
+
         setNewAccount(newState)
         if(e.target.value.length) {
             setError([error[0], null, error[2]])
@@ -219,13 +221,8 @@ const CreateAccount = () => {
 
     return (
         <div id='create-account'>
-            {request.loading || request1.loading || request2.loading ? <Loading></Loading> :         
+            { !(request2.value && !request2.loading) || !(request.value && !request.loading) ? <Loading></Loading> :         
                 <div>
-                    <div>
-                        <button>
-                            them moi
-                        </button>
-                    </div> 
                     <div className='form-container'>
                         <form>
                             <div>
@@ -292,12 +289,12 @@ const CreateAccount = () => {
                             </div>
                             <div>
                                 {!newAccount[4].isTimeout ? 
-                                    <button onClick={(e) => showSetTimeOut(e)}>
-                                        Thêm hiệu lực
+                                    <button className='ok-button' onClick={(e) => showSetTimeOut(e)}>
+                                        <i className='bx bx-plus'></i>{'  '}Thêm hiệu lực
                                     </button> 
                                 : 
-                                    <button onClick={(e) => showSetTimeOut(e)}>
-                                        Bỏ hiệu lực
+                                    <button className='remove-button' onClick={(e) => showSetTimeOut(e)}>
+                                        <i className='bx bx-minus'></i>{'  '}Bỏ hiệu lực
                                     </button> 
                                 }
                                 
@@ -320,20 +317,19 @@ const CreateAccount = () => {
                             </div>
                             <div className='submit-container'>
                                 {
-                                    !error[0] && !error[1] && !error[2] ?  <button onClick={(e) => handleSubmitAccount(e)} type="submit">Thêm mới</button> : null
+                                    !error[0] && !error[1] && !error[2] ?  <button className='ok-button' onClick={(e) => handleSubmitAccount(e)} type="submit">Thêm mới</button> : null
                                 }
                             </div>
                         </form>
                     </div>
-                    <div>
-                        <table className="table table-hover">
+                    <div className='table-container'>
+                        <table className="table">
                             <thead>
                                 <tr>
-                                    <th>Tên tài khoản</th>
+                                    <th>Tài khoản</th>
                                     <th>Tên</th>
-                                    <th>Cấp</th>
-                                    <th>Bị Cấm</th>
-                                    <th>Hết hiệu lực</th>
+                                    <th>Cấm</th>
+                                    <th>Hiệu lực</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -343,22 +339,20 @@ const CreateAccount = () => {
                                             <tr>
                                                 <td>{item.userName}</td>
                                                 <td>{item.name}</td>
-                                                <td>{item.tier}</td>
                                                 <td>{item.isBanned ? 'Cấm' : ''}</td>
                                                 <td>{item.userTimeOut ? moment(item.userTimeOut).utcOffset("+0700").format("HH:mm DD-MM-YYYY") : null}</td>
                                                 <td>
-                                                    <button onClick={() => handleShowUpdate(index)}>
-                                                        cap nhat
+                                                    <button className='update-button' onClick={() => handleShowUpdate(index)}>
+                                                        <i className='bx bx-pencil'></i>
                                                     </button>
                                                 </td>
                                             </tr>
                                             {isUpdateAccount === index ? 
                                                 <tr>
-                                                    
-                                                    <td colSpan='4'>
-                                                        <div>
+                                                    <td colSpan='6'className='account-update-wrapper'>
+                                                        <div className='close-update-button'>
                                                             <button onClick={(e) => handleCloseUpdate(e)}>
-                                                                Dong
+                                                                <i className='bx bxs-x-circle'></i>
                                                             </button>
                                                         </div>
                                                         <UpdateAccount setIsUpdateAccount={setIsUpdateAccount} currentAcc={item} account={account} setAccount={setAccount} setServerErr={setServerErr}></UpdateAccount>
@@ -373,6 +367,7 @@ const CreateAccount = () => {
                     </div>
             </div>  
             }
+            <WarningModal serverErr={serverErr} setServerErr={setServerErr}/>
         </div>
     )
 }
