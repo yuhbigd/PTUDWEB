@@ -38,7 +38,7 @@ const FadeInSection = (props) => {
                     {
                         !i[1] ? null :
                         <div className='chart-item'>   
-                            <ReactApexChart options={i[1].options} series={i[1].series} type={i[1].type} width={380} height={400} />
+                            <ReactApexChart options={i[1].options} series={i[1].series} type={i[1].type} width={i[1].type === 'radialBar' ? 280 : 380} height={i[1].type === 'radialBar' ? 350 : 400} />
                         </div>
                     }
             </div>  

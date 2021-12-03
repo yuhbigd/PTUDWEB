@@ -11,11 +11,12 @@ import ChartPage from '../appPages/ChartPage';
 
 const AppRouter = () => {
     const navigate = useNavigate()
-    const isMounted = useMountedState()
     const userPop = useRef(null)
     const [isPopup, setIsPopup] = useState(false)
     const dispatch = useDispatch()
+    const isMounted = useMountedState()
     const popupNav = useRef(null)
+
     const [loginRequest, setLoginRequest] = useAsyncFn(async() => {
         const res = await fetch('http://localhost:3001/login', {
             method: 'GET',
@@ -43,7 +44,7 @@ const AppRouter = () => {
     })
 
     useEffect(() => {
-        if(isMounted) {
+        if(isMounted()) {
             setLoginRequest()        
         }
     }, [])
@@ -55,9 +56,13 @@ const AppRouter = () => {
             if(JSON.parse(value).error) {
                 navigate('/login')
             }if(user) {
-                if(user.tier > 2 && isMounted) {
-                    dispatch(actions.set_user(user));
+                if(user.tier < 3) {                    
+                    const action= actions.set_user(user);
+                    dispatch(action);
+                }else {
+                    if(isMounted()) {
                         setLogOutRequest()
+                    }
                 }
             }
         }
@@ -72,17 +77,17 @@ const AppRouter = () => {
         setIsPopup(!isPopup)
     }
 
-    const handleLogOut = (e) => {
-        if(isMounted) {
-            setLogOutRequest()
-        }
-    }
-
     useEffect(() => {
         if(logOutRequest.value) {
             window.location.reload();
         } 
     }, [logOutRequest.value])
+    
+    const handleLogOut = (e) => {
+        if(isMounted()) {
+            setLogOutRequest()
+        }
+    }
 
     const handlePopupNav = () => {
         if(popupNav.current.classList.contains('active')) {

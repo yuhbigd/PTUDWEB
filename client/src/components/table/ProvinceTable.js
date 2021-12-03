@@ -42,7 +42,7 @@ const ProvinceTable = (props) => {
 
     useEffect(() => {
         const lastDir = props.dir[props.dir.length - 1]
-        if(isMounted && lastDir) {
+        if(isMounted() && lastDir) {
             setRequest(lastDir.id)
         }
     }, [props.dir])

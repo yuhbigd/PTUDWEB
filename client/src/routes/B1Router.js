@@ -9,6 +9,7 @@ import  './appRouter.css'
 import {useDispatch} from 'react-redux'
 import {useAsyncFn, useMountedState} from 'react-use'
 import ChartPage from '../appPages/ChartPage';
+import ManageCityzenPage from '../appPages/ManageCityzenPage';
 
 const B1Router = () => {
     const navigate = useNavigate()
@@ -45,7 +46,9 @@ const B1Router = () => {
     })
 
     useEffect(() => {
-        setLoginRequest()        
+        if(isMounted()) {
+            setLoginRequest()        
+        }
     }, [])
 
     useEffect(() => {
@@ -59,7 +62,9 @@ const B1Router = () => {
                     const action = actions.set_user(user);
                     dispatch(action);
                 }else {
-                    setLogOutRequest()
+                    if(isMounted()) {
+                        setLogOutRequest()
+                    }
                 }
             }
         }
@@ -81,7 +86,7 @@ const B1Router = () => {
     }, [logOutRequest.value])
     
     const handleLogOut = (e) => {
-        if(isMounted) {
+        if(isMounted()) {
             setLogOutRequest()
         }
     }
@@ -219,6 +224,7 @@ const B1Router = () => {
                     <Route path='/create-unit' element={<CreateUnitPage></CreateUnitPage>}></Route>
                     <Route path='/create-cityzen-info' element={<CreateCityZenPage></CreateCityZenPage>}></Route>
                     <Route path='/charts' element={<ChartPage></ChartPage>}></Route>
+                    <Route path='/manage-cityzen' element={<ManageCityzenPage></ManageCityzenPage>}></Route>
                 </Routes>
             </div>
         </div>

@@ -103,10 +103,10 @@ const CreateCityZen = () => {
                             </div>
                             <div className='group-input' onChange={(e) => handleRadioSelect(e)}>
                                 <div>
-                                    <input type="radio" value={'Nam'} name="gender"/> Nam
+                                    <input type="radio" value={'nam'} name="gender"/> Nam
                                 </div>
                                 <div>
-                                    <input type="radio" value={'Nữ'} name="gender"/> Nữ
+                                    <input type="radio" value={'nữ'} name="gender"/> Nữ
                                 </div>
                             </div>
                         </div>
@@ -193,7 +193,6 @@ const CreateCityZen = () => {
                         <div className='input-container'>
                             <div className='input-title-container'>
                                 <span>CCCD</span>
-                                <span className='star'>*</span>
                             </div>
                             <input 
                                 type='number'

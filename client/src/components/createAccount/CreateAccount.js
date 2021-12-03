@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import {useAsyncFn} from 'react-use'
-import {useMountedState} from 'react-use'
+import {useMountedState, useAsyncFn} from 'react-use'
 import './createAccount.css'
 import moment from 'moment'
 import UpdateAccount from './UpdateAccount'
@@ -18,7 +17,6 @@ const CreateAccount = () => {
         {isTimeout: false},
         {isBanned: false}
     ])
-
     const [error, setError] = useState(['require 2 number', 'should not be empty', 'should not be empty'])
     const [unit, setUnit] = useState([])
     const [targetUnit, setTargetUnit] = useState(null)
@@ -88,26 +86,31 @@ const CreateAccount = () => {
     })
 
     useEffect(() => {
-        if(request.value && isMounted) {
+        if(request.value && isMounted()) {
             setAccount([...JSON.parse(request.value).data])
         }
     }, [request.value])
 
     useEffect(() => {
-        if(isMounted) {
+        // console.log(user)
+        if(isMounted() && user) {
             setRequest2()
             setRequest()
         }
-    }, [])
+        return(() => {
+            setRequest2()
+            setRequest()
+        })
+    }, [user])
 
     useEffect(() => {
-        if(request2.value && isMounted) {
+        if(request2.value && isMounted()) {
             setUnit([...JSON.parse(request2.value).data])
         }
     }, [request2.value])
 
     useEffect(() => {
-        if(request1.value && isMounted) {
+        if(request1.value && isMounted()) {
             var temp 
                 if(account.length) {
                     temp = [...account, JSON.parse(request1.value).user]
@@ -204,7 +207,7 @@ const CreateAccount = () => {
 
     const handleSubmitAccount = (e) => {
         e.preventDefault()
-        if(isMounted) {
+        if(isMounted()) {
             setRequest1(newAccount[0].userName, newAccount[1].name, newAccount[2].password, newAccount[3].userTimeOut, newAccount[5].isBanned)
         }
     }

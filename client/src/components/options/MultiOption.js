@@ -1,18 +1,24 @@
 import React from 'react'
 import { useNavigate } from 'react-router'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector} from 'react-redux'
 import * as actions from './../../actions/index'
 import './multiOption.css'
 
 const MultiOption = (props) => {
     const {MultiOption, selectedUnit} = props
+    const user = useSelector(state => state.userRe)
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const handleContextOnclick = () => {
         if(selectedUnit.length > 0) {
-            console.log(selectedUnit.length)
             dispatch(actions.set_multi(selectedUnit))
-            navigate('/B1/charts')
+            if(user) {
+                if (user.user.tier < 3) {
+                    navigate('/A/charts')
+                }else{
+                    navigate('/B1/charts')
+                }
+            }
         }
     }
 

@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import './charts.css'
 import FadeInSection from './FadeInSection'
 import { useSelector } from 'react-redux'
+import { useMountedState } from 'react-use'
+import _ from 'lodash'
+import Loading from '../loading/Loading'
 
 // const line = {       
 //     series: [{
@@ -156,7 +159,6 @@ const agePieOptions = {
     }]
 }
 
-
 const marryBarOption = {
     chart: {
         type: 'basic-bar',
@@ -226,210 +228,208 @@ const marryRadialOption = {
     labels: ["Tỷ lệ ly hôn"]
 }
 
-var basicBar = {
-    series: [{
-        data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
-    }],
-    options: {
-        chart: {
-            type: 'basic-bar',
-            height: 350
-        },
-        plotOptions: {
-            bar: {
-                borderRadius: 4,
-                horizontal: false,
-            }
-        },
-        dataLabels: {
-            enabled: false
-            },
-        xaxis: {
-            categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan',
-                'United States', 'China', 'Germany'
-            ],
-        }
-    },
-};
-
-const nam = 8;
-const nu = 4;
-const sodan = 12;
-const kethon = 3;
-const chuakethon = 4;
-const lyhon = 5;
-const tu0_15 = 3;
-const tu16_64 = 4;
-const hon65 = 5;
-const dantoc = {
-    "kinh": 11,
-    "Hmong": 1
-};
-const tongiao = {
-    "Khong": 10,
-    "thienchua": 2 
-}
-const quoctich = {
-    "vietnam": 12,
-    "khac": 0
-}
-
 const Charts = () => {
     const data = useSelector(state => state.multiRe)
-    console.log(data)
+    const isMounted = useMountedState()
     const [proData, setProData] = useState({
-        nam: nam, nu: nu, sodan: sodan, kethon: kethon, 
-        chuakethon: chuakethon, lython: lyhon, dantoc: dantoc,
-        tongiao: tongiao, quoctich: quoctich, tu0_15: tu0_15, tu16_64: tu16_64,
-        hon65: hon65 
-    })
+        nam: 0, nu: 0, sodan: 0, kethon: 0, 
+        chuakethon: 0, lython: 0, dantoc: null,
+        tongiao: null, quoctich: null, tu0_15: 0, tu16_64: 0,
+        hon65: 0 
+    })    
     const [keyValue, setKeyValue] = useState(null)
     const [option, setOption] = useState(null)
     const [item, setItem] = useState([])
-
     useEffect(() => {
-        let tongiaoKey = []
-        let tongiaoValue = []
-        Object.keys(proData.tongiao).map((key) => {
-            tongiaoKey = [...tongiaoKey, key]
-            tongiaoValue = [...tongiaoValue, proData.tongiao[key]]
-        })
-        let dantocKey = []
-        let dantocValue = []
-        Object.keys(proData.dantoc).map((key) => {
-            dantocKey = [...dantocKey, key]
-            dantocValue = [...dantocValue, proData.dantoc[key]]
-        })
-        let quoctichKey = []
-        let quoctichValue = []
-        Object.keys(proData.quoctich).map((key) => {
-            quoctichKey = [...quoctichKey, key]
-            quoctichValue = [...quoctichValue, proData.quoctich[key]]   
-        })  
+        if(data.length){
+            let soNam = 0;
+            let soNu = 0;
+            let daKetHon = 0;
+            let chuaKetHon = 0;
+            let lyHon = 0;
+            let danToc = {};
+            let tonGiao = {};
+            let quocTich = {};
+            let nhoHon15 = 0;
+            let tu15_64 = 0;
+            let hon64 = 0;
+            let soDan = 0;
+            data.map((it, index) => {
+                if(Object.keys(it).length === 18) {
+                    soNam += it.soNam;
+                    soNu += it.soNu
+                    daKetHon += it.daKetHon
+                    chuaKetHon += it.chuaKetHon
+                    lyHon += it.lyHon
+                    nhoHon15 += it.nhoHon15
+                    tu15_64 += it.tu15_64
+                    hon64 += it.hon64
+                    soDan += it.soDan
+                    danToc = _.mergeWith(danToc, it.danToc, (a, b) => {
+                        if (_.every([a, b], _.isNumber)) return a + b;
+                    })
+                    tonGiao = _.mergeWith(tonGiao, it.tonGiao, (a, b) => {
+                        if (_.every([a, b], _.isNumber)) return a + b;
+                    })
+                    quocTich = _.mergeWith(quocTich, it.quocTich, (a, b) => {
+                        if (_.every([a, b], _.isNumber)) return a + b;
+                    })
+                }
+            })
+            setProData({
+                nam: soNam, nu: soNu, sodan: soDan, kethon: daKetHon, 
+                chuakethon: chuaKetHon, lython: lyHon, dantoc: danToc,
+                tongiao: tonGiao, quoctich: quocTich, tu0_15: nhoHon15, tu16_64: tu15_64,
+                hon65: hon64
+            })
+        }
+    },[data])
+    
+    useEffect(() => {
+        if(proData.tongiao) {
+            let tongiaoKey = []
+            let tongiaoValue = []
+            Object.keys(proData.tongiao).map((key) => {
+                tongiaoKey = [...tongiaoKey, key]
+                tongiaoValue = [...tongiaoValue, proData.tongiao[key]]
+            })
+            let dantocKey = []
+            let dantocValue = []
+            Object.keys(proData.dantoc).map((key) => {
+                dantocKey = [...dantocKey, key]
+                dantocValue = [...dantocValue, proData.dantoc[key]]
+            })
+            let quoctichKey = []
+            let quoctichValue = []
+            Object.keys(proData.quoctich).map((key) => {
+                quoctichKey = [...quoctichKey, key]
+                quoctichValue = [...quoctichValue, proData.quoctich[key]]   
+            })  
 
-        setKeyValue({
-            tongiaoKey: [...tongiaoKey],
-            tongiaoValue: [...tongiaoValue],
-            dantocKey: [...dantocKey],
-            dantocValue: [...dantocValue],
-            quoctichKey: [...quoctichKey],
-            quoctichValue: [...quoctichValue]
-        })
+            setKeyValue({
+                tongiaoKey: [...tongiaoKey],
+                tongiaoValue: [...tongiaoValue],
+                dantocKey: [...dantocKey],
+                dantocValue: [...dantocValue],
+                quoctichKey: [...quoctichKey],
+                quoctichValue: [...quoctichValue]
+            })
 
-        setOption({
-            tongiaoBarOptions:{
-                chart: {
-                    type: 'basic-bar',
-                    height: 350
-                },
-                plotOptions: {
-                    bar: {
-                        borderRadius: 4,
-                        horizontal: false,
-                    }
-                },
-                dataLabels: {
-                    enabled: false
-                    },
-                xaxis: {
-                    categories: [...tongiaoKey],
-                }
-            },
-            tongiaoPieOptions:{
-                chart: {
-                    width: 380,
-                    type: 'pie',
-                },
-                labels: [...tongiaoKey],
-                responsive: [{
-                    breakpoint: 480,
-                    options: {
+            setOption({
+                tongiaoBarOptions:{
                     chart: {
-                        width: 200
+                        type: 'basic-bar',
+                        height: 350
                     },
-                    legend: {
-                        position: 'bottom'
-                    }
-                    }
-                }]
-            },
-            ethnicBarOptions:{
-                chart: {
-                    type: 'basic-bar',
-                    height: 350
-                },
-                plotOptions: {
-                    bar: {
-                        borderRadius: 4,
-                        horizontal: true,
-                    }
-                },
-                dataLabels: {
-                    enabled: false
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 4,
+                            horizontal: false,
+                        }
                     },
-                xaxis: {
-                    categories: [...dantocKey],
-                }
-            },
-            ethnicPieOptions: {
-                chart: {
-                    width: 380,
-                    type: 'pie',
+                    dataLabels: {
+                        enabled: false
+                        },
+                    xaxis: {
+                        categories: [...tongiaoKey],
+                    }
                 },
-                labels: [...dantocKey],
-                responsive: [{
-                    breakpoint: 480,
-                    options: {
+                tongiaoPieOptions:{
                     chart: {
-                        width: 200
+                        width: 380,
+                        type: 'pie',
                     },
-                    legend: {
-                        position: 'bottom'
-                    }
-                    }
-                }]
-            },
-            nationBarOptions:{
-                chart: {
-                    type: 'basic-bar',
-                    height: 350
+                    labels: [...tongiaoKey],
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                        chart: {
+                            width: 200
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                        }
+                    }]
                 },
-                plotOptions: {
-                    bar: {
-                        borderRadius: 4,
-                        horizontal: false,
-                    }
-                },
-                dataLabels: {
-                    enabled: false
-                    },
-                xaxis: {
-                    categories: [...quoctichKey],
-                }
-            },
-            nationPieOptions: {
-                chart: {
-                    width: 380,
-                    type: 'pie',
-                },
-                labels: [...quoctichKey],
-                responsive: [{
-                    breakpoint: 480,
-                    options: {
+                ethnicBarOptions:{
                     chart: {
-                        width: 200
+                        type: 'basic-bar',
+                        height: 350
                     },
-                    legend: {
-                        position: 'bottom'
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 4,
+                            horizontal: true,
+                        }
+                    },
+                    dataLabels: {
+                        enabled: false
+                        },
+                    xaxis: {
+                        categories: [...dantocKey],
                     }
+                },
+                ethnicPieOptions: {
+                    chart: {
+                        width: 380,
+                        type: 'pie',
+                    },
+                    labels: [...dantocKey],
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                        chart: {
+                            width: 200
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                        }
+                    }]
+                },
+                nationBarOptions:{
+                    chart: {
+                        type: 'basic-bar',
+                        height: 350
+                    },
+                    plotOptions: {
+                        bar: {
+                            borderRadius: 4,
+                            horizontal: false,
+                        }
+                    },
+                    dataLabels: {
+                        enabled: false
+                        },
+                    xaxis: {
+                        categories: [...quoctichKey],
                     }
-                }]
-            }
-        })
+                },
+                nationPieOptions: {
+                    chart: {
+                        width: 380,
+                        type: 'pie',
+                    },
+                    labels: [...quoctichKey],
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                        chart: {
+                            width: 200
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                        }
+                    }]
+                }
+            })
+        }  
     }, [proData])
     
     useEffect(() => {
-        if(option) {
+        if(option && isMounted()) {
             setItem([
                 // nam nu
                 [
@@ -466,7 +466,6 @@ const Charts = () => {
         }
     }, [option])
     
-
     return (
         <div id='chart-session'>
             {
@@ -480,7 +479,7 @@ const Charts = () => {
                         })
                     }
                 </div>
-                :null
+                :<Loading></Loading>
             }
             
         </div>

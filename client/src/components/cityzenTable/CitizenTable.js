@@ -1,61 +1,32 @@
-import React from 'react'
-const cityzen = [
-    {
-        "id": 1,
-        "name": "nguyen van a",
-        "dob": "16/8/1002",
-        "gender": "male",
-        "note": "dep zai" 
-    },
-    {
-        "id": 1,
-        "name": "nguyen van a",
-        "dob": "16/8/1002",
-        "gender": "male",
-        "note": "dep zai" 
-    },
-    {
-        "id": 1,
-        "name": "nguyen van a",
-        "dob": "16/8/1002",
-        "gender": "male",
-        "note": "dep zai" 
-    },
-    {
-        "id": 1,
-        "name": "nguyen van a",
-        "dob": "16/8/1002",
-        "gender": "male",
-        "note": "dep zai" 
-    },      
-]
+import React, { useEffect, useState } from 'react'
+import './cityzenTable.css'
+import { useAsyncFn, useMountedState } from 'react-use'
+
 const CitizenTable = () => {
-    
+    const [serverErr, setServerErr] = useState(null)
+    const [people, setPeople] = useState([])
+    const [request, setRequest] = useAsyncFn(async(name, code) => {
+        const res = await fetch('http://localhost:3001/residents?detail=1', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        })
+        const result = await res.text()
+        return result
+    })
+
+    useEffect(() => {
+        setRequest()
+    }, [])
+
+    console.log(request)
     return (
-        <table className="table">
-            <thead>
-                <tr>
-                    <th>Mã</th>
-                    <th>tên</th>
-                    <th>ngày sinh</th>
-                    <th>giới tính</th>
-                    <th>Ghi chú</th>
-                </tr>
-            </thead>
-            <tbody>
-                {cityzen.map((item, index) => {
-                    return(
-                        <tr  key={index}>
-                            <td>{item.id}</td>
-                            <td>{item.name}</td>
-                            <td>{item.gender}</td>
-                            <td>{item.dob}</td>
-                            <td>{item.note}</td>
-                        </tr>
-                    )
-                })}
-            </tbody>
-        </table>
+        <div id='cityzen-table'>
+
+        </div>
     )
 }
 

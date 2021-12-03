@@ -82,14 +82,14 @@ const CreateUnit = () => {
 
     const submitForm = (e) => {
         e.preventDefault()
-        if(isMounted) {
+        if(isMounted()) {
             setRequest1(unitName, unitCode)
             setSuccessLog(null)
         }
     }
 
     const handleUpdateName = (id, name) => {
-        if(isMounted) {
+        if(isMounted()) {
             setRequest2(id, unitNameUpdate)
             setSuccessLog(null)
         }
@@ -105,13 +105,13 @@ const CreateUnit = () => {
     }, [successLog])
 
     useEffect(() => {
-        if(request.value){
+        if(request.value && isMounted()){
             setUnit([...JSON.parse(request.value).data])
         }
     }, [request.value])
 
     useEffect(() => {
-        if(request1.value) {
+        if(request1.value && isMounted()) {
             setUnitName(null)
             setUnitCode(null)
             setError(['should not empty', 'should not empty'])
@@ -123,7 +123,7 @@ const CreateUnit = () => {
     }, [request1.value])
 
     useEffect(() => {
-        if(request2.value) {
+        if(request2.value && isMounted()) {
             const data = JSON.parse(request2.value).data
             const temp = [...unit.filter((item) => {
                 return item.id !== data.id
@@ -139,8 +139,11 @@ const CreateUnit = () => {
 
 
     useEffect(() => {
-        if(isMounted) {
+        if(isMounted()) {
             setRequest()
+            return(() => {
+                setRequest()
+            })
         }
     },[])
 
