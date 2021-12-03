@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 import InfoLog from '../infoLog/InfoLog'
 import { useAsyncFn} from 'react-use'
 import {useMountedState} from 'react-use'
@@ -13,6 +13,12 @@ const ProvinceTable = (props) => {
     const [multiOption, setMultiOption] = useState(false)
     const [selectedUnit, setSelectedUnit] = useState([])
     const [serverErr, setServerErr] = useState(null)
+    const [searchSort, setSearchSort] = useState({
+        search: '',
+        sort: 1,
+        keySort: 'id'
+    })
+    const [showTableData, setShowTableData] = useState(province)
 
     const provinceOnclick = (id, index, e) => {
         if(province[index].id !== props.dir[props.dir.length-1].id && province[index].count) {
@@ -22,7 +28,6 @@ const ProvinceTable = (props) => {
     }
 
     const [request, setRequest] = useAsyncFn(async(id) => {
-    
         const res = await fetch(`http://localhost:3001/country/${id === 'root' ? '' : id}`, {
             method: 'GET',
             headers: {
@@ -37,7 +42,7 @@ const ProvinceTable = (props) => {
 
     useEffect(() => {
         const lastDir = props.dir[props.dir.length - 1]
-        if(isMounted && lastDir) {
+        if(isMounted() && lastDir) {
             setRequest(lastDir.id)
         }
     }, [props.dir])
@@ -69,12 +74,33 @@ const ProvinceTable = (props) => {
         if(multiOption) {
             setSelectedUnit([])
         }
-    }    
+    }   
+    
+    useEffect(() => {
+        setShowTableData([...province])
+    }, [province])
+
+    useEffect(() => {
+        setShowTableData([... province.filter((item) => {
+            return item.name.toLowerCase().includes(searchSort.search)
+        })])
+    },[searchSort])
+
+    const handleSearchOnchange = useCallback(
+        ({target:{name,value}}) => setSearchSort(state => ({ ...state, [name]:value }), [])
+    );
     
     return (
         <div id='unit-table-container'>
-            {request.loading ? <Loading></Loading>:
+            {!(request.value && !request.loading) ? <Loading></Loading>:
                 <div className='unit-table'>
+                    <div className='search-table-container'>
+                        <div>
+                            <i className='bx bx-search-alt'></i>
+                            <div className='break-icon-input'></div>
+                            <input type='text' placeholder='search' name='search' key='search' value={searchSort.search} onChange={handleSearchOnchange}></input>
+                        </div>           
+                    </div>
                     <div className='option-container'>
                         <div>
                             <ExportToExcel csvData={province} fileName={'this'}/>
@@ -89,15 +115,15 @@ const ProvinceTable = (props) => {
                             <thead>
                                 <tr>
                                     <th>Mã</th>
-                                    <th>tên</th>
-                                    <th>Đơn vị cấp dưới</th>
+                                    <th>Tên</th>
+                                    <th>Cấp dưới</th>
                                     <th></th>
                                     <th>
-                                        {multiOption ? 'multiselect': null}
+                                        {multiOption ? 'multi': null}
                                     </th>
                                 </tr>
                             </thead>
-                            {province.map((item, index) => {
+                            {showTableData.map((item, index) => {
                                 return(
                                     <tbody key={index}>
                                         <tr>
@@ -105,7 +131,9 @@ const ProvinceTable = (props) => {
                                             <td onClick={(e) => provinceOnclick(item.id, index, e)}>{item.name}</td>
                                             <td>{item.count}</td>
                                             <td>
-                                                <button onClick={(e) => buttonOnclick(item.id, index, e)}>Chi tiết</button>
+                                                <button className='more-button' onClick={(e) => buttonOnclick(item.id, index, e)}>
+                                                    <i className='bx bx-dots-horizontal-rounded'></i>    
+                                                </button>
                                             </td>
                                             <td>
                                                 {multiOption ? <input type='checkbox' value={item} onChange={(e) => {handleMultiOption(e, item)}}></input>: null}
@@ -113,7 +141,7 @@ const ProvinceTable = (props) => {
                                         </tr>
                                         <tr>
                                             {index === keyIndex ? 
-                                                <td colSpan="4"><InfoLog data={province[index]} setKeyIndex={setKeyIndex}></InfoLog></td>
+                                                <td colSpan="6"><InfoLog data={province[index]} setKeyIndex={setKeyIndex}></InfoLog></td>
                                             : null}
                                         </tr>
                                     </tbody>            

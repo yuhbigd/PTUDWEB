@@ -1,0 +1,52 @@
+#unit-info-container {
+    display: flex;
+    box-shadow: 0 0 3px 3px rgb(100, 100, 100, 0.6);
+    padding: 16px 8px;
+    flex-wrap: wrap;
+    position: relative;
+    gap: 0px 24px;
+    border-radius: 4px;
+}
+
+#unit-info-container .close-button {
+    position: absolute;
+    right: -4px;
+    top: 1%;
+}
+
+#unit-info-container .close-button i {
+    font-size: 3rem;
+    color: black;
+}
+
+#unit-info-container .close-button:hover i {
+    color: rgb(150, 150, 150);
+}
+
+#unit-info-container .info-item {
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    margin-top: 4px;
+}
+
+#unit-info-container span.item-title {
+    width: 100px;
+    display: block;
+}
+
+#unit-info-container button {
+    border: none;
+    background-color: transparent;
+}
+
+#unit-info-container .info-item span:nth-child(2) {
+    background-color: rgb(255, 131, 30);
+    display: block;
+    padding: 3px 16px;
+    border-radius: 4px;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 500;
+    height: 28px;
+}

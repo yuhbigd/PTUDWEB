@@ -1,0 +1,109 @@
+:root {
+    --modal-title-size: 2rem;
+    --warning-content-size: 1.4rem;
+    --padding-wrapper: 32px 48px;
+    --padding-bound: 48px 32px;
+    --modal-content-width: 280px
+}    
+    
+#warning-modal-overlay{
+    position: absolute;
+    z-index: 9;
+    background-color: transparent;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    visibility: hidden;
+    transition: .1s ease-in-out;
+}
+
+#warning-modal-overlay.active {
+    visibility: visible;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+#warning-modal-overlay .w-modal-container {
+    position: fixed;
+    padding: var(--padding-wrapper);
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 4px;
+    box-shadow: 0 0 3px 3px rgba(180, 180, 180, 0.3);
+    opacity: 0;
+    transition: .2s ease-in-out;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%) scale(0.86);
+    /* transform: scale(.86); */
+}
+
+#warning-modal-overlay.active .w-modal-container {
+    transform: scale(1) translateX(-50%) translateY(-50%);
+    opacity: 1;
+}
+
+
+#warning-modal-overlay .modal-bound {
+    border: 1px solid rgb(150, 150, 150);
+    padding: var(--padding-bound);
+    border-radius: 6px;
+}
+
+#warning-modal-overlay .ok-button{
+    padding: 8px 32px;
+    background-color: blue;
+    color: white;
+    border-radius: 18px/20px;
+}
+
+#warning-modal-overlay .ok-button:hover {
+    cursor: pointer;
+    background-color: rgb(43, 137, 245)
+}
+
+#warning-modal-overlay .modal-title {
+    font-size: var(--modal-title-size);
+    font-weight: 600;
+    color: black;
+}
+
+#warning-modal-overlay .w-modal-content {
+    width: var(--modal-content-width);
+}
+
+#warning-modal-overlay .w-modal-content span{
+    width: var(--modal-content-width);
+}
+
+#warning-modal-overlay .warning-content {
+    color: rgb(51, 51, 51);
+    font-size: var(--warning-content-size);
+    font-weight: 500;
+}
+
+@media only screen and (max-width: 700px) {
+    :root {
+        --modal-title-size: 1.6rem;
+        --warning-content-size: 1.2rem;
+        --padding-wrapper: 32px;
+        --padding-bound: 32px 12px;
+        --modal-content-width: 260px;
+    }  
+}
+
+@media only screen and (max-width: 400px) {
+    :root {
+        --modal-title-size: 1.6rem;
+        --warning-content-size: 1.2rem;
+        --padding-wrapper: 32px 16px;
+        --padding-bound: 32px 12px;
+        --modal-content-width: 240px;
+    }  
+}
+
+
+
+

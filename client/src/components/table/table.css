@@ -12,6 +12,8 @@
     color: blue;
     font-size: 1.3rem;
     font-weight: 500;
+    width: var(--explorer-line-break);
+    overflow: hidden;
 }
 
 .like-file-surf div:hover {
@@ -40,12 +42,14 @@ tbody {
 
 #app .option-container {
     width: 100%;
-    display: flex;
-    justify-content: flex-end;
+    margin-top: 32px;
 }
 
 #app .option-container > div {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 4px 0;
 }
 
 #app i {
@@ -79,5 +83,62 @@ tbody {
 #app .unit-table-container {
     position: relative;
 }
+
+#unit-table-container .search-table-container {
+    margin-bottom: 12px;
+}
+
+#unit-table-container .table-container {
+    box-shadow: 0 0 3px 3px rgba(151, 151, 151, 0.6);
+    border-radius: 4px;
+    margin-top: 16px;
+}
+
+#unit-table-container .table-container .more-button {
+    border: none;
+    border-radius: 4px;
+    background-color: rgb(32, 151, 255);
+    color: white;
+    padding: 4px 8px;
+}
+
+#unit-table-container .search-table-container > div {
+    display: flex;
+    align-items: center;
+    width: 300px;
+    padding: 4px 16px;
+    background-color: rgb(255, 255, 255); 
+    box-shadow: 0 0 3px 3px rgba(151, 151, 151, 0.6);
+    border-radius: 15px;
+    gap: 4px;
+}
+
+#unit-table-container .search-table-container i {
+    color: rgb(167, 167, 167);
+}
+
+#unit-table-container .search-table-container input {
+    outline: none;
+    border: none;
+    flex-grow: 1;
+    font-size: 1.5rem;
+}
+
+
+@media only screen and (max-width: 900px) {
+    :root {
+        --padding-exploreer: 0px;
+        --explorer-line-break: 85%;   
+        --app-padding: 12px 12px
+    }    
+}
+
+@media only screen and (max-width: 400px) {
+    :root {
+        --explorer-line-break: 100%;   
+    }    
+}
+
+
 
 

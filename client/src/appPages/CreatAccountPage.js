@@ -4,9 +4,7 @@ import CreateAccount from './../components/createAccount/CreateAccount'
 const CreatAccountPage = () => {
     return (
         <div>
-            <CreateAccount>
-                
-            </CreateAccount>
+            <CreateAccount></CreateAccount>
         </div>
     )
 }

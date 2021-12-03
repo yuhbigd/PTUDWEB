@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 
 const AuthRoute = (props) => {
     const Auth =  useSelector(state => state.userRe)
-    const redirect = Auth.auth && Auth.user
 
     if (true) {
         return <Outlet></Outlet>

@@ -3,13 +3,15 @@ import TablePage from '../appPages/TablePage';
 import { Link, Route, Routes, useNavigate} from 'react-router-dom'
 import CreateUnitPage from './../appPages/CreateUnitPage';
 import CreatAccountPage from '../appPages/CreatAccountPage';
-import { useDispatch } from 'react-redux';
-import {useMountedState, useAsyncFn} from 'react-use'
-import * as actions from '../actions/index'
+import CreateCityZenPage from '../appPages/CreateCityZenPage';
+import * as actions from './../actions/index'
 import  './appRouter.css'
+import {useDispatch} from 'react-redux'
+import {useAsyncFn, useMountedState} from 'react-use'
 import ChartPage from '../appPages/ChartPage';
+import ManageCityzenPage from '../appPages/ManageCityzenPage';
 
-const AppRouter = () => {
+const B1Router = () => {
     const navigate = useNavigate()
     const userPop = useRef(null)
     const [isPopup, setIsPopup] = useState(false)
@@ -56,8 +58,8 @@ const AppRouter = () => {
             if(JSON.parse(value).error) {
                 navigate('/login')
             }if(user) {
-                if(user.tier < 3) {                    
-                    const action= actions.set_user(user);
+                if(user.tier === 3) {                    
+                    const action = actions.set_user(user);
                     dispatch(action);
                 }else {
                     if(isMounted()) {
@@ -98,66 +100,72 @@ const AppRouter = () => {
     }
 
     return (
-       loginRequest.loading ? null :
-            <div id='main-container'>
-                <div id='top-nav'>
-                    <div className='top-nav-container'>
-                        <div className='app-nav'>
-                            <div>
-                                <span>
-                                    <Link to='/A' className='nav-app-item'>
-                                            Home  
-                                    </Link>
-                                </span>
-                            </div>
-                            <div>
-                                <span>
-                                    <Link to='/A/create-unit' className='nav-app-item'>
-                                        Đơn vị hành chính
-                                    </Link>
-                                </span>
-                            </div>
-                            <div>
-                                <span>
-                                    <Link to='/A/create-account' className='nav-app-item'>
-                                        Tài khoản
-                                    </Link>
-                                </span>
-                            </div>
+        <div id='main-container'>
+            <div id='top-nav'>
+                <div className='top-nav-container'>
+                    <div className='app-nav'>
+                        <div>
+                            <span>
+                                <Link to='/B1/' className='nav-app-item'>
+                                        Home  
+                                </Link>
+                            </span>
                         </div>
-                        <div className='user-nav'>
-                            <div className='user-nav-container'>
-                                <div className='user-icon' onClick={(e) => handleUserPopup(e)}>
-                                    <i className='bx bxs-user-circle'></i>
-                                </div>
-                                <ul className='user-popup' ref={userPop}>
-                                    <li>
-                                        <span className='popup-title'>USER</span>
-                                        <div className='line-break'></div>
-                                    </li>
-                                    <li onClick={(e) => {handleLogOut(e)}}>
-                                        <div>
-                                            <i className='bx bx-log-out'></i>
-                                            <span>logout</span>
-                                        </div> 
-                                    </li>
-                                    <li>
-                                        <div>
-                                            <i className='bx bxs-user-account' ></i>
-                                            <span>account</span>
-                                        </div>
-                                    </li>
-                                </ul>
+                        <div>
+                            <span>
+                                <Link to='/B1/create-unit' className='nav-app-item'>
+                                    Đơn vị hành chính
+                                </Link>
+                            </span>
+                        </div>
+                        <div>
+                            <span>
+                                <Link to='/B1/create-account' className='nav-app-item'>
+                                    Tài khoản
+                                </Link>
+                            </span>
+                        </div>
+                        <div>
+                            <span>
+                                <Link to='/B1/create-cityzen-info' className='nav-app-item'>
+                                    Người dân
+                                </Link>
+                            </span>
+                        </div>
+                    </div>
+                    <div className='user-nav'>
+                        <div className='user-nav-container'>
+                            <div className='user-icon' onClick={(e) => handleUserPopup(e)}>
+                                <i className='bx bxs-user-circle'></i>
                             </div>
+                            <ul className='user-popup' ref={userPop}>
+                                <li>
+                                    <span className='popup-title'>USER</span>
+                                    <div className='line-break'></div>
+                                </li>
+                                <li onClick={(e) => {handleLogOut(e)}}>
+                                    <div>
+                                        <i className='bx bx-log-out'></i>
+                                        <span>logout</span>
+                                    </div> 
+                                </li>
+                                <li>
+                                    <div>
+                                        <i className='bx bxs-user-account' ></i>
+                                        <span>account</span>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-                <div id='top-nav-mobile' ref={popupNav}>
+            </div>
+            <div id='top-nav-mobile' ref={popupNav}>
                     <div className='top-nav-mobile-container'>
                         <div className='redirect-button-container'>
                             <div>
                                 <span>
-                                    <Link to='/A' className='nav-app-item'>
+                                    <Link to='/B1' className='nav-app-item'>
                                         <i className='bx bxs-dashboard' ></i>
                                         Dashboard
                                     </Link>
@@ -165,7 +173,7 @@ const AppRouter = () => {
                             </div>
                             <div>
                                 <span>
-                                    <Link to='/A/create-unit' className='nav-app-item'>
+                                    <Link to='/B1/create-unit' className='nav-app-item'>
                                         <i className='bx bxs-city'></i>
                                         Đơn vị
                                     </Link>
@@ -173,7 +181,7 @@ const AppRouter = () => {
                             </div>
                             <div>
                                 <span>
-                                    <Link to='/A/create-account' className='nav-app-item'>
+                                    <Link to='/B1/create-account' className='nav-app-item'>
                                         <i className='bx bxs-user-account' ></i>   
                                         Tài khoản
                                     </Link>
@@ -196,7 +204,12 @@ const AppRouter = () => {
                                 </div>
                             </div>
                             <div>
-
+                                <span>
+                                    <Link to='/B1/create-cityzen-info' className='nav-app-item'>
+                                        <i className='bx bx-male'></i>
+                                        Người dân
+                                    </Link>
+                                </span>
                             </div>
                         </div>
                         <div className='nav-popup-button'  onClick={(e) => handlePopupNav(e)}>
@@ -204,16 +217,18 @@ const AppRouter = () => {
                         </div>
                     </div>
                 </div>
-                <div id='app-router'>
-                    <Routes>
-                        <Route path='/' element={<TablePage></TablePage>}></Route>
-                        <Route path='/create-account' element={<CreatAccountPage></CreatAccountPage>}></Route>
-                        <Route path='/create-unit' element={<CreateUnitPage></CreateUnitPage>}></Route>
-                        <Route path='/charts' element={<ChartPage></ChartPage>}></Route>
-                    </Routes>
-                </div>
-            </div>     
+            <div id='app-router'>
+                <Routes>
+                    <Route path='/' element={<TablePage></TablePage>}></Route>
+                    <Route path='/create-account' element={<CreatAccountPage></CreatAccountPage>}></Route>
+                    <Route path='/create-unit' element={<CreateUnitPage></CreateUnitPage>}></Route>
+                    <Route path='/create-cityzen-info' element={<CreateCityZenPage></CreateCityZenPage>}></Route>
+                    <Route path='/charts' element={<ChartPage></ChartPage>}></Route>
+                    <Route path='/manage-cityzen' element={<ManageCityzenPage></ManageCityzenPage>}></Route>
+                </Routes>
+            </div>
+        </div>
     )
 }
 
-export default AppRouter
+export default B1Router

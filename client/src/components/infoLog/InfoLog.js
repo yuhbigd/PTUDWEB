@@ -1,47 +1,62 @@
 import React, { useState } from 'react'
 import CityzenTable from './../cityzenTable/CitizenTable'
+import './infoLog.css'
 
 const InfoLog = (props) => {
-    const showCityzen = (id) => {
-        setAreaId(id)
-        setClose(null)
-    }   
-    const handleClose = (id) => {
-        setClose(id)
-        setAreaId(null)
-    }
-
+    const {data} = props
     const handleCloseInfo = () => {
         props.setKeyIndex(null)
     }
-
     const [areaId, setAreaId] = useState(null)
-    const [close, setClose] = useState(null)
     
     return (
-        <div>
+        <div id='unit-info-container'>
             <div>
-                <span>Ma</span>
-                <span>{props.data.id}</span>
+                <div className='info-item'>
+                    <span className='item-title'>Mã:</span>
+                    <span>{data.id}</span>
+                </div>
+                <div className='info-item'>
+                    <span className='item-title'>Tên:</span>
+                    <span>{data.name}</span>
+                </div>
+                <div className='info-item'>
+                    <span className='item-title'>ĐV Cấp dưới:</span>
+                    <span>{data.count? data.count : '0'}</span>
+                </div>
+                <div className='info-item'>
+                    <span className='item-title'>Tổng dân:</span>
+                    <span>{data.soDan}</span>
+                </div>
             </div>
             <div>
-                <span>Ten</span>
-                <span>{props.data.name}</span>
+                <div className='info-item'>
+                    <span className='item-title'>Số nam:</span>
+                    <span>{data.soNam}</span>
+                </div>
+                <div className='info-item'>
+                    <span className='item-title'>Số nữ:</span>
+                    <span>{data.soNu}</span>
+                </div>
+                <div className='info-item'>
+                    <span className='item-title'>(0-15):</span>
+                    <span>{data.nhoHon15}</span>
+                </div>
+                <div className='info-item'>
+                    <span className='item-title'>(15-64):</span>
+                    <span>{data.tu15_64}</span>
+                </div>
+                <div className='info-item'>
+                    <span className='item-title'> {'(>64)'}:</span>
+                    <span>{data.hon64}</span>
+                </div>
             </div>
-            <div>
-                <span>Tong</span>
-                <span>{props.data.count}</span>
-            </div>
-            <div>
-                <span>Ghi chu</span>
-                <span>tuyet voi</span>
-            </div>
-            <div>
+            <div className='close-button'>
                 <button onClick={() => {handleCloseInfo()}}> 
-                    dong
+                    <i className='bx bxs-x-circle'></i>
                 </button>
             </div>
-            <div>
+            {/* <div>
                 <button onClick={() => showCityzen(props.data.id)}>xem dan so</button>
                 {
                     areaId ? 
@@ -49,7 +64,7 @@ const InfoLog = (props) => {
                     :
                     null
                 }
-            </div>
+            </div> */}
             <div>
                 {
                     areaId === props.data.id ? <CityzenTable></CityzenTable>: null

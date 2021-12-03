@@ -19,7 +19,14 @@
 
 #option-button-container div > span {
     display: block;
-    width: 112px;
+}
+
+#option-button-container .select-title {
+    background-color: rgb(114, 158, 143);
+    border-radius: 8px;
+    color: white;
+    width: 60px;
+    text-align: center;
 }
 
 #option-button-container .blur{
