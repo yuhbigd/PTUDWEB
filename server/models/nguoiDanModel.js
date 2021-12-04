@@ -116,26 +116,10 @@ const residentSchema = new mongoose.Schema({
     index: true,
   },
 });
-async function checkPre(next) {
-  if (this.tenChuHo || this.quanHeVoiChuHo || this.soHoKhau) {
-    if (!this.tenChuHo || !this.quanHeVoiChuHo || !this.soHoKhau) {
-      throw new Error("phần hộ khẩu không thể bỏ trống");
-    }
+residentSchema.pre("save", async function (next) {
+  if (!this.honNhan) {
+    throw new Error("không thể bỏ trống ô hôn nhân");
   }
-  if (this.tenVoChong || this.cccdVoChong || this.quocTichVoChong) {
-    if (this.honNhan.normalize("NFC") === "chưa kết hôn".normalize("NFC")) {
-      throw new Error("Không thể chọn chưa kết hôn khi bạn đã có vợ/chồng");
-    }
-  }
-  let yearDiff = moment().diff(this.ngaySinh, "years", false);
-  if (
-    yearDiff < 15 &&
-    (this.honNhan.normalize("NFC") === "Đã kết hôn".normalize("NFC") ||
-      this.honNhan.normalize("NFC") === "Ly hôn".normalize("NFC"))
-  ) {
-    throw new Error("chưa được 15 tuổi kết hôn cái gì vậy trời");
-  }
-
   if (!this.hoTen.trim()) {
     throw new Error("không thể bỏ trống ô họ tên");
   }
@@ -161,12 +145,32 @@ async function checkPre(next) {
   this.quocTich = this.quocTich.trim();
   this.tonGiao = this.tonGiao.trim();
   this.noiThuongTru = this.noiThuongTru.trim();
+  if (this.tenChuHo || this.quanHeVoiChuHo || this.soHoKhau) {
+    if (!this.tenChuHo || !this.quanHeVoiChuHo || !this.soHoKhau) {
+      throw new Error("phần hộ khẩu không thể bỏ trống");
+    }
+  }
+  if (this.tenVoChong || this.cccdVoChong || this.quocTichVoChong) {
+    if (this.honNhan.normalize("NFC") === "chưa kết hôn".normalize("NFC")) {
+      throw new Error("Không thể chọn chưa kết hôn khi bạn đã có vợ/chồng");
+    }
+  }
+  let yearDiff = moment().diff(this.ngaySinh, "years", false);
+  if (
+    yearDiff < 18 &&
+    (this.honNhan.normalize("NFC") === "Đã kết hôn".normalize("NFC") ||
+      this.honNhan.normalize("NFC") === "Ly hôn".normalize("NFC"))
+  ) {
+    throw new Error("chưa được 18 tuổi kết hôn cái gì vậy trời");
+  }
+  if (yearDiff > 17) {
+    if (!this.soCCCD) {
+      throw new Error("18 tuổi trở lên thì phải có CCCD");
+    }
+  }
 
   next();
-}
-
-residentSchema.pre("save", checkPre);
-residentSchema.pre("findOneAndUpdate", checkPre);
+});
 // post create
 residentSchema.post("save", postInsert);
 const Resident = mongoose.model("residents", residentSchema);

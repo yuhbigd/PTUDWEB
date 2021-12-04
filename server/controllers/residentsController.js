@@ -272,6 +272,54 @@ getResident = async (req, res) => {
   }
 };
 
+function preUpdate(resident, data) {
+  if (data.ngaySinh || data.hoTen || data._id) {
+    throw new Error("Không thể cập nhật những trường này");
+  }
+  if (data.tenChuHo || data.quanHeVoiChuHo || data.soHoKhau) {
+    if (!(resident.tenChuHo && resident.quanHeVoiChuHo && resident.soHoKhau)) {
+      if (!data.tenChuHo || !data.quanHeVoiChuHo || !data.soHoKhau) {
+        throw new Error("phần hộ khẩu không thể bỏ trống");
+      }
+    }
+  }
+  if (data.tenVoChong || data.cccdVoChong || data.quocTichVoChong) {
+    if (data.honNhan) {
+      if (
+        resident.honNhan.normalize("NFC") === "Chưa kết hôn".normalize("NFC") &&
+        data.honNhan !== "chưa kết hôn"
+      ) {
+        let yearDiff = moment().diff(resident.ngaySinh, "years", false);
+        if (yearDiff < 18) {
+          if (
+            data.honNhan.normalize("NFC") !== "Chưa kết hôn".normalize("NFC")
+          ) {
+            throw new Error("chưa được 18 tuổi kết hôn cái gì vậy trời");
+          }
+        }
+      } else if (data.honNhan === "Đã kết hôn") {
+        if (!data.tenVoChong || !data.cccdVoChong || !data.quocTichVoChong) {
+          throw new Error("Hãy nhập đủ các trường liên quan đến kết hôn");
+        }
+      }
+    } else {
+      let yearDiff = moment().diff(resident.ngaySinh, "years", false);
+      if (yearDiff < 18) {
+        throw new Error("chưa được 18 tuổi kết hôn cái gì vậy trời");
+      }
+      if (resident.data === "Đã kết hôn") {
+        if (!data.tenVoChong || !data.cccdVoChong || !data.quocTichVoChong) {
+          throw new Error("Hãy nhập đủ các trường liên quan đến kết hôn");
+        }
+      } else if (resident.data === "Ly hôn") {
+        if (data.tenVoChong || data.cccdVoChong || data.quocTichVoChong) {
+          throw new Error("Ly hôn thì cập nhật làm gì vậy?");
+        }
+      }
+    }
+  }
+}
+
 putResident = async (req, res) => {
   try {
     const user = req.user;
@@ -329,6 +377,7 @@ putResident = async (req, res) => {
     if (!resident) {
       throw new Error("id không chính xác");
     }
+    preUpdate(resident, data);
     let dataNeedToRemove = getDataNeedToRemove([resident])[resident.noiKhai];
     const newResident = await Resident.findOneAndUpdate(
       {
