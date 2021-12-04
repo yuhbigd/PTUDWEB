@@ -1,5 +1,5 @@
 #create-unit {
-    padding: 24px;
+    padding: var(--app-padding);
 }
 
 input::-webkit-outer-spin-button,

@@ -1,7 +1,7 @@
 :root {
     --padding-exploreer: 40px;
     --explorer-line-break: 60%;   
-    --app-padding: 24px 24px
+    --app-padding: 56px 72px
 }
 
 .like-file-surf {
@@ -129,13 +129,14 @@ tbody {
     :root {
         --padding-exploreer: 0px;
         --explorer-line-break: 85%;   
-        --app-padding: 12px 12px
+        --app-padding: 12px 32px
     }    
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 600px) {
     :root {
-        --explorer-line-break: 100%;   
+        --explorer-line-break: 100%;
+        --app-padding: 12px 12px
     }    
 }
 

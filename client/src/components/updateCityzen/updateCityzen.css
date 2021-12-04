@@ -1,0 +1,122 @@
+#update-cityzen {
+    padding: 32px 16px;
+}
+
+#update-cityzen span{
+    color: rgb(119, 119, 119); 
+}
+
+#update-cityzen .input-container span{
+    display: block;
+}
+
+#update-cityzen .private-information-input,
+#update-cityzen .parent-information-input,
+#update-cityzen .relate-information-input{
+    display: flex;
+    gap: 24px;
+    padding: 8px 16px 32px 16px;
+}
+
+#update-cityzen .private-information .column,
+#update-cityzen .parent-information .column,
+#update-cityzen .relate-information .column{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+#update-cityzen .input-container > input[type='text'],
+#update-cityzen .input-container > input[type='number']{
+    width: 100%;
+    height: 36px;
+    outline: none;
+    border: 1px solid rgb(158, 158, 158);
+    border-radius: 3px;
+}
+
+#update-cityzen .input-container .other-nat-container {
+    height: 26px;
+}
+
+#update-cityzen input[type='date'] {
+    outline: none;
+    border: 1px solid rgb(158, 158, 158);
+    border-radius: 3px;
+    height: 36px;
+    width: 50%;
+}
+
+#update-cityzen .private-information,
+#update-cityzen .parent-information,
+#update-cityzen .relate-information{
+    box-shadow: 0 0 3px 3px rgba(150, 150, 150, 0.5);
+    border-radius: 4px;
+    margin-bottom: 36px;
+}
+
+#update-cityzen .header-container {
+    padding: 4px 16px;
+    background-color: rgb(3, 122, 190);
+    border-radius: 4px 4px 0 0;
+
+}
+
+#update-cityzen .header-container span {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 300;
+}
+
+
+#update-cityzen .input-container > input[type='text']:focus {
+    border: 1px solid blue;
+}
+
+#update-cityzen .group-input {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 32px;
+    min-height: 36px;
+}
+
+#update-cityzen .group-input input[type='text'] {
+    outline: none;
+    border: none;
+    border-bottom: 1px solid rgb(158, 158, 158);
+    width: 100%;
+}
+
+#update-cityzen .group-input input[type='text']:focus{
+    border-bottom: 1px solid blue;
+}
+
+#update-cityzen .input-title-container {
+    display: flex;
+    gap: 3px;
+}
+
+#update-cityzen .star {
+    color: red;
+}
+
+#update-cityzen .submit-button {
+    padding: 8px 16px;
+    background-color: rgb(59, 121, 255);
+    color: white;
+    font-weight: 500;
+    border-radius: 4px;
+}
+
+#update-cityzen .submit-button:hover {
+    background-color: rgb(129, 168, 253);
+}
+
+@media only screen and (max-width: 800px) {
+    #update-cityzen .private-information-input,
+    #update-cityzen .parent-information-input,
+    #update-cityzen .relate-information-input {
+        flex-direction: column;
+    }  
+}

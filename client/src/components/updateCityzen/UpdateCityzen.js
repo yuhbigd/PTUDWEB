@@ -1,9 +1,10 @@
 import React, { useCallback, useState, useEffect} from 'react'
-import './createCityZen.css'
+import './updateCityzen.css'
+import moment from 'moment'
 import { useAsyncFn, useMountedState } from 'react-use'
 
-const Create = (props) => {
-    const [serverErr, setServerErr] = useState(null)
+const UpdateCityzen = (props) => {
+    const {cityzenItem, setServerErr} = props
     const isMounted = useMountedState()
     const[cityzen, setCityZen] = useState({
         name: '', // city zen name
@@ -34,9 +35,9 @@ const Create = (props) => {
         withOwner: '',
     })
 
-    const [request, setRequest] = useAsyncFn(async(item) => {
-        const res = await fetch(`http://localhost:3001/residents`, {
-            method: 'POST',
+    const [request, setRequest] = useAsyncFn(async(_id, item) => {
+        const res = await fetch(`http://localhost:3001/residents/${_id}`, {
+            method: 'PUT',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -84,6 +85,39 @@ const Create = (props) => {
         return result
     })
 
+    useEffect(() => {
+        if(cityzenItem) {
+            setCityZen({
+                name: cityzenItem.hoTen, // city zen name
+                dob: moment(cityzenItem.ngaySinh).utcOffset("+0700").format("YYYY-MM-DD"),  // date of birth
+                bloodg: cityzenItem.nhomMau, // nhóm máu
+                gender: cityzenItem.gioiTinh, //giới tính
+                marry: cityzenItem.honNhan, // tình trạng kết hôn
+                bornRegister: cityzenItem.noiDangKyKhaiSinh, //nơi đăng ký khai sinh
+                hometown: cityzenItem.queQuan, // quê quán 
+                ethnic: cityzenItem.danToc, //dân tộc
+                nationality: cityzenItem.quocTich === 'Việt Nam' ? cityzenItem.quocTich : '', //quốc tịch việt nam, nếu khác ghi bên cạnh
+                othderNationality: cityzenItem.quocTich !== 'Việt Nam' ? '' : cityzenItem.quocTich,
+                iden: cityzenItem.soCCCD ? cityzenItem.soCCCD : '',
+                resident: cityzenItem.noiThuongTru, //nơi thường chú
+                curentRes: cityzenItem.noiOHienTai, // nơi ở hiện tại
+                dadName: cityzenItem.tenCha, // tên cha
+                tonGiao: cityzenItem.tonGiao,
+                dadIden: cityzenItem.soCCCDCha, // cccd
+                dadNat: cityzenItem.quocTichCha === 'Việt Nam' ? cityzenItem.quocTichCha : '',
+                dadOtherNat: cityzenItem.quocTichCha !== 'Việt Nam' ? '' : cityzenItem.quocTichCha,  // quốc tịch cha
+                momNat: cityzenItem.quocTichMe === 'Việt Nam' ? cityzenItem.quocTichMe : '',
+                momOtherNat: cityzenItem.quocTichMe !== 'Việt Nam' ? '': cityzenItem.quocTichMe,
+                momName: cityzenItem.tenMe,
+                momIden: cityzenItem.soCCCDMe,
+                ownerName: cityzenItem.tenChuHo,
+                resNumber: cityzenItem.soHoKhau,
+                ownerIden: cityzenItem.cccdDaiDienHopPhap,
+                withOwner: cityzenItem.quanHeVoiChuHo,      
+            })
+        }
+    }, [cityzenItem])            
+
     const textInputOnChange = useCallback(
         ({target:{name,value}}) => setCityZen(state => ({ ...state, [name]:value }), [])
     );
@@ -97,47 +131,15 @@ const Create = (props) => {
     }, [cityzen.nationality]) 
 
     const handleSubmitButton = () => {
-        setRequest(cityzen)
-        console.log(cityzen)
+        setRequest(cityzenItem._id, cityzen)
     }    
 
-    console.log(request)
-
     useEffect(() => {
-        if(request.value) {
-            setCityZen({
-                name: '', // city zen name
-                dob: '',  // date of birth
-                bloodg: '', // nhóm máu
-                gender: '', //giới tính
-                marry: '', // tình trạng kết hôn
-                bornRegister: '', //nơi đăng ký khai sinh
-                hometown: '', // quê quán 
-                ethnic: '', //dân tộc
-                nationality: '', //quốc tịch việt nam, nếu khác ghi bên cạnh
-                othderNationality: '',
-                iden: '',
-                resident: '', //nơi thường chú
-                curentRes: '', // nơi ở hiện tại
-                dadName: '', // tên cha
-                tonGiao:'',
-                dadIden: '', // cccd
-                dadNat: '', // quốc tịch cha
-                momNat: '',
-                momOtherNat: '',
-                dadOtherNat: '',
-                momName: '',
-                momIden: '',
-                ownerName: '',
-                resNumber: '',
-                ownerIden: '',
-                withOwner: '',
-            })
-        }
+        console.log(request)
     }, [request])
 
     return (
-        <div id='create-cityzen'>
+        <div id='update-cityzen'>
             <div className='private-information'>
                 <div className='header-container'>
                     <span>Thông tin cá nhân</span>
@@ -211,13 +213,13 @@ const Create = (props) => {
                             <span>Tình trạng hôn nhân</span>
                             <div className='group-input' >
                                 <div>
-                                    <input type="radio" onChange={(e) => handleRadioSelect(e)} value={'Đã kết hôn'} checked={'Đã kết hôn' === cityzen.marry} name="marry"/> Đã kết hôn
+                                    <input type="radio" onChange={(e) => handleRadioSelect(e)} value="Đã kết hôn" checked={'Đã kết hôn' === cityzen.marry} name="marry"/> Đã kết hôn
                                 </div>
                                 <div>
-                                    <input type="radio" onChange={(e) => handleRadioSelect(e)} value={'Chưa kết hôn'}  checked={'Chưa kết hôn' === cityzen.marry} name="marry"/> Chưa kết hôn
+                                    <input type="radio" onChange={(e) => handleRadioSelect(e)} value="Chưa kết hôn"  checked={"Chưa kết hôn" === cityzen.marry} name="marry"/> Chưa kết hôn
                                 </div>
                                 <div>
-                                    <input type="radio" onChange={(e) => handleRadioSelect(e)} value={'Ly hôn'}  checked={'Ly hôn' === cityzen.marry} name="marry"/> Ly hôn
+                                    <input type="radio" onChange={(e) => handleRadioSelect(e)} value="Ly hôn"  checked={"Ly hôn" === cityzen.marry} name="marry"/> Ly hôn
                                 </div>
                             </div>
                         </div>
@@ -534,4 +536,4 @@ const Create = (props) => {
     )
 }
 
-export default Create
+export default UpdateCityzen
