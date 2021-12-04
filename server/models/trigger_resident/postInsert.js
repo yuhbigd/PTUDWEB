@@ -20,25 +20,7 @@ let pickedArray = [
   "nhomMau",
 ];
 async function postInsert(doc) {
-  if (doc.tenChuHo || doc.quanHeVoiChuHo || doc.soHoKhau) {
-    if (!doc.tenChuHo || !doc.quanHeVoiChuHo || !doc.soHoKhau) {
-      throw new Error("phần hộ khẩu không thể bỏ trống");
-    }
-  }
-  if (doc.tenVoChong || doc.cccdVoChong || doc.quocTichVoChong) {
-    if (doc.honNhan.normalize("NFC") === "chưa kết hôn".normalize("NFC")) {
-      throw new Error("Không thể chọn chưa kết hôn khi bạn đã có vợ/chồng");
-    }
-  }
-  let yearDiff = moment().diff(doc.ngaySinh, "years", false);
-  if (
-    yearDiff < 15 &&
-    (doc.honNhan.normalize("NFC") === "Đã kết hôn".normalize("NFC") ||
-      doc.honNhan.normalize("NFC") === "Ly hôn".normalize("NFC"))
-  ) {
-    throw new Error("chưa được 15 tuổi kết hôn cái gì vậy trời");
-  }
-
+  let yearDiff = moment().diff(this.ngaySinh, "years", false);
   const noiKhai = doc.noiKhai;
   const xaId = noiKhai.slice(0, -2);
   const huyenId = noiKhai.slice(0, -4);
