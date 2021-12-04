@@ -15,7 +15,13 @@ export const set_user = (user) => {
     }
 }
 
-export const drop_user = (user) => {
+export const set_user_auth_false = () => {
+    return {
+        type: types.SET_AUTH_FALSE
+    }
+}
+
+export const drop_user = () => {
     return {
         type: types.DROP_USER
     }

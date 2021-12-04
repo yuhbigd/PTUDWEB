@@ -6,7 +6,6 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Login = (props) => {
-
     const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -40,12 +39,17 @@ const Login = (props) => {
     const value = loginRequest.value;
     if (value) {
       const user = JSON.parse(value).user;
-      if (user) {
-        console.log(user)
-        const action = actions.set_user(user);
-        dispatch(action);
-        navigate("/app");
-      }
+        if (user) {
+            const action = actions.set_user(user);
+            dispatch(action);
+            if(user.tier < 3) {
+                navigate("/A");
+            }else if(user.tier === 3) {
+                navigate("/B1")
+            }else {
+                navigate("/B2")
+            }
+        }
     }
   }, [loginRequest]);
 

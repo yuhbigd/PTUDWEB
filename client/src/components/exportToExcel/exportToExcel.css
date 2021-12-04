@@ -1,0 +1,10 @@
+#export-excel .download{
+    border: none;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+#export-excel .download:hover span{
+    text-decoration: underline;
+}

@@ -1,0 +1,44 @@
+#chart-session {
+    padding: 16px;
+}
+
+#chart-session .charts-group{
+    display: flex;
+    box-shadow: 0 0 3px 3px rgb(100, 100, 100, 0.5);
+    flex-wrap: wrap;
+    border-radius: 4px;
+    opacity: 1;
+}
+
+#chart-session .chart-item{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+#fade-in-section {
+    margin-top: 32px;
+    opacity: 0;
+    transform: translate(0, 50px);
+    visibility: hidden;
+    transition: opacity 900ms ease-in-out, transform 900ms ease-out;
+    will-change: opacity, visibility;
+}
+
+#fade-in-section.is-visible {
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+}
+
+#fade-in-section .title {
+    font-size: 1.6rem;
+    font-weight: 500;
+}
+
+@media only screen and (max-width: 600px) {
+    #chart-session .charts-group {
+        flex-direction: column;
+    }
+}
+

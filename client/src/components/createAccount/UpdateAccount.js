@@ -30,6 +30,10 @@ const UpdateAccount = (props) => {
             credentials: 'include'
         })
         const result = await res.text()
+        if(JSON.parse(result).error) {
+            setServerErr(JSON.parse(result).error)
+            return
+        }
         return result
     })
 
@@ -74,21 +78,16 @@ const UpdateAccount = (props) => {
 
     useEffect(() => {
         if(request.value){
-            if(JSON.parse(request.value).error) {
-                setServerErr(JSON.parse(request.value).error)
-            }else {
-                // add vao cai ACcoount va sort
-                const acc = JSON.parse(request.value).user
-                const temp = [acc, ...account.filter((item) => { return item.userName !== currentAcc.userName})]
-                setAccount(temp.sort((a, b) => (a.userName - b.userName)))
+            const acc = JSON.parse(request.value).user
+            const temp = [acc, ...account.filter((item) => { return item.userName !== currentAcc.userName})]
+            setAccount(temp.sort((a, b) => (a.userName - b.userName)))
 
-                setIsUpdateAccount(null)
-            }
+            setIsUpdateAccount(null)
         }
     }, [request.value])
 
     return (
-       <div className='form-container'>
+       <div className='update-form-container'>
             <form onSubmit={(e) => handleSubmitAcc(e)}>
                 <div>
                     <span className='input-title'>
@@ -152,7 +151,7 @@ const UpdateAccount = (props) => {
                 <div className='submit-container'>
                     {
                         newAccount[0].name && newAccount[1].password ?
-                            <button type='submit'>
+                            <button className='ok-button' type='submit'>
                                 lưu
                             </button>
                         : null

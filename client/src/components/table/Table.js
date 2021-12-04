@@ -3,7 +3,6 @@ import ProvinceTable from './ProvinceTable';
 import RenderDir from './RenderDir';
 import './table.css'
 import { useSelector } from 'react-redux';
-import Loading from '../loading/Loading';
 
 const Table = () => {
     const user = useSelector (state => state.userRe)
