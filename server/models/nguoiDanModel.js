@@ -116,7 +116,7 @@ const residentSchema = new mongoose.Schema({
     index: true,
   },
 });
-residentSchema.pre("save", async function (next) {
+async function checkPre(next) {
   if (this.tenChuHo || this.quanHeVoiChuHo || this.soHoKhau) {
     if (!this.tenChuHo || !this.quanHeVoiChuHo || !this.soHoKhau) {
       throw new Error("phần hộ khẩu không thể bỏ trống");
@@ -163,7 +163,10 @@ residentSchema.pre("save", async function (next) {
   this.noiThuongTru = this.noiThuongTru.trim();
 
   next();
-});
+}
+
+residentSchema.pre("save", checkPre);
+residentSchema.pre("findOneAndUpdate", checkPre);
 // post create
 residentSchema.post("save", postInsert);
 const Resident = mongoose.model("residents", residentSchema);
