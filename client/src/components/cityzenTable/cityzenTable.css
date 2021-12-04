@@ -1,0 +1,230 @@
+#cityzen-table {
+    padding: var(--app-padding)
+}
+
+#cityzen-table .table {
+    box-shadow: 0 0 4px 4px rgba(134, 134, 134, 0.6);
+    border-radius: 4px;
+    margin-top: 24px;
+}
+
+#cityzen-table button {
+    outline: none;
+    border: none;
+    background-color: transparent;
+}
+
+#select-option .select-option,
+#select-option .direct-option
+{
+    position: relative;
+}
+
+#select-option .popup-select {
+    position: absolute;
+    z-index: 9;
+    background-color: white;
+    left: 50%;
+    box-shadow: 0 0 4px 4px rgba(134, 134, 134, 0.6);
+    border-radius: 4px;
+    visibility: hidden;
+}
+
+#select-option .select-option.active .popup-select,
+#select-option .direct-option.active .popup-select
+{
+    visibility: visible;
+}
+
+#select-option .popup-select ul {
+    list-style-type: none;
+    padding: 0;
+    width: 200px;
+}
+
+#select-option li {
+    padding: 8px 40px;
+    color: rgb(99, 99, 99);
+    font-size: 1.3rem;
+}
+
+#select-option li:hover {
+    background-color: rgb(230, 230, 230);
+    cursor: pointer;
+}
+
+#select-option .select-title {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    padding: 8px 12px;
+    border: 1px solid rgb(175, 175, 175);
+    border-radius: 4px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    transition: .1s ease-in-out;
+}
+
+#select-option .select-option.active .select-title,
+#select-option .direct-option.active .select-title {
+    border: 1px solid blue;
+}
+
+#select-option .select-title:hover {
+    border: 1px solid rgb(0, 0, 0);
+    cursor: pointer;
+}
+
+#select-option .select-option.active .select-title:hover,
+#select-option .direct-option.active .select-title:hover {
+    border: 1px solid blue;
+}
+
+#select-option i.bx-sort-alt-2{
+    font-size: 2.1rem;
+    font-weight: 800;
+}
+
+#select-option i.bxs-down-arrow{
+    font-size: 1rem;
+    transition: .16s ease-in-out;
+}
+
+#select-option .select-option.active i.bxs-down-arrow,
+#select-option .direct-option.active i.bxs-down-arrow {
+    transform: rotate(180deg);
+}
+
+#select-option .title-container {
+    width: 100px;
+}
+
+#select-option .select-title span {
+    text-align: center;
+    transition: .1s ease-out;
+    background-color: white;
+    padding: 4px 8px;
+    color: black;
+    position: absolute;
+    top: 6px;
+    left: 40px;
+}
+
+#select-option .select-option.active .select-title span,
+#select-option .direct-option.active .select-title span {
+    font-size: 1.1rem;
+    color: blue;
+    transform: translate(-20%, -70%);
+}
+
+#select-option {
+    display: flex;
+    margin-top: 48px;
+    gap: 12px;
+    margin-left: 12px;
+}
+
+/* cityzen-table */
+#cityzen-table .search-table-container {
+    margin-bottom: 12px;
+}
+
+#cityzen-table .search-table-container > div {
+    display: flex;
+    align-items: center;
+    width: 300px;
+    padding: 4px 16px;
+    background-color: rgb(255, 255, 255); 
+    box-shadow: 0 0 3px 3px rgba(151, 151, 151, 0.6);
+    border-radius: 15px;
+    gap: 4px;
+}
+
+#cityzen-table .search-table-container i {
+    color: rgb(167, 167, 167);
+}
+
+#cityzen-table .search-table-container input {
+    outline: none;
+    border: none;
+    flex-grow: 1;
+    font-size: 1.5rem;
+}
+
+/* more info section */
+#more-info-section {
+    padding: 8px;
+    position: relative;
+}
+
+#more-info-section .more-info-container {
+    box-shadow: 0 0 3px 3px rgba(134, 134, 134, 0.6);
+    padding: 16px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 32px 56px;
+    border-radius: 4px;
+}
+
+#more-info-section .item-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+#more-info-section .item-container span:first-child {
+    display: block;
+    width: 100px;
+}
+
+#more-info-section .item-container span:nth-child(2) {
+    background-color: orange;
+    padding: 8px 16px;
+    border-radius: 4px;
+    color: white;
+    font-weight: 600;
+    min-height: 36px;
+    min-width: 56px;
+}
+
+#more-info-section .card-container {
+    box-shadow: 0 0 4px 4px rgba(134, 134, 134, 0.6);
+    border-radius: 4px;
+    width: 360px;
+}
+
+#more-info-section .column-container {
+    padding: 8px 24px 24px 24px;
+}
+
+#more-info-section .card-title {
+    background-image: linear-gradient(to right, #00265e, #152d6d, #27347c, #383b8a, #494299);
+    display: block;
+    padding: 16px 16px;
+    font-size: 1    .4rem;
+    color: white;
+    font-weight: 600;
+    border-radius: 4px 4px 0 0;
+}
+
+#more-info-section .close-more-button{
+    position: absolute;
+    right: 8px;
+    top: 8px;
+}
+
+#more-info-section .close-more-button i{
+    font-size: 3rem;
+    color: black;
+    transition: .1s ease-in-out;
+}
+
+#more-info-section .close-more-button i:hover{
+    color: rgb(100, 100, 100);
+}
+
+
+
+

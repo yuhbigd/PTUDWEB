@@ -1,5 +1,5 @@
 #create-account {
-    padding: 24px;
+    padding: var(--app-padding)
 }
 
 #create-account .form-container {

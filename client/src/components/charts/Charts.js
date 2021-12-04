@@ -174,7 +174,7 @@ const marryBarOption = {
         enabled: false
         },
     xaxis: {
-        categories: ['Đã kết hôn', 'Chưa kết hôn', 'Đã ly hôn'],
+        categories: ['Đã kết hôn', 'Chưa kết hôn', 'Ly hôn'],
     }   
 }
 
@@ -240,6 +240,7 @@ const Charts = () => {
     const [keyValue, setKeyValue] = useState(null)
     const [option, setOption] = useState(null)
     const [item, setItem] = useState([])
+    
     useEffect(() => {
         if(data.length){
             let soNam = 0;
@@ -443,7 +444,7 @@ const Charts = () => {
                     {tite: 'Tỷ lệ các nhó tuổi'}
                 ],
                 [
-                    {options: marryBarOption, series: [{data:[proData.chuakethon, proData.kethon, proData.lython]}], type:"bar"},
+                    {options: marryBarOption, series: [{data:[proData.kethon, proData.chuakethon, proData.lython]}], type:"bar"},
                     {options: marryRadialOption, series: [parseInt(100*proData.lython/proData.sodan)], type:'radialBar'},
                     {tite: 'Tỷ lệ kết hôn'}
                 ],
