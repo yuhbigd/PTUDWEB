@@ -1,5 +1,5 @@
 #chart-session {
-    padding: 16px;
+    padding: var(--app-padding);
 }
 
 #chart-session .charts-group{
@@ -8,6 +8,7 @@
     flex-wrap: wrap;
     border-radius: 4px;
     opacity: 1;
+    padding: 16px 0;
 }
 
 #chart-session .chart-item{
@@ -17,7 +18,7 @@
 }
 
 #fade-in-section {
-    margin-top: 32px;
+    margin-top: 72px;
     opacity: 0;
     transform: translate(0, 50px);
     visibility: hidden;
