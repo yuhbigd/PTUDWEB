@@ -4,6 +4,7 @@ const Huyen = require("../models/huyenModel");
 const Xa = require("../models/xaModel");
 const To = require("../models/toModel");
 const TkCaNuoc = require("../models/tkCaNuocModel");
+const Residents = require("../models/nguoiDanModel");
 const sanitize = require("mongo-sanitize");
 const moment = require("moment");
 require("dotenv").config();
@@ -509,6 +510,93 @@ account_getChildren = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+getProgression = async (req, res) => {
+  try {
+    const user = req.user;
+    let userId = user.userName;
+    if (user.tier === 0) {
+      userId = "";
+    }
+    let query = req.query;
+    let group = {
+      year: { $year: { date: "$ngayKhai", timezone: "+07" } },
+    };
+    if (query.days === "1" || (!query.days && !query.weeks && !query.months)) {
+      group.month = { $month: { date: "$ngayKhai", timezone: "+07" } };
+      group.day = { $dayOfMonth: { date: "$ngayKhai", timezone: "+07" } };
+    } else if (query.weeks === "1") {
+      group.week = { $week: { date: "$ngayKhai", timezone: "+07" } };
+    } else if (query.months === "1") {
+      group.month = { $month: { date: "$ngayKhai", timezone: "+07" } };
+    }
+
+    const data = await Residents.aggregate([
+      { $match: { noiKhai: { $regex: userId + ".*", $options: "i" } } },
+      {
+        $group: {
+          _id: group,
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    if (!data || _.isEmpty(data)) {
+      throw new Error("Chưa có dữ liệu");
+    }
+    res.status(200).json({ data: data });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+getChildProgression = async (req, res) => {
+  try {
+    let paramId = req.params.id;
+    const user = req.user;
+    let userId = user.userName;
+    if (user.tier === 0) {
+      userId = "";
+    }
+    if (
+      paramId.length > 8 ||
+      paramId.length % 2 !== 0 ||
+      !/^[0-9]*$/gi.test(paramId)
+    ) {
+      throw new Error("Id không đúng định dạng");
+    }
+    if (userId.length >= paramId.length || paramId.indexOf(userId) !== 0) {
+      throw new Error("Không đủ thẩm quyền để xem dữ liệu");
+    }
+    let query = req.query;
+    let group = {
+      year: { $year: { date: "$ngayKhai", timezone: "+07" } },
+    };
+    if (query.days === "1" || (!query.days && !query.weeks && !query.months)) {
+      group.month = { $month: { date: "$ngayKhai", timezone: "+07" } };
+      group.day = { $dayOfMonth: { date: "$ngayKhai", timezone: "+07" } };
+    } else if (query.weeks === "1") {
+      group.week = { $week: { date: "$ngayKhai", timezone: "+07" } };
+    } else if (query.months === "1") {
+      group.month = { $month: { date: "$ngayKhai", timezone: "+07" } };
+    }
+
+    const data = await Residents.aggregate([
+      { $match: { noiKhai: { $regex: paramId + ".*", $options: "i" } } },
+      {
+        $group: {
+          _id: group,
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    if (!data || _.isEmpty(data)) {
+      throw new Error("Chưa có dữ liệu");
+    }
+    res.status(200).json({ data: data });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 // children/:id
 account_getChild = async (req, res) => {
   try {
@@ -655,4 +743,6 @@ module.exports = {
   account_getChildren,
   account_getChild,
   account_getChildrenOfChild,
+  getProgression,
+  getChildProgression,
 };

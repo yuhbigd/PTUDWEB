@@ -13,4 +13,6 @@ router.get(
   accountController.account_getChildrenOfChild,
 );
 router.delete("/:id", accountController.account_delete);
+router.get("/progression", accountController.getProgression);
+router.get("/progression/:id", accountController.getChildProgression);
 module.exports = { router };
