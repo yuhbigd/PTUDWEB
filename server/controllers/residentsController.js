@@ -319,6 +319,8 @@ function preUpdate(resident, data) {
       if (data.tenVoChong || data.cccdVoChong || data.quocTichVoChong) {
         throw new Error("Ly hôn thì cập nhật làm gì vậy?");
       }
+    } else if (resident.honNhan === "Chưa kết hôn") {
+      throw new Error("Chưa kết hôn thì thay cái gì vậy trời");
     }
   }
 }
