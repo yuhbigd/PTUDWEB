@@ -518,15 +518,20 @@ getProgression = async (req, res) => {
       userId = "";
     }
     let query = req.query;
+    // cac thong so de group data (utc +7)
     let group = {
       year: { $year: { date: "$ngayKhai", timezone: "+07" } },
     };
+
     if (query.days === "1" || (!query.days && !query.weeks && !query.months)) {
+      // group theo ngay (mac dinh)
       group.month = { $month: { date: "$ngayKhai", timezone: "+07" } };
       group.day = { $dayOfMonth: { date: "$ngayKhai", timezone: "+07" } };
     } else if (query.weeks === "1") {
+      // group theo tuan
       group.week = { $week: { date: "$ngayKhai", timezone: "+07" } };
     } else if (query.months === "1") {
+      //group theo thang
       group.month = { $month: { date: "$ngayKhai", timezone: "+07" } };
     }
 
@@ -567,15 +572,20 @@ getChildProgression = async (req, res) => {
       throw new Error("Không đủ thẩm quyền để xem dữ liệu");
     }
     let query = req.query;
+    // cac thong so de group data (utc +7)
     let group = {
       year: { $year: { date: "$ngayKhai", timezone: "+07" } },
     };
+
     if (query.days === "1" || (!query.days && !query.weeks && !query.months)) {
+      // group theo ngay (mac dinh)
       group.month = { $month: { date: "$ngayKhai", timezone: "+07" } };
       group.day = { $dayOfMonth: { date: "$ngayKhai", timezone: "+07" } };
     } else if (query.weeks === "1") {
+      // group theo tuan
       group.week = { $week: { date: "$ngayKhai", timezone: "+07" } };
     } else if (query.months === "1") {
+      //group theo thang
       group.month = { $month: { date: "$ngayKhai", timezone: "+07" } };
     }
 
@@ -593,6 +603,145 @@ getChildProgression = async (req, res) => {
       throw new Error("Chưa có dữ liệu");
     }
     res.status(200).json({ data: data });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+getChildrenProgression = async (req, res) => {
+  try {
+    let children = req.body.data.children;
+    const user = req.user;
+    let userId = user.userName;
+    if (user.tier === 0) {
+      userId = "";
+    }
+    // xoa phan tu trung trong children
+    children = [...new Set(children)];
+
+    // test xem user name cua children co vi pham j ko
+    children.forEach((childId) => {
+      if (
+        childId.length > 8 ||
+        childId.length % 2 !== 0 ||
+        !/^[0-9]*$/gi.test(childId)
+      ) {
+        throw new Error("Id không đúng định dạng");
+      }
+      if (userId.length >= childId.length || childId.indexOf(userId) !== 0) {
+        throw new Error("Không đủ thẩm quyền để xem dữ liệu");
+      }
+    });
+
+    childrenUsername = children.map((childId) => {
+      return { userName: childId };
+    });
+    let countAccount = await User.countDocuments({
+      $or: childrenUsername,
+    });
+    if (countAccount !== children.length) {
+      throw new Error(
+        "Có tài khoản con không tồn tại. Hãy kiểm tra lại danh sách tài khoản con",
+      );
+    }
+
+    // tao array cac dieu kien trong lenh $or cua mongodb
+    let matchNoiKhai = children.map((childId) => {
+      return { noiKhai: { $regex: childId + ".*", $options: "i" } };
+    });
+
+    let query = req.query;
+    // cac thong so de group data (utc +7)
+    let group = {
+      year: { $year: { date: "$ngayKhai", timezone: "+07" } },
+    };
+
+    if (query.days === "1" || (!query.days && !query.weeks && !query.months)) {
+      // group theo ngay (mac dinh)
+      group.month = { $month: { date: "$ngayKhai", timezone: "+07" } };
+      group.day = { $dayOfMonth: { date: "$ngayKhai", timezone: "+07" } };
+    } else if (query.weeks === "1") {
+      // group theo tuan
+      group.week = { $week: { date: "$ngayKhai", timezone: "+07" } };
+    } else if (query.months === "1") {
+      //group theo thang
+      group.month = { $month: { date: "$ngayKhai", timezone: "+07" } };
+    }
+    // tach theo noi khai nua
+    group.noiKhai = "$noiKhai";
+    // lay du lieu tu ben db
+    const data = await Residents.aggregate([
+      { $match: { $or: matchNoiKhai } },
+      {
+        $group: {
+          _id: group,
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    if (!data || _.isEmpty(data)) {
+      throw new Error("Chưa có dữ liệu");
+    }
+
+    // tao progressData la 1 obj gom id va progress cua id do
+    let progressData = children.map((childId) => {
+      return { id: childId, progress: [] };
+    });
+
+    // duyet progress tim duoc tu db
+    for (let i = 0; i < data.length; i++) {
+      // duyet progressData tu dau den cuoi
+      for (let j = 0; j < progressData.length; j++) {
+        let progressId = data[i]._id.noiKhai;
+        let childId = progressData[j].id;
+        // neu noi khai bat dau = id cua progressData[j]
+        if (progressId.indexOf(childId) === 0) {
+          let progress = progressData[j].progress;
+          // tach cac thuoc tinh thoi gian
+          let progressDataIdKey = Object.keys(data[i]._id).filter((item) => {
+            return item !== "noiKhai";
+          });
+          // neu progress trong thi tao 1 obj progress moi gom cac thuoc tinh thoi gian
+          // va so dan tao trong khoan do
+          if (progress.length === 0) {
+            let obj = {};
+            progressDataIdKey.forEach((key) => {
+              obj[key] = data[i]._id[key];
+            });
+            obj.count = data[i].count;
+            // push vao progress
+            progress.push(obj);
+          } else {
+            // duyet progress tu dau den cuoi
+            for (let k = 0; k < progress.length; k++) {
+              // neu l === progressDataIdKey.length => progress[k] la obj can + them data
+              let l = 0;
+              progressDataIdKey.forEach((key) => {
+                if (progress[k][key] === data[i]._id[key]) {
+                  l++;
+                }
+              });
+              if (l === progressDataIdKey.length) {
+                progress[k].count += data[i].count;
+                break;
+              }
+              // neu l !== progressDataIdKey.length ma k === progress.length - 1
+              // vay day la phan tu cuoi cung => tao 1 obj roi push vao progress array
+              if (l !== progressDataIdKey.length && k === progress.length - 1) {
+                let obj = {};
+                progressDataIdKey.forEach((key) => {
+                  obj[key] = data[i]._id[key];
+                });
+                obj.count = data[i].count;
+                progress.push(obj);
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+    res.status(200).json({ data: progressData });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -745,4 +894,5 @@ module.exports = {
   account_getChildrenOfChild,
   getProgression,
   getChildProgression,
+  getChildrenProgression,
 };

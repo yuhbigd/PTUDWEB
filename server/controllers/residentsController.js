@@ -328,6 +328,7 @@ function preUpdate(resident, data) {
 putResident = async (req, res) => {
   try {
     const user = req.user;
+    await User.checkIsBanned(user);
     let id = user.userName;
     if (user.tier === 0) {
       id = "";
