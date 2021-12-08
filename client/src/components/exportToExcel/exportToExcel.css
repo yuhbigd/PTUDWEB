@@ -3,6 +3,7 @@
     display: flex;
     align-items: center;
     height: 100%;
+    background-color: var(--sub-theme-1);
 }
 
 #export-excel .download:hover span{

@@ -127,8 +127,8 @@ const B1Router = () => {
                         </div>
                         <div>
                             <span>
-                                <Link to='/B1/create-cityzen-info' className='nav-app-item'>
-                                    Người dân
+                                <Link to='/B1/manage-cityzen' className='nav-app-item'>
+                                    QL thông tin
                                 </Link>
                             </span>
                         </div>
@@ -205,9 +205,9 @@ const B1Router = () => {
                             </div>
                             <div>
                                 <span>
-                                    <Link to='/B1/create-cityzen-info' className='nav-app-item'>
+                                    <Link to='/B1/manage-cityzen' className='nav-app-item'>
                                         <i className='bx bx-male'></i>
-                                        Người dân
+                                        QL thông tin
                                     </Link>
                                 </span>
                             </div>
@@ -222,7 +222,6 @@ const B1Router = () => {
                     <Route path='/' element={<TablePage></TablePage>}></Route>
                     <Route path='/create-account' element={<CreatAccountPage></CreatAccountPage>}></Route>
                     <Route path='/create-unit' element={<CreateUnitPage></CreateUnitPage>}></Route>
-                    <Route path='/create-cityzen-info' element={<CreateCityZenPage></CreateCityZenPage>}></Route>
                     <Route path='/charts' element={<ChartPage></ChartPage>}></Route>
                     <Route path='/manage-cityzen' element={<ManageCityzenPage></ManageCityzenPage>}></Route>
                 </Routes>

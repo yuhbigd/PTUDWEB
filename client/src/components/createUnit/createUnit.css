@@ -1,6 +1,10 @@
 #create-unit {
     padding: var(--app-padding);
+    background-color: var(--main-theme);
+    color: var(--text-color-1);
+    min-height: 100vh;
 }
+
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -33,7 +37,7 @@ input[type=number] {
 #create-unit span.error-title {
     font-size: 1.1rem;
     font-weight: 500;
-    color: rgb(199, 3, 3);
+    color: var(--span-error);
     line-height: 18px;
 }
 
@@ -43,8 +47,9 @@ input[type=number] {
 
 #create-unit form.create {
     padding: 16px 8px;
-    background-color: white;
+    background-color: var(--sub-theme-1);
     border-radius: 4px;
+    box-shadow: var(--box-shadow-1);
 }
 
 #create-unit input {
@@ -52,6 +57,10 @@ input[type=number] {
     outline: none;
     border: 1px solid rgb(167, 167, 167);
     border-radius: 2px;
+    color: var(--text-color-2);
+    background-color: var(--input-back);
+    color: var(--input-text);
+    font-weight: 500;
 }
 
 #create-unit input:focus{
@@ -81,7 +90,7 @@ input[type=number] {
 #create-unit .unit-table-container {
     margin-top: 24px;
     border-radius: 4px;
-    box-shadow: 0 0 3px 3px rgba(100, 100, 100, .5);
+    box-shadow:var(--box-shadow-1);
     position: relative;
 }
 
@@ -111,11 +120,9 @@ input[type=number] {
     display: block;
     font-size: 2rem;
     font-weight: 600;
-    color: rgb(99, 99, 99);
 }   
 
 #create-unit .unit-update-wrapper {
-    background-color: rgb(228, 228, 228);
     padding: 12px;
     position: relative;
 }
@@ -126,11 +133,10 @@ input[type=number] {
 }
 
 #create-unit .unit-update-wrapper .unit-update-content{
-    border: 1px solid rgb(170, 170, 170);
     padding: 12px;
-    box-shadow: 0 0 3px 3px rgba(100, 100, 100, .5);
+    box-shadow: var(--box-shadow-1);
     border-radius: 4px;
-    background-color: white;
+    /* background-color: white; */
 }
 
 #create-unit .update-title {
@@ -156,10 +162,9 @@ input[type=number] {
 
 
 #create-unit .form-container {
-    box-shadow: 0 0 3px 3px rgba(100, 100, 100, .5);
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 8px 0;
     border-radius: 4px;
 }
@@ -189,14 +194,26 @@ input[type=number] {
     background-color: transparent;
 }
 
+#create-unit .close-update-button button i {
+    color: var(--close-button);
+}
+
 #create-unit .close-update-button button:hover i{
-    color: rgb(100, 100, 100);
+    color: var(--close-button-hover);
 }
 
 #create-unit .close-update-button i {
     font-size: 3rem;
     color: black;
     transition: .1s ease-in-out;
+}
+
+#create-unit .selected-row {
+    background-color: var(--sub-theme-2);
+}
+
+#create-unit .row-item:hover {
+    background-color: var(--sub-theme-2);
 }
 
 @media only screen and (max-width: 800px) {

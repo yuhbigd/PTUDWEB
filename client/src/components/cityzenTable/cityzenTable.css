@@ -1,6 +1,8 @@
 #cityzen-table {
-    padding: var(--app-padding)
+    padding: var(--app-padding);
+    padding-bottom: 400px;
 }
+
 
 #cityzen-table .table {
     box-shadow: 0 0 4px 4px rgba(134, 134, 134, 0.6);
@@ -14,6 +16,85 @@
     background-color: transparent;
 }
 
+#cityzen-table .popup-success{
+    position: fixed;
+    right: 0;
+    bottom: -46px;
+    left: 0;
+    height: 46px;
+    z-index: 99;
+    background-color: rgb(39, 240, 156);
+    color: black;
+    padding: 8px 16px;
+    border-radius: 4px;
+    visibility: hidden;
+    font-size: 1.4rem;
+    opacity: 0.2;
+    transition: .2s ease-in-out;
+}
+
+#cityzen-table .popup-success.active{
+    visibility: visible;
+    opacity: 1;
+    bottom: 0;
+}
+
+#cityzen-table .loading-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: transparent;
+    z-index: 9;
+    visibility: hidden;
+    transition: 0.1s ease-in;
+}
+
+#cityzen-table .loading-wrapper.active {
+    visibility: visible;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+#cityzen-table .multi-option-wrapper {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#cityzen-table .multi-option-wrapper > div {
+    display: flex;
+    align-items: center;
+    font-size: 2rem;
+}   
+
+#cityzen-table .option-item > span {
+    padding: 2px 16px;
+    display: block;
+}
+
+#cityzen-table .option-item:hover > span {
+    background-color: rgb(200, 200, 200);
+    cursor: pointer;
+
+}
+
+#cityzen-table .selected-number > span {
+    background-color: rgb(114, 158, 143);
+    border-radius: 8px;
+    color: white;
+    width: 60px;
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 4px 16px;
+    margin-left: 8px;
+    display: block;
+}
+
+#cityzen-table .option-item.blur i {
+    color: rgb(182, 182, 182);
+}
+
 #select-option .select-option,
 #select-option .direct-option
 {
@@ -24,7 +105,6 @@
     position: absolute;
     z-index: 9;
     background-color: white;
-    left: 50%;
     box-shadow: 0 0 4px 4px rgba(134, 134, 134, 0.6);
     border-radius: 4px;
     visibility: hidden;
@@ -203,7 +283,7 @@
     background-image: linear-gradient(to right, #00265e, #152d6d, #27347c, #383b8a, #494299);
     display: block;
     padding: 16px 16px;
-    font-size: 1    .4rem;
+    font-size: 1.4rem;
     color: white;
     font-weight: 600;
     border-radius: 4px 4px 0 0;
@@ -225,6 +305,89 @@
     color: rgb(100, 100, 100);
 }
 
+#cityzen-table .update-wrapper {
+    position: relative;
+}
+
+#cityzen-table .update-wrapper .close-more-button{
+    position: absolute;
+    top: 8px;
+    right: 4px;
+}
+
+#cityzen-table .update-wrapper .close-more-button i {
+    font-size: 3rem;
+}
+
+#cityzen-table .table-button-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+} 
+
+#cityzen-table .more-button {
+    padding: 0px 12px;
+    font-size: 2rem;
+    border-radius: 4px;
+    color: white;
+    background-color: rgb(32, 151, 255);
+}
+
+#cityzen-table .update-button {
+    padding: 0px 12px;
+    font-size: 2rem;
+    border-radius: 4px;
+    color: white;
+    background-color: rgb(255, 164, 27);
+}
+
+#cityzen-table .delete-button {
+    padding: 0px 12px;
+    font-size: 2rem;
+    border-radius: 4px;
+    color: white;
+    background-color: rgb(252, 93, 81);
+}
 
 
+@media only screen and (max-width: 500px) {
+    #select-option .select-option .popup-select {
+        left: 30%;
+    }
 
+    #select-option .direct-option .popup-select {
+        right: 0;
+    }
+
+    #more-info-section .card-container {
+        width: 300px;
+    }
+
+    #cityzen-table th, #cityzen-table td.text-overflow {        
+        max-width: 60px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    #cityzen-table #select-option {
+        margin-left: 0;
+    }
+}
+
+@media only screen and (max-width: 1800px)  {
+    #select-option .select-option .popup-select {
+        left: 30%;
+    }
+
+    #select-option .direct-option .popup-select {
+        right: 30%;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    #more-info-section .more-info-container {
+        box-shadow: none;
+        padding: 32px 8px;
+    }
+}

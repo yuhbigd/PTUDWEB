@@ -1,0 +1,147 @@
+#pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0 8px;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: rgb(0, 0, 0);
+}
+
+#pagination-container .pagi-button{
+    width: 40px;
+    height: 32px;
+    /* border-radius: 50%; */
+    background-color: rgb(16, 177, 252);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#pagination-container .pagi-button:hover {
+    cursor: pointer;
+}
+
+#pagination-container .pagi-button.active{
+    background-color: rgb(16, 252, 161);
+}
+
+#pagination-container .redir {
+    height: 24px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    background-color: aqua;
+    border-radius: 16px/20px;
+    font-size: 2rem;
+}
+
+#pagination-container .redir:hover {
+    cursor: pointer;
+}
+
+#pagination-section .num-per-page-option{
+    position: relative;
+}
+
+#pagination-section .popup-select {
+    position: absolute;
+    z-index: 9;
+    background-color: white;
+    box-shadow: 0 0 4px 4px rgba(134, 134, 134, 0.6);
+    border-radius: 4px;
+    visibility: hidden;
+}
+
+#pagination-section .num-per-page-option.active .popup-select{
+    visibility: visible;
+}
+
+#pagination-section .popup-select ul {
+    list-style-type: none;
+    padding: 0;
+    width: 160px;
+    height: 200px;
+    overflow-y: scroll;
+}
+
+#pagination-section li {
+    padding: 8px 40px;
+    color: rgb(99, 99, 99);
+    font-size: 1.3rem;
+}
+
+#pagination-section li:hover {
+    background-color: rgb(230, 230, 230);
+    cursor: pointer;
+}
+
+#pagination-section .select-title {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    padding: 8px 12px;
+    border: 1px solid rgb(175, 175, 175);
+    border-radius: 4px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    transition: .1s ease-in-out;
+}
+
+#pagination-section .num-per-page-option.active .select-title{
+    border: 1px solid blue;
+}
+
+#pagination-section .select-title:hover {
+    border: 1px solid rgb(0, 0, 0);
+    cursor: pointer;
+}
+
+#pagination-section .num-per-page-option.active .select-title:hover{
+    border: 1px solid blue;
+}
+
+#pagination-section i.bx-spreadsheet{
+    font-size: 2.1rem;
+    font-weight: 800;
+}
+
+#pagination-section i.bxs-down-arrow{
+    font-size: 1rem;
+    transition: .16s ease-in-out;
+}
+
+#pagination-section .num-per-page-option.active i.bxs-down-arrow{
+    transform: rotate(180deg);
+}
+
+#pagination-section .title-container {
+    width: 100px;
+}
+
+#pagination-section .select-title span {
+    text-align: center;
+    transition: .1s ease-out;
+    background-color: white;
+    padding: 4px 8px;
+    color: black;
+    position: absolute;
+    top: 6px;
+    left: 40px;
+}
+
+#pagination-section .num-per-page-option.active .select-title span{
+    font-size: 1.1rem;
+    color: blue;
+    transform: translate(-20%, -70%);
+}
+
+#pagination-section {
+    display: flex;
+    margin-top: 48px;
+    gap: 12px;
+    margin-left: 12px;
+    flex-direction: column;
+}
+
+

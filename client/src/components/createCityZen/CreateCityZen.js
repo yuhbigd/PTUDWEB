@@ -1,6 +1,8 @@
-import React, { useCallback, useState, useEffect} from 'react'
+import React, {useRef, useCallback, useState, useEffect} from 'react'
 import './createCityZen.css'
 import { useAsyncFn, useMountedState } from 'react-use'
+import WarningModal from './../warningModal/WarningModal'
+import Loading from '../loading/Loading'
 
 const Create = (props) => {
     const [serverErr, setServerErr] = useState(null)
@@ -33,6 +35,38 @@ const Create = (props) => {
         ownerIden: '',
         withOwner: '',
     })
+    const [succcesMessage, setSucccesMessage] = useState(null)
+    const successRef = useRef(null)
+    const reset = () => {
+        setCityZen({
+            name: '', // city zen name
+            dob: '',  // date of birth
+            bloodg: '', // nhóm máu
+            gender: '', //giới tính
+            marry: '', // tình trạng kết hôn
+            bornRegister: '', //nơi đăng ký khai sinh
+            hometown: '', // quê quán 
+            ethnic: '', //dân tộc
+            nationality: '', //quốc tịch việt nam, nếu khác ghi bên cạnh
+            othderNationality: '',
+            iden: '',
+            resident: '', //nơi thường chú
+            curentRes: '', // nơi ở hiện tại
+            dadName: '', // tên cha
+            tonGiao:'',
+            dadIden: '', // cccd
+            dadNat: '', // quốc tịch cha
+            momNat: '',
+            momOtherNat: '',
+            dadOtherNat: '',
+            momName: '',
+            momIden: '',
+            ownerName: '',
+            resNumber: '',
+            ownerIden: '',
+            withOwner: '',
+        })
+    }
 
     const [request, setRequest] = useAsyncFn(async(item) => {
         const res = await fetch(`http://localhost:3001/residents`, {
@@ -79,8 +113,9 @@ const Create = (props) => {
         const result = await res.text()
         if(JSON.parse(result).error) {
             setServerErr(JSON.parse(result).error)
-            return
+            return null
         }
+        reset()
         return result
     })
 
@@ -98,46 +133,26 @@ const Create = (props) => {
 
     const handleSubmitButton = () => {
         setRequest(cityzen)
-        console.log(cityzen)
     }    
-
-    console.log(request)
 
     useEffect(() => {
         if(request.value) {
-            setCityZen({
-                name: '', // city zen name
-                dob: '',  // date of birth
-                bloodg: '', // nhóm máu
-                gender: '', //giới tính
-                marry: '', // tình trạng kết hôn
-                bornRegister: '', //nơi đăng ký khai sinh
-                hometown: '', // quê quán 
-                ethnic: '', //dân tộc
-                nationality: '', //quốc tịch việt nam, nếu khác ghi bên cạnh
-                othderNationality: '',
-                iden: '',
-                resident: '', //nơi thường chú
-                curentRes: '', // nơi ở hiện tại
-                dadName: '', // tên cha
-                tonGiao:'',
-                dadIden: '', // cccd
-                dadNat: '', // quốc tịch cha
-                momNat: '',
-                momOtherNat: '',
-                dadOtherNat: '',
-                momName: '',
-                momIden: '',
-                ownerName: '',
-                resNumber: '',
-                ownerIden: '',
-                withOwner: '',
-            })
+            setSucccesMessage(`Tạo thành công thông tin cho 1 công dân`)
+            successRef.current.classList.add('active')
+            setTimeout(() => {
+                if(successRef.current) {
+                    successRef.current.classList.remove('active')
+                }
+            }, 4000)
         }
-    }, [request])
+    }, [request.value])
 
     return (
         <div id='create-cityzen'>
+            <WarningModal serverErr={serverErr} setServerErr={setServerErr}></WarningModal>
+            <div className='popup-success' ref={successRef}>
+                {succcesMessage ? succcesMessage : 'this is before the picture'} 
+            </div>
             <div className='private-information'>
                 <div className='header-container'>
                     <span>Thông tin cá nhân</span>
@@ -529,6 +544,13 @@ const Create = (props) => {
                 <button className='submit-button' onClick={(e) => handleSubmitButton(e)}>
                     Lưu kết quả
                 </button>
+            </div>
+            <div className={request.loading ? 'loading-wrapper active' : 'loading-wrapper'} >
+                <div>
+                    {
+                        (request.loading) ? <Loading></Loading> : null
+                    }
+                </div>
             </div>
         </div>
     )

@@ -261,8 +261,8 @@ const CreateUnit = () => {
                             </thead>
                                 {unit.map((item, index) => {
                                     return(
-                                        <tbody key={index}>
-                                            <tr>
+                                        <tbody key={index} className={index === updateUnit ? 'selected-row' : ''}>
+                                            <tr className='row-item'>
                                                 <td>{item.id}</td>
                                                 <td>{item.name}</td>
                                                 <td>

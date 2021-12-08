@@ -1,5 +1,4 @@
 import * as types from './../constants/constantType'
-import { useSelector } from 'react-redux'
 
 export const set_province = (province) => {
     return {
