@@ -24,16 +24,16 @@
 #loading-animation span{
     width: 3px;
     height: 20px;
-    background:black;
+    background: var(--loading-1);
     float:left;
     position: relative;
     animation:ani linear .8s infinite ;
 }
 
 @keyframes ani{
-    0%{background:#000000;}   
-    90%{background:rgb(206, 204, 204);}
-    100%{background:#000000}
+    0%{background: var(--loading-1);}   
+    90%{background:var(--loading-2);}
+    100%{background:var(--loading-3)}
 }
 
 #loading-animation span:nth-child(1){

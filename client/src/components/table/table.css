@@ -9,9 +9,9 @@
     justify-content: flex-start;
     align-items: center;
     gap: 5px;
-    color: blue;
-    font-size: 1.3rem;
-    font-weight: 500;
+    color: var(--explorer-color);
+    font-size: 1.4rem;
+    font-weight: 600;
     width: var(--explorer-line-break);
     overflow: hidden;
 }
@@ -64,14 +64,15 @@ tbody {
 #app .line-break {
     width: var(--explorer-line-break);
     height: 1px;
-    background-color: blue;
+    background-color: var(--explorer-color);
 }
 
 #app {
     padding: var(--app-padding);
-    background: rgb(255, 255, 255);
+    background: var(--main-theme);
     position: relative;
     box-sizing: border-box;
+    color: var(--text-color-1);
     min-height: calc(100vh - 60px);
 }
 
@@ -89,7 +90,7 @@ tbody {
 }
 
 #unit-table-container .table-container {
-    box-shadow: 0 0 3px 3px rgba(151, 151, 151, 0.6);
+    box-shadow: var(--box-shadow-1);
     border-radius: 4px;
     margin-top: 16px;
 }
@@ -108,9 +109,13 @@ tbody {
     width: 300px;
     padding: 4px 16px;
     background-color: rgb(255, 255, 255); 
-    box-shadow: 0 0 3px 3px rgba(151, 151, 151, 0.6);
+    box-shadow: 0 0 3px 3px rgba(163, 163, 163, 0.6);
     border-radius: 15px;
     gap: 4px;
+}
+
+#unit-table-container .row-selected {
+    background-color: var(--sub-theme-2);
 }
 
 #unit-table-container .search-table-container i {
@@ -122,8 +127,13 @@ tbody {
     border: none;
     flex-grow: 1;
     font-size: 1.5rem;
+    color: rgb(105, 105, 105);
 }
 
+#unit-table-container .row-item:hover{
+    cursor: pointer;
+    background-color: var(--sub-theme-2);
+}
 
 @media only screen and (max-width: 900px) {
     :root {

@@ -147,65 +147,58 @@ const B2Router = () => {
                 </div>
             </div>
             <div id='top-nav-mobile' ref={popupNav}>
-                    <div className='top-nav-mobile-container'>
-                        <div className='redirect-button-container'>
-                            <div>
+                <div className='top-nav-mobile-container'>
+                    <div className='redirect-button-container'>
+                        <div>
+                            <span>
+                                <Link to='/B2/manage-cityzen' className='nav-app-item'>
+                                    <i className='bx bxs-dashboard' ></i>
+                                    QL Thông tin
+                                </Link>
+                            </span>
+                        </div>
+                        <div>
+                            <span>
+                               
+                            </span>
+                        </div>
+                        <div>
+                            <span>
+                                
+                            </span>
+                        </div>
+                        <div>
+                            <div  className='nav-app-item' onClick={() => {handleLogOut()}}>
+                                <i className='bx bx-log-out'></i>
                                 <span>
-                                    <Link to='/B2' className='nav-app-item'>
-                                        <i className='bx bxs-dashboard' ></i>
-                                        Dashboard
-                                    </Link>
+                                    Đăng xuất
                                 </span>
-                            </div>
-                            <div>
-                                <span>
-                                    <Link to='/B1/create-unit' className='nav-app-item'>
-                                        <i className='bx bxs-city'></i>
-                                        Đơn vị
-                                    </Link>
-                                </span>
-                            </div>
-                            <div>
-                                <span>
-                                    <Link to='/B1/create-account' className='nav-app-item'>
-                                        <i className='bx bxs-user-account' ></i>   
-                                        Tài khoản
-                                    </Link>
-                                </span>
-                            </div>
-                            <div>
-                                <div  className='nav-app-item' onClick={() => {handleLogOut()}}>
-                                    <i className='bx bx-log-out'></i>
-                                    <span>
-                                        Đăng xuất
-                                    </span>
-                                 </div>
-                            </div>
-                            <div>
-                                <div  className='nav-app-item'>
-                                    <i className='bx bx-key' ></i>
-                                    <span>
-                                        Cá nhân
-                                    </span>
                                 </div>
-                            </div>
-                            <div>
+                        </div>
+                        <div>
+                            <div  className='nav-app-item'>
+                                <i className='bx bx-key' ></i>
                                 <span>
-                                    <Link to='/B1/create-cityzen-info' className='nav-app-item'>
-                                        <i className='bx bx-male'></i>
-                                        Người dân
-                                    </Link>
+                                    Cá nhân
                                 </span>
                             </div>
                         </div>
-                        <div className='nav-popup-button'  onClick={(e) => handlePopupNav(e)}>
-                            <i className='bx bx-chevron-down'></i>
+                        <div>
+                            <span>
+                                <Link to='/B2/create-cityzen-info' className='nav-app-item'>
+                                    <i className='bx bx-male'></i>
+                                    Tạo thông tin
+                                </Link>
+                            </span>
                         </div>
                     </div>
+                    <div className='nav-popup-button'  onClick={(e) => handlePopupNav(e)}>
+                        <i className='bx bx-chevron-down'></i>
+                    </div>
                 </div>
+            </div>
             <div id='app-router'>
                 <Routes>
-                    <Route path='/' element={<TablePage></TablePage>}></Route>
                     <Route path='/create-cityzen-info' element={<CreateCityZenPage></CreateCityZenPage>}></Route>
                     <Route path='/manage-cityzen' element={<ManageCityzenPage></ManageCityzenPage>}></Route>
                 </Routes>

@@ -26,22 +26,23 @@
 #warning-modal-overlay .w-modal-container {
     position: fixed;
     padding: var(--padding-wrapper);
-    background-color: white;
+    background-color: transparent;
     display: flex;
     flex-direction: column;
     gap: 20px;
     border-radius: 4px;
     box-shadow: 0 0 3px 3px rgba(180, 180, 180, 0.3);
     opacity: 0;
-    transition: .2s ease-in-out;
+    transition: .1s ease-out;
     top: 50%;
     left: 50%;
-    transform: translateX(-50%) translateY(-50%) scale(0.86);
+    transform: translateX(-50%) translateY(-50%) scale(0.8);
     /* transform: scale(.86); */
 }
 
 #warning-modal-overlay.active .w-modal-container {
-    transform: scale(1) translateX(-50%) translateY(-50%);
+    background-color: white;
+    transform: translateX(-50%) translateY(-50%)  scale(1);
     opacity: 1;
 }
 
@@ -82,6 +83,24 @@
     color: rgb(51, 51, 51);
     font-size: var(--warning-content-size);
     font-weight: 500;
+}
+
+#warning-modal-overlay .button-modal .cancel-button{
+    padding: 8px 32px;
+    background-color: rgb(170, 170, 170);
+    color: white;
+    border-radius: 18px/20px;
+}
+
+#warning-modal-overlay .button-modal .cancel-button:hover {
+    cursor: pointer;
+    background-color: rgb(200, 200, 200);
+
+}
+
+#warning-modal-overlay .button-modal {
+    display: flex;
+    gap: 0 12px;
 }
 
 @media only screen and (max-width: 700px) {

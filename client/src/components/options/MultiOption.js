@@ -24,13 +24,13 @@ const MultiOption = (props) => {
 
     return (
         <div id='option-button-container'>
-            <div onClick={() => handleContextOnclick()} className='option-button'>
-                <i className={selectedUnit.length ? 'bx bxs-extension' : 'bx bxs-extension blur'} ></i>
+            <div className='option-button'>
+                <i className={selectedUnit.length ? 'bx bx-line-chart-down' : 'bx bx-line-chart-down blur'} ></i>
             </div>
             <div className='option-button'>
                 <i className={selectedUnit.length ? 'bx bxs-user-rectangle' : 'bx bxs-user-rectangle blur'}></i>
             </div>
-            <div className='option-button'>
+            <div className='option-button' onClick={() => handleContextOnclick()} >
                 <i className={selectedUnit.length ? 'bx bxs-bar-chart-alt-2' : 'bx bxs-bar-chart-alt-2 blur'}></i>
             </div>
             <div className='select-title'>

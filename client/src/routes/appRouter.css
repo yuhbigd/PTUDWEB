@@ -4,7 +4,29 @@
     --top-nav-height: 56px;
     --nav-item-gap: 20px;
     --nav-margin-left: 60px;
+    --main-theme: blue;
+    --sub-theme-1: white;
+    --sub-theme-2: rgb(216, 216, 216);
+    --sub-theme-3: rgb(112, 26, 182);
+    --nav-back-color: black;
     --nav-text-color: rgb(196, 196, 196);
+    --nav-mobile-back: white;
+    --nav-mobile-text: black;
+    --disable-color: rgb(200, 200, 200);
+    --active-color: rgb(20, 20, 20);
+    --box-shadow-1: 0 0 3px 3px rgba(100, 100, 100, 0.6);
+    --text-color-1: black;
+    --text-color-2: rgb(90, 90, 90);
+    --close-button: rgb(30, 30, 30);
+    --close-button-hover: rgb(200, 200, 200);
+    --explorer-color: blue;
+    --loading-1: #383838;
+    --loading-2: white;
+    --loading-3: #2b2b2b;
+    --this: #2e265a;
+    --input-back: white;
+    --input-text: black;
+    --span-error: rgb(199, 3, 3)
 }
 
 body, html {
