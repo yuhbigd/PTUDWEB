@@ -283,38 +283,41 @@ function preUpdate(resident, data) {
       }
     }
   }
-  if (data.tenVoChong || data.cccdVoChong || data.quocTichVoChong) {
-    if (data.honNhan) {
-      if (
-        resident.honNhan.normalize("NFC") === "Chưa kết hôn".normalize("NFC") &&
-        data.honNhan !== "chưa kết hôn"
-      ) {
-        let yearDiff = moment().diff(resident.ngaySinh, "years", false);
-        if (yearDiff < 18) {
-          if (
-            data.honNhan.normalize("NFC") !== "Chưa kết hôn".normalize("NFC")
-          ) {
-            throw new Error("chưa được 18 tuổi kết hôn cái gì vậy trời");
-          }
-        }
-      } else if (data.honNhan === "Đã kết hôn") {
-        if (!data.tenVoChong || !data.cccdVoChong || !data.quocTichVoChong) {
-          throw new Error("Hãy nhập đủ các trường liên quan đến kết hôn");
-        }
-      }
-    } else {
+  if (data.honNhan) {
+    if (
+      resident.honNhan.normalize("NFC") === "Chưa kết hôn".normalize("NFC") &&
+      data.honNhan !== "Chưa kết hôn"
+    ) {
       let yearDiff = moment().diff(resident.ngaySinh, "years", false);
       if (yearDiff < 18) {
-        throw new Error("chưa được 18 tuổi kết hôn cái gì vậy trời");
+        if (data.honNhan.normalize("NFC") !== "Chưa kết hôn".normalize("NFC")) {
+          throw new Error("chưa được 18 tuổi kết hôn cái gì vậy trời");
+        }
       }
-      if (resident.data === "Đã kết hôn") {
-        if (!data.tenVoChong || !data.cccdVoChong || !data.quocTichVoChong) {
-          throw new Error("Hãy nhập đủ các trường liên quan đến kết hôn");
-        }
-      } else if (resident.data === "Ly hôn") {
-        if (data.tenVoChong || data.cccdVoChong || data.quocTichVoChong) {
-          throw new Error("Ly hôn thì cập nhật làm gì vậy?");
-        }
+    } else if (data.honNhan === "Đã kết hôn") {
+      if (!data.tenVoChong || !data.cccdVoChong || !data.quocTichVoChong) {
+        throw new Error("Hãy nhập đủ các trường liên quan đến kết hôn");
+      }
+    } else if (data.honNhan === "Chưa kết hôn") {
+      if (resident.honNhan !== "Chưa kết hôn") {
+        throw new Error(
+          "Đã ly hôn hoặc đã kết hôn thì không thể là chưa kết hôn",
+        );
+      }
+    }
+  }
+  if (data.tenVoChong || data.cccdVoChong || data.quocTichVoChong) {
+    let yearDiff = moment().diff(resident.ngaySinh, "years", false);
+    if (yearDiff < 18) {
+      throw new Error("chưa được 18 tuổi kết hôn cái gì vậy trời");
+    }
+    if (resident.honNhan === "Đã kết hôn") {
+      if (!data.tenVoChong || !data.cccdVoChong || !data.quocTichVoChong) {
+        throw new Error("Hãy nhập đủ các trường liên quan đến kết hôn");
+      }
+    } else if (resident.honNhan === "Ly hôn") {
+      if (data.tenVoChong || data.cccdVoChong || data.quocTichVoChong) {
+        throw new Error("Ly hôn thì cập nhật làm gì vậy?");
       }
     }
   }
@@ -868,7 +871,6 @@ deleteManyResident = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-
 
 module.exports = {
   postResident,
