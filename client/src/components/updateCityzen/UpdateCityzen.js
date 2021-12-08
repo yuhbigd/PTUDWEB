@@ -2,9 +2,11 @@ import React, { useCallback, useState, useEffect} from 'react'
 import './updateCityzen.css'
 import moment from 'moment'
 import { useAsyncFn, useMountedState } from 'react-use'
+import _ from 'lodash'
+import Loading from '../loading/Loading'
 
 const UpdateCityzen = (props) => {
-    const {cityzenItem, setServerErr} = props
+    const {setUpdate, setPeople, cityzenItem, setServerErr, setSuccessMessage, successRef_, people} = props
     const isMounted = useMountedState()
     const[cityzen, setCityZen] = useState({
         name: '', // city zen name
@@ -45,8 +47,6 @@ const UpdateCityzen = (props) => {
             credentials: 'include',
             body: JSON.stringify({
                 "data":{
-                    "hoTen": item.name,
-                    "ngaySinh": item.dob,
                     "gioiTinh": item.gender,
                     "nhomMau": item.bloodg, 
                     "honNhan": item.marry,
@@ -81,6 +81,15 @@ const UpdateCityzen = (props) => {
         if(JSON.parse(result).error) {
             setServerErr(JSON.parse(result).error)
             return
+        }
+        if(JSON.parse(result)) {
+            setSuccessMessage('cập nhật thành công 1 công dân')
+            successRef_.current.classList.add('active')
+            setTimeout(() => {
+                if(successRef_.current) {
+                    successRef_.current.classList.remove('active') 
+                }
+            }, 4000)
         }
         return result
     })
@@ -135,11 +144,18 @@ const UpdateCityzen = (props) => {
     }    
 
     useEffect(() => {
-        console.log(request)
-    }, [request])
+        if(request.value) {
+            const temp = people.map((item, index) =>{
+                return item._id === JSON.parse(request.value).data._id ? JSON.parse(request.value).data : item
+            })
+            setPeople(temp)
+            setUpdate(null)
+        }
+    }, [request.value])
 
     return (
         <div id='update-cityzen'>
+            
             <div className='private-information'>
                 <div className='header-container'>
                     <span>Thông tin cá nhân</span>
@@ -152,11 +168,13 @@ const UpdateCityzen = (props) => {
                                 <span className='star'>*</span>
                             </div>
                             <input 
+                                className='read-only'
                                 type='text' 
                                 name='name'
                                 key='name' 
                                 value={cityzen.name}
                                 onChange={(e) => {textInputOnChange(e)}}
+                                readOnly
                             ></input>
                         </div>
                         <div className='input-container'>
@@ -165,11 +183,13 @@ const UpdateCityzen = (props) => {
                                 <span className='star'>*</span>
                             </div>
                             <input 
+                                className='read-only'
                                 type='date' 
                                 name='dob'
                                 key='dob' 
                                 value={cityzen.dob}
-                                onChange={(e) => {textInputOnChange(e)}}    
+                                onChange={(e) => {textInputOnChange(e)}} 
+                                readOnly   
                             ></input>
                         </div>
                         <div className='input-container'>
@@ -531,6 +551,13 @@ const UpdateCityzen = (props) => {
                 <button className='submit-button' onClick={(e) => handleSubmitButton(e)}>
                     Lưu kết quả
                 </button>
+            </div>
+            <div className={request.loading ? 'update-loading-wrapper active' : 'update-loading-wrapper'} >
+                <div>
+                    {
+                        (request.loading) ? <Loading></Loading> : null
+                    }
+                </div>
             </div>
         </div>
     )

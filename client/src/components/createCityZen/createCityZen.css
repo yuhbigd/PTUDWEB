@@ -101,6 +101,34 @@
     color: red;
 }
 
+#create-cityzen .popup-success{
+    position: fixed;
+    right: 0;
+    bottom: -46px;
+    left: 0;
+    height: 46px;
+    background-color: rgb(39, 240, 156);
+    color: black;
+    padding: 8px 16px;
+    border-radius: 4px;
+    visibility: hidden;
+    font-size: 1.4rem;
+    opacity: 0.2;
+    transition: .2s ease-in-out;
+}
+
+#create-cityzen .popup-success.active{
+    visibility: visible;
+    opacity: 1;
+    bottom: 0;
+}
+
+#create-cityzen .loading-wrapper {
+    position: relative;
+    height: 100px;
+    width: 100%;
+}
+
 @media only screen and (max-width: 800px) {
     #create-cityzen .private-information-input,
     #create-cityzen .parent-information-input,

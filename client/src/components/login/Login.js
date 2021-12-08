@@ -47,7 +47,7 @@ const Login = (props) => {
             }else if(user.tier === 3) {
                 navigate("/B1")
             }else {
-                navigate("/B2")
+                navigate("/B2/manage-cityzen")
             }
         }
     }

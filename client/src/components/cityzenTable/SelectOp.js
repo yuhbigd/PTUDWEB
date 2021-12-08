@@ -40,6 +40,7 @@ const SelectOp = (props) => {
             orderRef.current.classList.remove('active')
         }else {
             orderRef.current.classList.add('active')
+            directRef.current.classList.remove('active')
         }
     }
 
@@ -48,6 +49,7 @@ const SelectOp = (props) => {
             directRef.current.classList.remove('active')
         }else {
             directRef.current.classList.add('active')
+            orderRef.current.classList.remove('active')
         }
     }
 

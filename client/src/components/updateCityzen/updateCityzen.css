@@ -1,5 +1,7 @@
 #update-cityzen {
     padding: 32px 16px;
+    box-shadow: 0 0 3px 3px rgba(134, 134, 134, 0.6);
+    border-radius: 4px;
 }
 
 #update-cityzen span{
@@ -113,10 +115,24 @@
     background-color: rgb(129, 168, 253);
 }
 
+#update-cityzen .update-loading-wrapper {
+    position: relative;
+    height: 100px;
+    width: 100%;
+}
+
+
 @media only screen and (max-width: 800px) {
     #update-cityzen .private-information-input,
     #update-cityzen .parent-information-input,
     #update-cityzen .relate-information-input {
         flex-direction: column;
     }  
+}
+
+@media only screen and (max-width: 500px) {
+    #update-cityzen {
+        padding: 32px 8px;
+        box-shadow: none;
+    }   
 }

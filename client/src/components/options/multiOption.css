@@ -9,12 +9,12 @@
 }
 
 #option-button-container div {
-    color: rgb(63, 63, 63);
+    color: var(--active-color);
 }
 
 #option-button-container .option-button:hover{
     cursor: pointer;
-    background-color: rgb(223, 223, 223);
+    background-color: var(--sub-theme-2);
 }
 
 #option-button-container div > span {
@@ -30,6 +30,6 @@
 }
 
 #option-button-container .blur{
-    color: rgb(121, 121, 121);
+    color: var(--disable-color);
 }
 

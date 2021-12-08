@@ -125,8 +125,8 @@ const ProvinceTable = (props) => {
                             </thead>
                             {showTableData.map((item, index) => {
                                 return(
-                                    <tbody key={index}>
-                                        <tr>
+                                    <tbody key={index} className={keyIndex === index ? 'row-selected' : ''}>
+                                        <tr className='row-item'>
                                             <td>{item.id}</td>
                                             <td onClick={(e) => provinceOnclick(item.id, index, e)}>{item.name}</td>
                                             <td>{item.count}</td>
