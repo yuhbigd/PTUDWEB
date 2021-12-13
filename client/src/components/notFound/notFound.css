@@ -1,0 +1,326 @@
+#not-found-section {
+    height: 100vh;
+    width: 100vw;
+    margin: 0px;
+    background: linear-gradient(90deg, rgba(47,54,64,1) 23%, rgba(24,27,32,1) 100%);
+    overflow: hidden;
+    position: relative;
+}
+
+#not-found-section .moon {
+    background: linear-gradient(90deg, rgba(208,208,208,1) 48%, rgba(145,145,145,1) 100%);
+    position: absolute;
+    top: -100px;
+    left: -300px;
+    width: 900px;
+    height: 900px;
+    border-radius: 100%;
+    box-shadow: 0px 0px 30px -4px rgba(0,0,0,0.5)
+}
+#not-found-section .crater {
+    position: absolute;
+    border-radius: 100%;
+    opacity: 0.6;
+    background: linear-gradient(90deg, rgba(122,122,122,1) 38%, rgba(195,195,195,1) 100%);
+}
+#not-found-section .crater1 {
+    width: 60px;
+    height: 180px;
+    top: 250px;
+    left: 500px;
+}
+#not-found-section .crater2 {
+    width: 40px;
+    height: 80px;
+    top: 650px;
+    left: 340px;
+    transform: rotate(55deg);
+}
+#not-found-section .crater3 {
+    width: 65px;
+    height: 120px;
+    top: -20px;
+    left: 40px;
+    transform: rotate(55deg);
+}
+#not-found-section .star {
+    background: grey;
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 100%;
+    transform: rotate(250deg);
+    opacity: 0.4;
+    animation-name: shimmer;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+@keyframes shimmer{
+    from{
+    opacity: 0;
+    }
+    to {
+    opacity: 0.7;
+    }
+}
+#not-found-section .star1 {
+    top: 40%;
+    left: 50%;
+    animation-delay: 1s;
+}
+#not-found-section .star2 {
+    top: 60%;
+    left: 90%;
+    animation-delay: 3s;
+}
+#not-found-section .star3 {
+    top: 10%;
+    left: 70%;
+    animation-delay: 2s;
+}
+#not-found-section .star4 {
+    top: 90%;
+    left: 40%;
+}
+#not-found-section .star5 {
+    top: 20%;
+    left: 30%;
+    animation-delay: 0.5s;
+}
+#not-found-section .error {
+    position: absolute;
+    left: 100px;
+    top: 400px;
+    transform: translateY(-60%);
+    color: #343e49;
+}
+#not-found-section .title {
+    font-size: 10em;
+    font-family: 'Righteous', cursive;
+    
+}
+#not-found-section .subtitle {
+    font-size: 1.6rem;
+}
+#not-found-section .description {
+    opacity: 0.5s;
+}
+#not-found-section .button {
+    min-width: 7rem;
+    margin-top: 3rem;
+    margin-right: 0.5em;
+    padding: 0.5em 2em;
+    outline: none;
+    border: 2px solid #2f3640;
+    background-color: transparent;
+    border-radius: 8em;
+    color: #576375;
+    cursor: pointer;
+    transition-duration: 0.2s;
+    font-size: 1.7rem;
+}
+#not-found-section .button:hover {
+    color: #21252c;
+}
+#not-found-section .button--active {
+    background-color: #e67e22;
+    border: 2px solid #e67e22;
+    color: white;
+}
+#not-found-section .button--active:hover {
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.5s);
+    color: white;
+}
+#not-found-section .astronaut {
+    position: absolute;
+    width: 185px;
+    height: 300px;
+    left: 70%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(20deg) scale(1.2);
+}
+#not-found-section .head {
+    background-color: white;
+    position: absolute;
+    top: 60px;
+    left: 60px;
+    width: 60px;
+    height: 60px;
+    border-radius: 2em;
+}
+#not-found-section .head-visor-flare1 {
+    background-color: #7f8fa6;
+    position: absolute;
+    top: 28px;
+    left: 40px;
+    width: 10px;
+    height: 10px;
+    border-radius: 2em;
+    opacity: 0.5;
+}
+#not-found-section .head-visor-flare2 {
+    background-color: #718093;
+    position: absolute;
+    top: 40px;
+    left: 38px;
+    width: 5px;
+    height: 5px;
+    border-radius: 2em;
+    opacity: 0.3;
+}
+#not-found-section .backpack {
+    background-color: #bfbfbf;
+    position: absolute;
+    top: 90px;
+    left: 47px;
+    width: 86px;
+    height: 90px;
+    border-radius: 8px;
+}
+#not-found-section .body {
+    background-color: #e6e6e6;
+    position: absolute;
+    top: 115px;
+    left: 55px;
+    width: 70px;
+    height: 80px;
+    border-radius: 8px;
+}
+#not-found-section .body__chest {
+    background-color: #d9d9d9;
+    position: absolute;
+    top: 140px;
+    left: 68px;
+    width: 45px;
+    height: 25px;
+    border-radius: 6px;
+}
+#not-found-section .arm-left1 {
+    background-color: #e6e6e6;
+    position: absolute;
+    top: 127px;
+    left: 9px;
+    width: 65px;
+    height: 20px;
+    border-radius: 8px;
+    transform: rotate(-30deg);
+}
+#not-found-section .arm-left2 {
+    background-color: #e6e6e6;
+    position: absolute;
+    top: 102px;
+    left: 7px;
+    width: 20px;
+    height: 45px;
+    border-radius: 8px;
+    transform: rotate(-12deg);
+    border-top-left-radius: 8em;
+    border-top-right-radius: 8em;
+}
+#not-found-section .arm-right1 {
+    background-color: #e6e6e6;
+    position: absolute;
+    top: 113px;
+    left: 100px;
+    width: 65px;
+    height: 20px;
+    border-radius: 8px;
+    transform: rotate(-10deg);
+}
+#not-found-section .arm-right2 {
+    background-color: #e6e6e6;
+    position: absolute;
+    top: 78px;
+    left: 141px;
+    width: 20px;
+    height: 45px;
+    border-radius: 8px;
+    transform: rotate(-10deg);
+    border-top-left-radius: 8em;
+    border-top-right-radius: 8em;
+}
+#not-found-section .arm-thumb-left {
+    background-color: #e6e6e6;
+    position: absolute;
+    top: 110px;
+    left: 21px;
+    width: 10px;
+    height: 6px;
+    border-radius: 8em;
+    transform: rotate(-35deg);
+}
+#not-found-section .arm-thumb-right {
+    background-color: #e6e6e6;
+    position: absolute;
+    top: 90px;
+    left: 133px;
+    width: 10px;
+    height: 6px;
+    border-radius: 8em;
+    transform: rotate(20deg);
+}
+#not-found-section .wrist-left {
+    background-color: #e67e22;
+    position: absolute;
+    top: 122px;
+    left: 6.5px;
+    width: 21px;
+    height: 4px;
+    border-radius: 8em;
+    transform: rotate(-15deg);
+}
+#not-found-section .wrist-right {
+    background-color: #e67e22;
+    position: absolute;
+    top: 98px;
+    left: 141px;
+    width: 21px;
+    height: 4px;
+    border-radius: 8em;
+    transform: rotate(-10deg);
+}
+#not-found-section .leg-left {
+    background-color: #e6e6e6;
+    position: absolute;
+    top: 188px;
+    left: 50px;
+    width: 23px;
+    height: 75px;
+    transform: rotate(10deg);
+}
+#not-found-section .leg-right {
+    background-color: #e6e6e6;
+    position: absolute;
+    top: 188px;
+    left: 108px;
+    width: 23px;
+    height: 75px;
+    transform: rotate(-10deg);
+}
+#not-found-section .foot-left {
+    background-color: white;
+    position: absolute;
+    top: 240px;
+    left: 43px;
+    width: 28px;
+    height: 20px;
+    transform: rotate(10deg);
+    border-radius: 3px;
+    border-top-left-radius: 8em;
+    border-top-right-radius: 8em;
+    border-bottom: 4px solid #e67e22;
+}
+#not-found-section .foot-right {
+    background-color: white;
+    position: absolute;
+    top: 240px;
+    left: 111px;
+    width: 28px;
+    height: 20px;
+    transform: rotate(-10deg);
+    border-radius: 3px;
+    border-top-left-radius: 8em;
+    border-top-right-radius: 8em;
+    border-bottom: 4px solid #e67e22;
+}

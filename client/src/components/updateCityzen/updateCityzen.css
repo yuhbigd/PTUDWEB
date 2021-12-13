@@ -1,13 +1,13 @@
 #update-cityzen {
     padding: 32px 16px;
-    box-shadow: 0 0 3px 3px rgba(134, 134, 134, 0.6);
+    /* box-shadow: 0 0 3px 3px rgba(134, 134, 134, 0.6); */
     border-radius: 4px;
 }
 
 #update-cityzen span{
-    color: rgb(119, 119, 119); 
+    color: var(--input-title); 
 }
-
+    
 #update-cityzen .input-container span{
     display: block;
 }
@@ -27,6 +27,13 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+}
+
+
+#update-cityzen input {
+    background-color: var(--input-back);
+    color: var(--input-text);
+    font-weight: 600;
 }
 
 #update-cityzen .input-container > input[type='text'],
@@ -53,7 +60,7 @@
 #update-cityzen .private-information,
 #update-cityzen .parent-information,
 #update-cityzen .relate-information{
-    box-shadow: 0 0 3px 3px rgba(150, 150, 150, 0.5);
+    box-shadow: var(--box-shadow-1);
     border-radius: 4px;
     margin-bottom: 36px;
 }

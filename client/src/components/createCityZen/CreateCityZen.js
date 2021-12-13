@@ -3,6 +3,7 @@ import './createCityZen.css'
 import { useAsyncFn, useMountedState } from 'react-use'
 import WarningModal from './../warningModal/WarningModal'
 import Loading from '../loading/Loading'
+import {Link} from 'react-router-dom'
 
 const Create = (props) => {
     const [serverErr, setServerErr] = useState(null)
@@ -34,6 +35,14 @@ const Create = (props) => {
         resNumber: '',
         ownerIden: '',
         withOwner: '',
+        tenVoChong: '',
+        cccdVoChong: '',
+        quocTichVoChong: '',
+        otherQuocTichVoChong: '',
+        daiDienHopPhap: '',
+        cccdDaiDienHopPhap: '',
+        quocTichDaiDienHopPhap: '',
+        otherQuocTichDaiDienHopPhap: '',
     })
     const [succcesMessage, setSucccesMessage] = useState(null)
     const successRef = useRef(null)
@@ -65,11 +74,19 @@ const Create = (props) => {
             resNumber: '',
             ownerIden: '',
             withOwner: '',
+            tenVoChong: '',
+            cccdVoChong: '',
+            quocTichVoChong: '',
+            otherQuocTichVoChong: '',
+            daiDienHopPhap: '',
+            cccdDaiDienHopPhap: '',
+            quocTichDaiDienHopPhap: '',
+            otherQuocTichDaiDienHopPhap: '',
         })
     }
 
     const [request, setRequest] = useAsyncFn(async(item) => {
-        const res = await fetch(`http://localhost:3001/residents`, {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/residents`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -97,15 +114,15 @@ const Create = (props) => {
                     "soCCCDCha": item.dadIden,
                     "quocTichCha": item.dadNat === 'Khác' ? item.dadOtherNat : item.dadNat,
                     "quocTichMe": item.momNat === 'Khác' ? item.momOtherNat : item.momNat,
-                    "tenVoChong": "",
-                    "cccdVoChong": "",
-                    "quocTichVoChong": "", 
-                    "daiDienHopPhap": "",
-                    "quocTichDaiDienHopPhap": "",
                     "cccdDaiDienHopPhap": item.ownerIden,
                     "tenChuHo": item.ownerName,
                     "quanHeVoiChuHo": item.withOwner,
-                    "soHoKhau": item.resNumber
+                    "soHoKhau": item.resNumber,
+                    "tenVoChong": item.tenVoChong,
+                    "cccdVoChong": item.cccdVoChong,
+                    "quocTichVoChong": item.quocTichVoChong === 'khác' ? item.otherQuocTichVoChong : item.quocTichVoChong,
+                    "daiDienHopPhap": item.daiDienHopPhap,
+                    "quocTichDaiDienHopPhap": item.quocTichDaiDienHopPhap === 'khác' ? item.otherQuocTichDaiDienHopPhap : item.quocTichDaiDienHopPhap,
                   }
             })
         })
@@ -146,6 +163,8 @@ const Create = (props) => {
             }, 4000)
         }
     }, [request.value])
+
+    console.log(cityzen)
 
     return (
         <div id='create-cityzen'>
@@ -487,6 +506,128 @@ const Create = (props) => {
                     </div>
                 </div>
             </div>
+
+            <div className='parent-information'>
+                <div className='header-container'>
+                    <span>Thông tin vợ chồng, ĐDHP</span>
+                </div>
+                <div className='parent-information-input'>
+                    <div className='column'>
+                        <div className='input-container'>
+                            <span>Họ và tên đệm vợ chồng</span>
+                            <input 
+                                type='text' 
+                                name={'tenVoChong'}
+                                key='tenVoChong' 
+                                value={cityzen.tenVoChong}
+                                onChange={(e) => {textInputOnChange(e)}}  
+                            ></input>
+                        </div>
+                        <div className='input-container'>
+                            <span>CCCD</span>
+                            <input 
+                                type='number' 
+                                name={'cccdVoChong'}
+                                key='cccdVoChong' 
+                                value={cityzen.cccdVoChong}
+                                onChange={(e) => {textInputOnChange(e)}}  
+                            ></input>
+                        </div>
+                        <div className='input-container'>
+                            <span>Quốc tịch</span>
+                            <div className='group-input'>
+                                <div>
+                                    <input 
+                                        type="radio" 
+                                        name="quocTichVoChong"
+                                        key='quocTichVoChong' 
+                                        value='Việt Nam'
+                                        onChange={(e) => {textInputOnChange(e)}}   
+                                        checked={'Việt Nam' === cityzen.quocTichVoChong}   
+                                    /> Việt Nam
+                                </div>
+                                <div>
+                                    <input 
+                                        type="radio" 
+                                        name='quocTichVoChong'
+                                        value='Khác'
+                                        key='quocTichVoChong'
+                                        onChange={(e) => {textInputOnChange(e)}} 
+                                    /> Khác
+                                    <div className='other-nat-container'>
+                                        {
+                                            cityzen.quocTichVoChong === 'Khác' ?
+                                                <input 
+                                                    type='text'
+                                                    name={'otherQuocTichVoChong'}
+                                                    key='otherQuocTichVoChong' 
+                                                    value={cityzen.otherQuocTichVoChong}
+                                                    onChange={(e) => {textInputOnChange(e)}}      
+                                                ></input>
+                                            :
+                                            null    
+                                        }   
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='column'>
+                        <div className='input-container'>
+                            <span>Họ và tên đệm đại diện hợp pháp</span>
+                            <input 
+                                type='text' 
+                                name={'daiDienHopPhap'}
+                                key='daiDienHopPhap' 
+                                value={cityzen.daiDienHopPhap}
+                                onChange={(e) => {textInputOnChange(e)}} 
+                            ></input>
+                        </div>
+                        <div className='input-container'>
+                            <span>CCCD</span>
+                            <input 
+                                type='number' 
+                                name={'cccdDaiDienHopPhap'}
+                                key='cccdDaiDienHopPhap' 
+                                value={cityzen.cccdDaiDienHopPhap}
+                                onChange={(e) => {textInputOnChange(e)}} 
+                            ></input>
+                        </div>
+                        <div className='input-container'>
+                            <span>Quốc tịch</span>
+                            <div className='group-input'>
+                                <div>
+                                    <input 
+                                        type="radio" 
+                                        name="quocTichDaiDienHopPhap"
+                                        key='quocTichDaiDienHopPhap' 
+                                        value='Việt Nam'
+                                        onChange={(e) => {textInputOnChange(e)}}
+                                        checked={'Việt Nam' === cityzen.quocTichDaiDienHopPhap}
+                                    /> Việt Nam
+                                </div>
+                                <div>
+                                    <input type="radio" value='Khác' name='quocTichDaiDienHopPhap' onChange={(e) => {textInputOnChange(e)}}/> Khác
+                                    <div className='other-nat-container'>
+                                        {
+                                            cityzen.quocTichDaiDienHopPhap === 'Khác' ?
+                                                <input 
+                                                    type='text'
+                                                    name={'otherQuocTichDaiDienHopPhap'}
+                                                    key='otherQuocTichDaiDienHopPhap' 
+                                                    value={cityzen.otherQuocTichDaiDienHopPhap}
+                                                    onChange={(e) => {textInputOnChange(e)}}      
+                                                ></input>
+                                            :
+                                            null    
+                                        }   
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
                 
             <div className='relate-information'>
                 <div className='header-container'>
@@ -551,6 +692,9 @@ const Create = (props) => {
                         (request.loading) ? <Loading></Loading> : null
                     }
                 </div>
+            </div>
+            <div>
+                <Link to="/doc/Phieumau.docx" target="_blank" download>Tải xuống phiếu mẫu</Link>
             </div>
         </div>
     )

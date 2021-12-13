@@ -6,101 +6,6 @@ import { useMountedState } from 'react-use'
 import _ from 'lodash'
 import Loading from '../loading/Loading'
 
-const genderBarOptions = {
-    chart: {
-        type: 'basic-bar',
-        height: 350
-    },
-    plotOptions: {
-        bar: {
-            borderRadius: 4,
-            horizontal: true,
-        }
-    },
-    dataLabels: {
-        enabled: false
-        },
-    xaxis: {
-        categories: ['Nam', 'Nữ'],
-    }
-}
-
-const genderPieOptions = {
-    chart: {
-        width: 380,
-        type: 'pie',
-    },
-    labels: ['Nam', 'Nữ'],
-    responsive: [{
-        breakpoint: 480,
-        options: {
-        chart: {
-            width: 200
-        },
-        legend: {
-            position: 'bottom'
-        }
-        }
-    }]
-}
-
-const ageBarOptions = {
-    chart: {
-        type: 'basic-bar',
-        height: 350
-    },
-    plotOptions: {
-        bar: {
-            borderRadius: 4,
-            horizontal: false,
-        }
-    },
-    dataLabels: {
-        enabled: false
-        },
-    xaxis: {
-        categories: ['(0-15)', '(16-64)', '>65'],
-    }
-}
-
-const agePieOptions = {
-    chart: {
-        width: 380,
-        type: 'pie',
-    },
-    labels: ['(0-15)', '(16-64)', '>65'],
-    responsive: [{
-        breakpoint: 480,
-        options: {
-        chart: {
-            width: 200
-        },
-        legend: {
-            position: 'bottom'
-        }
-        }
-    }]
-}
-
-const marryBarOption = {
-    chart: {
-        type: 'basic-bar',
-        height: 350
-    },
-    plotOptions: {
-        bar: {
-            borderRadius: 4,
-            horizontal: false,
-        }
-    },
-    dataLabels: {
-        enabled: false
-        },
-    xaxis: {
-        categories: ['Đã kết hôn', 'Chưa kết hôn', 'Ly hôn'],
-    }   
-}
-
 const marryRadialOption = {
     chart: {
         height: 350,
@@ -153,6 +58,8 @@ const marryRadialOption = {
 
 const Charts = () => {
     const data = useSelector(state => state.multiRe)
+    const [theme, setTheme] = ((localStorage.getItem('theme'))) 
+    
     const isMounted = useMountedState()
     const [proData, setProData] = useState({
         nam: 0, nu: 0, sodan: 0, kethon: 0, 
@@ -160,10 +67,153 @@ const Charts = () => {
         tongiao: null, quoctich: null, tu0_15: 0, tu16_64: 0,
         hon65: 0 
     })    
+
     const [keyValue, setKeyValue] = useState(null)
     const [option, setOption] = useState(null)
     const [item, setItem] = useState([])
+    const [genderBar, setGenderBar] = useState(null)
+    const [genderPie, setGenderPie] = useState(null)
+    const [ageBar, setAgeBar] = useState(null)
+    const [agePie, setAgePie] = useState(null)
+    const [marryBar, setMarryBar] = useState(null)
     
+    useEffect(() => {
+        var foreColor
+        if(parseInt(theme) === 1 || parseInt(theme) === 3) {
+            foreColor = 'black'
+        }else if(parseInt(theme) === 2 ) {
+            foreColor = 'white'
+        }else {
+            foreColor = 'black'
+        }
+        setGenderBar({
+            chart: {
+                type: 'basic-bar',
+                height: 350,
+                foreColor: foreColor
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    horizontal: true,
+                }
+            },
+            dataLabels: {
+                enabled: false
+                },
+            xaxis: {
+                categories: ['Nam', 'Nữ'],
+            },
+            title: {
+                text: undefined,
+                align: 'left',
+                margin: 10,
+                offsetX: 0,
+                offsetY: 0,
+                floating: false,
+                style: {
+                  fontSize:  '14px',
+                  fontWeight:  'bold',
+                  fontFamily:  undefined,
+                  color:  '#263238'
+                },
+            },
+            grid: {
+                borderColor: foreColor,
+            }
+        })
+
+        setGenderPie(
+            {
+                chart: {
+                    width: 380,
+                    type: 'pie',
+                    foreColor: foreColor
+                },
+                labels: ['Nam', 'Nữ'],
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                    }
+                }],
+                grid: {
+                    borderColor: foreColor,
+                }
+        })
+        setAgeBar({
+            chart: {
+                type: 'basic-bar',
+                height: 350,
+                foreColor: foreColor
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    horizontal: false,
+                }
+            },
+            dataLabels: {
+                enabled: false
+                },
+            xaxis: {
+                categories: ['(0-15)', '(16-64)', '>65'],
+            },
+            grid: {
+                borderColor: foreColor,
+            }
+        })
+        setAgePie({
+            chart: {
+                width: 380,
+                type: 'pie',
+                foreColor: foreColor
+            },
+            labels: ['(0-15)', '(16-64)', '>65'],
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                chart: {
+                    width: 200
+                },
+                legend: {
+                    position: 'bottom'
+                }
+                }
+            }],
+            grid: {
+                borderColor: foreColor,
+            }
+        })
+        setMarryBar( {
+            chart: {
+                type: 'basic-bar',
+                height: 350,
+                foreColor: foreColor
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    horizontal: false,
+                }
+            },
+            dataLabels: {
+                enabled: false
+                },
+            xaxis: {
+                categories: ['Đã kết hôn', 'Chưa kết hôn', 'Ly hôn'],
+            },
+            grid: {
+                borderColor: foreColor,
+            }   
+        })
+    }, [theme])
+
     useEffect(() => {
         if(data.length){
             let soNam = 0;
@@ -177,9 +227,10 @@ const Charts = () => {
             let nhoHon15 = 0;
             let tu15_64 = 0;
             let hon64 = 0;
-            let soDan = 0;
+            let soDan = 0;  
+            console.log(data[0])
             data.map((it, index) => {
-                if(Object.keys(it).length === 18) {
+                if(Object.keys(it).length > 10) {
                     soNam += it.soNam;
                     soNu += it.soNu
                     daKetHon += it.daKetHon
@@ -200,6 +251,7 @@ const Charts = () => {
                     })
                 }
             })
+            console.log(soDan)
             setProData({
                 nam: soNam, nu: soNu, sodan: soDan, kethon: daKetHon, 
                 chuakethon: chuaKetHon, lython: lyHon, dantoc: danToc,
@@ -245,11 +297,21 @@ const Charts = () => {
                 quoctichValue: [...quoctichValue]
             })
 
+            var foreColor
+            if(parseInt(theme) === 1 || parseInt(theme) === 3) {
+                foreColor = 'black'
+            }else if(parseInt(theme) === 2 ) {
+                foreColor = 'white'
+            }else {
+                foreColor = 'black'
+            }
+
             setOption({
                 tongiaoBarOptions:{
                     chart: {
                         type: 'basic-bar',
-                        height: 350
+                        height: 350,
+                        foreColor: foreColor
                     },
                     plotOptions: {
                         bar: {
@@ -262,12 +324,16 @@ const Charts = () => {
                         },
                     xaxis: {
                         categories: [...tongiaoKey],
+                    },
+                    grid: {
+                        borderColor: foreColor,
                     }
                 },
                 tongiaoPieOptions:{
                     chart: {
                         width: 380,
                         type: 'pie',
+                        foreColor: foreColor
                     },
                     labels: [...tongiaoKey],
                     responsive: [{
@@ -280,12 +346,16 @@ const Charts = () => {
                             position: 'bottom'
                         }
                         }
-                    }]
+                    }],
+                    grid: {
+                        borderColor: foreColor,
+                    }
                 },
                 ethnicBarOptions:{
                     chart: {
                         type: 'basic-bar',
-                        height: 350
+                        height: 350,
+                        foreColor: foreColor
                     },
                     plotOptions: {
                         bar: {
@@ -298,12 +368,16 @@ const Charts = () => {
                         },
                     xaxis: {
                         categories: [...dantocKey],
+                    },
+                    grid: {
+                        borderColor: foreColor,
                     }
                 },
                 ethnicPieOptions: {
                     chart: {
                         width: 380,
                         type: 'pie',
+                        foreColor: foreColor
                     },
                     labels: [...dantocKey],
                     responsive: [{
@@ -316,12 +390,16 @@ const Charts = () => {
                             position: 'bottom'
                         }
                         }
-                    }]
+                    }],
+                    grid: {
+                        borderColor: foreColor,
+                    }
                 },
                 nationBarOptions:{
                     chart: {
                         type: 'basic-bar',
-                        height: 350
+                        height: 350,
+                        foreColor: foreColor
                     },
                     plotOptions: {
                         bar: {
@@ -334,12 +412,16 @@ const Charts = () => {
                         },
                     xaxis: {
                         categories: [...quoctichKey],
+                    },
+                    grid: {
+                        borderColor: foreColor,
                     }
                 },
                 nationPieOptions: {
                     chart: {
                         width: 380,
                         type: 'pie',
+                        foreColor: foreColor
                     },
                     labels: [...quoctichKey],
                     responsive: [{
@@ -352,7 +434,10 @@ const Charts = () => {
                             position: 'bottom'
                         }
                         }
-                    }]
+                    }],
+                    grid: {
+                        borderColor: foreColor,
+                    }
                 }
             })
         }  
@@ -363,17 +448,17 @@ const Charts = () => {
             setItem([
                 // nam nu
                 [
-                    {options: genderBarOptions, series: [{data:[proData.nam, proData.nu]}], type:"bar"},
-                    {options: genderPieOptions, series: [proData.nam, proData.nu], type:"pie"},
+                    {options: genderBar, series: [{data:[proData.nam, proData.nu]}], type:"bar"},
+                    {options: genderPie, series: [proData.nam, proData.nu], type:"pie"},
                     {tite: 'Tỷ lệ Nam, Nữ'}
                 ],
                 [
-                    {options: ageBarOptions, series: [{data:[proData.tu0_15, proData.tu16_64, proData.hon65]}], type:"bar"},
-                    {options: agePieOptions, series: [proData.tu0_15, proData.tu16_64, proData.hon65], type:'donut'},
-                    {tite: 'Tỷ lệ các nhó tuổi'}
+                    {options: ageBar, series: [{data:[proData.tu0_15, proData.tu16_64, proData.hon65]}], type:"bar"},
+                    {options: agePie, series: [proData.tu0_15, proData.tu16_64, proData.hon65], type:'donut'},
+                    {tite: 'Tỷ lệ các nhóm tuổi'}
                 ],
                 [
-                    {options: marryBarOption, series: [{data:[proData.kethon, proData.chuakethon, proData.lython]}], type:"bar"},
+                    {options: marryBar, series: [{data:[proData.kethon, proData.chuakethon, proData.lython]}], type:"bar"},
                     {options: marryRadialOption, series: [parseInt(100*proData.lython/proData.sodan)], type:'radialBar'},
                     {tite: 'Tỷ lệ kết hôn'}
                 ],
@@ -395,11 +480,11 @@ const Charts = () => {
             ])
         }
     }, [option])
-    
+
     return (
         <div id='chart-session'>
             {
-                keyValue && option ?
+                keyValue && option && theme ?
                 <div >
                     {
                         item.map((i, index) => {

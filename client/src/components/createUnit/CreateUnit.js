@@ -4,6 +4,7 @@ import {useMountedState} from 'react-use'
 import './createUnit.css'
 import WarningModal from '../warningModal/WarningModal'
 import Loading from '../loading/Loading'
+import ContinueModal from './../continueModal/ContinueModal'
 
 const CreateUnit = () => {
     const [unitName, setUnitName] = useState(null)
@@ -13,13 +14,18 @@ const CreateUnit = () => {
     const [updateUnit, setUpdateUnit] = useState(null)
     const isMounted = useMountedState()
     const [unitNameUpdate, setUnitNameUpdate] = useState(null)
-    const [error, setError] = useState(['should not empty', 'should not empty'])
+    const [error, setError] = useState(['Không được bỏ trống', 'Không được bỏ trống'])
     const [serverErr, setServerErr] = useState(null)
     const [successLog, setSuccessLog] = useState(null)
     const successRef = useRef(null)
+    const [messagePac, setMessagePac] = useState({
+        message: null,
+        dataId: null,
+        action: false,
+    })
 
     const [request1, setRequest1] = useAsyncFn(async(name, code) => {
-        const res = await fetch('http://localhost:3001/country/', {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/country/`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -38,11 +44,18 @@ const CreateUnit = () => {
             setServerErr(JSON.parse(result).error)
             return
         }
+        setSuccessLog('Tạo thành công 1 đơn vị mới')
+        if(successRef.current) {
+            successRef.current.classList.add('active')
+            setTimeout(() => {
+                successRef.current.classList.remove('active')
+            }, 4000)
+        }
         return result
     })
 
     const [request, setRequest] = useAsyncFn(async() => {
-        const res = await fetch('http://localhost:3001/country/', {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/country/`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -53,13 +66,13 @@ const CreateUnit = () => {
         const result = await res.text()
         if(JSON.parse(result).error) {
             setServerErr(JSON.parse(result).error)
-            return
+            return JSON.stringify({data: []})
         }
         return result
     })
 
     const [request2, setRequest2] = useAsyncFn(async(id, name) => {
-        const res = await fetch(`http://localhost:3001/country/${id}`, {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/country/${id}`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
@@ -73,52 +86,83 @@ const CreateUnit = () => {
             }),
         })
         const result = await res.text()
+        
         if(JSON.parse(result).error) {
             setServerErr(JSON.parse(result).error)
-            return
+            return 
+        }
+
+        setSuccessLog('Cập nhật thành công 1 đơn vị')
+        successRef.current.classList.add('active')
+        setTimeout(() => {
+            successRef.current.classList.remove('active')
+        }, 4000)
+        
+        return result
+    })
+
+
+    const [request3, setRequest3] = useAsyncFn(async(id) => {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/country/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        })
+        const result = await res.text()
+        if(JSON.parse(result).error) {
+            setServerErr(JSON.parse(result).error)
+            return 
+        }
+        if(JSON.parse(result).message==='done') {
+            setSuccessLog('Xóa thành công 1 công dân')
+            successRef.current.classList.add('active')
+            setTimeout(() => {
+                if(successRef.current) {
+                    successRef.current.classList.remove('active') 
+                }
+            }, 4000)   
         }
         return result
     })
+
+    useEffect(() =>{
+        if(request3.value) {
+            if(JSON.parse(request3.value).message === 'done') {
+                setRequest()
+            }
+        }
+    }, [request3.value])
 
     const submitForm = (e) => {
         e.preventDefault()
         if(isMounted()) {
             setRequest1(unitName, unitCode)
-            setSuccessLog(null)
         }
     }
 
     const handleUpdateName = (id, name) => {
         if(isMounted()) {
             setRequest2(id, unitNameUpdate)
-            setSuccessLog(null)
         }
     }
-
-    useEffect(() => {
-        if(successLog) {
-            successRef.current.classList.add('active')
-            setTimeout(() => {
-                successRef.current.classList.remove('active')
-            }, 3000)
-        }
-    }, [successLog])
 
     useEffect(() => {
         if(request.value && isMounted()){
             setUnit([...JSON.parse(request.value).data])
         }
-    }, [request.value])
+    }, [request])
 
     useEffect(() => {
         if(request1.value && isMounted()) {
             setUnitName(null)
             setUnitCode(null)
-            setError(['should not empty', 'should not empty'])
+            setError(['Không được bỏ trống', 'Không được bỏ trống'])
             setUnit([...unit, JSON.parse(request1.value).data].sort((a, b) => {
                 return a.id - b.id
             }))
-            setSuccessLog('Thêm 1 đơn vị mới thành công')
         }        
     }, [request1.value])
 
@@ -133,7 +177,6 @@ const CreateUnit = () => {
                 return a.id - b.id
             }))
             setUpdateUnit(null)
-            setSuccessLog('Cập nhật 1 đơn vị mới thành công')
         }
     }, [request2.value])
 
@@ -158,10 +201,10 @@ const CreateUnit = () => {
 
     const unitCodeOnchange = (e) => {
         setUnitCode(e.target.value)
-        setError([error[0], e.target.value.length < 2 ? 'require 2 number' : null])
+        setError([error[0], e.target.value.length < 2 ? 'Yêu cầu 2 số' : null])
         unit.map((item, index) => {
             if(item.id === e.target.value){
-                setError([error[0], 'code duplicate'])
+                setError([error[0], 'Trùng mã'])
                 return
             }
         })
@@ -172,7 +215,7 @@ const CreateUnit = () => {
         if(e.target.value.length) {
             setError([null, error[1]])
         }else {
-            setError(['should not empty', error[1]])
+            setError(['Không được bỏ trống', error[1]])
         }
     }
 
@@ -186,8 +229,31 @@ const CreateUnit = () => {
         setUpdateUnit(null)        
     }
 
+    const handleShowDeleteWarning = (id) => {
+        setMessagePac({
+            message: 'Có chắc muốn xóa đơn vị hành chính này chứ?',
+            dataId: id,
+            action: false,
+            method: 'delete'
+        })
+    }
+
+    useEffect(() => {
+        if(messagePac.action === true) {
+            setRequest3(messagePac.dataId)        
+            setMessagePac({
+                message: '',
+                dataId: null,
+                action: false,
+                method: ''
+            })
+           
+        }
+    }, [messagePac])
+
     return (
         <div id='create-unit'>
+            <ContinueModal messagePac={messagePac} setMessagePac={setMessagePac}></ContinueModal>
             {
                 !(request.value && !request.loading) ? <Loading></Loading> : 
                 <div>
@@ -265,9 +331,12 @@ const CreateUnit = () => {
                                             <tr className='row-item'>
                                                 <td>{item.id}</td>
                                                 <td>{item.name}</td>
-                                                <td>
+                                                <td className='unit-button-container'>
                                                     <button className='update-button' onClick={() => handleShowUpdate(index)}>
                                                         <i className='bx bx-pencil'></i>
+                                                    </button>
+                                                    <button className='delete-button' onClick={() =>  handleShowDeleteWarning(item._id)}>
+                                                        <i className='bx bx-trash'></i>
                                                     </button>
                                                 </td>
                                             </tr>

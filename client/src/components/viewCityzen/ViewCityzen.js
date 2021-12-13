@@ -1,18 +1,16 @@
 import React, { useEffect, useState, useCallback, useRef} from 'react'
-import './cityzenTable.css'
 import { useAsyncFn, useMountedState, useTimeoutFn} from 'react-use'
 import moment from 'moment'
-import SelectOp from './SelectOp'
+import SelectOp from './../cityzenTable/SelectOp'
 import Loading from '../loading/Loading'
-import UpdateCityzen from '../updateCityzen/UpdateCityzen'
 import WarningModal from '../warningModal/WarningModal'
-import ContinueModal from '../continueModal/ContinueModal'
 import Pageination from './../pagination/Pagination'
+import DownloadModal from '../continueModal/DownloadModal'
+import { useSelector } from 'react-redux'
 
-const CitizenTable = () => {
+const ViewCityzen = () => {
     const [serverErr, setServerErr] = useState(null)
     const [people, setPeople] = useState([])
-    // by id, name, dob, gender, dan toc, ton giao, nhom mau, quoc tich, ket hon 
     const [searchSort, setSearchSort] = useState({
         search: '',
     })
@@ -26,78 +24,38 @@ const CitizenTable = () => {
         value: 'Tăng dần'
     })
     const [more, setMore] = useState(null)
-    const [update, setUpdate] = useState(null)
-    const [deleteCityzen, setDeleteCityzen] = useState(null)
-    const [messagePac, setMessagePac] = useState({
-        message: null,
-        dataId: null,
-        action: false,
-    })
+    const units = useSelector(state => state.multiRe)
+    const [unitId, setUnitId] = useState([])
+    const [totalCityzen, setTotalCityzen] = useState()
+    const [downLoadCityzen, setDownLoadCityzen] = useState([])
+
     const [succcesMessage, setSuccessMessage] = useState(null)
     const successRef_ = useRef(null)
-    const [selectedItem, setSelectedItem] = useState([])
     const [isMulti, setIsMulti] = useState(false)
     const [currentPage, setCurrentPage] = useState(1)
     const [numPerPage, setNumPerPage] = useState(5)
     const [totalPage, setTotalPage] = useState(null)
 
-    const [request, setRequest] = useAsyncFn(async(search, order, direction, numPerPage, currentPage) => {
-        const res1 = await fetch(`${process.env.REACT_APP_BASE_URL}/residents?detail=1&searchString=${search}&isCount=1`, {
-            method: 'GET',
+    const [request, setRequest] = useAsyncFn(async(search, order, direction, numPerPage, currentPage, ids) => {
+        const res1 = await fetch(`${process.env.REACT_APP_BASE_URL}/residents/country/children?detail=1&searchString=${search}&isCount=1`, {
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
+            body: JSON.stringify({
+                "data":{
+                    "children":[...ids]
+                }            
+            }),
             credentials: 'include'
         })
         const result1 = await res1.text()
         setTotalPage(parseInt(JSON.parse(result1).count / numPerPage) + 1)
-
-        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/residents?detail=1&searchString=${search}&order=${order}&direction=${direction}&pageNum=${currentPage}&numPerPage=${numPerPage}`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        })
-        const result = await res.text()
-        if(JSON.parse(result).error) {
-            setServerErr(JSON.parse(result).error)
-            return
-        }
-        return result
-    })
-
-    const [request1, setRequest1] = useAsyncFn(async(_id) => {
-        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/residents/${_id}`, {
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        })
-        const result = await res.text()
-        if(JSON.parse(result).error) {
-            setServerErr(JSON.parse(result).error)
-            return
-        }
-        if(JSON.parse(result).message==='done') {
-            setSuccessMessage('Xóa thành công 1 công dân')
-            successRef_.current.classList.add('active')
-            setTimeout(() => {
-                if(successRef_.current) {
-                    successRef_.current.classList.remove('active') 
-                }
-            }, 4000)
-        }
-        return result
-    })
-
-    const [request2, setRequest2] = useAsyncFn(async(ids) => {
-        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/residents`, {
-            method: 'DELETE',
+        setTotalCityzen(JSON.parse(result1).count)
+        
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/residents/country/children?detail=1&searchString=${search}&order=${order}&direction=${direction}&pageNum=${currentPage}&numPerPage=${numPerPage}`, {
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -105,32 +63,47 @@ const CitizenTable = () => {
             credentials: 'include',
             body: JSON.stringify({
                 "data":{
-                    "residents": [...ids]
-                }
-            })
+                    "children":[...ids]
+                }            
+            }),
         })
         const result = await res.text()
         if(JSON.parse(result).error) {
             setServerErr(JSON.parse(result).error)
             return
         }
-        if(JSON.parse(result).message==='done') {
-            setSuccessMessage(`Xóa thành công ${ids.length} công dân`)
-            successRef_.current.classList.add('active')
-            setTimeout(() => {
-                if(successRef_.current) {
-                    successRef_.current.classList.remove('active') 
-                }
-            }, 4000)
-            setSelectedItem([])
-            callGetRequest()
-            setIsMulti(false)
+        return result
+    })
+
+    const [request1, setRequest1] = useAsyncFn(async(search, order, direction, numPerPage, ids) => {
+        
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/residents/country/children?detail=1&searchString=${search}&order=${order}&direction=${direction}&pageNum=${1}&numPerPage=${numPerPage}`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                "data":{
+                    "children":[...ids]
+                }            
+            }),
+        })
+        const result = await res.text()
+        if(JSON.parse(result).error) {
+            setServerErr(JSON.parse(result).error)
+            return
+        }else {
+            setDownLoadCityzen(JSON.parse(result).data)
         }
         return result
     })
 
     const callGetRequest = () => {
-        setRequest(searchSort.search, selectedValue.key, directOrder.key, numPerPage, currentPage)
+        if(unitId) {
+            setRequest(searchSort.search, selectedValue.key, directOrder.key, numPerPage, currentPage, unitId)
+        }
     }    
     const [isReady, cancel, reset] = useTimeoutFn(callGetRequest, 500); 
 
@@ -138,7 +111,6 @@ const CitizenTable = () => {
         if(request.value && isMounted()) {
             setPeople(JSON.parse(request.value).data)
         }
-        handleCloseUpdate()
     }, [request.value])
 
     const handleSearchOnchange = useCallback(
@@ -153,7 +125,7 @@ const CitizenTable = () => {
                 reset();
             }
         }
-    }, [directOrder, selectedValue, currentPage, numPerPage])
+    }, [directOrder, selectedValue, currentPage, numPerPage, unitId])
 
     useEffect(() => {
         if(isMounted()) {
@@ -163,108 +135,39 @@ const CitizenTable = () => {
                 reset();
             }
         }
-    }, [searchSort])
+    }, [searchSort, unitId])
 
     const handleSetMore = (_id) => {
         setMore(_id)
-        setUpdate(null)
-        setDeleteCityzen(null)
-        handleCloseUpdate()
     }
 
-    const handleSetUpdate = (_id) =>{
-        setMessagePac({
-            message: 'Có chắc muốn cập nhật thông tin của công dân này chứ?',
-            dataId: _id,
-            action: false,
-            method: 'update'
-        })
-    }
-
-    const handleSetDeleteCityzen = (_id) => {
-        setMessagePac({
-            message: 'Có chắc muốn xóa thông tin của công dân này chứ?',
-            dataId: _id,
-            action: false,
-            method: 'delete'
-        })
-    }
-
-    const handleMultiDelete = () => {
-        if(isMulti && selectedItem.length) {
-            setMessagePac({
-                message: 'Có chắc muốn xóa thông tin của các công dân này chứ?',
-                dataId: selectedItem,
-                action: false,
-                method: 'multi-delete'
+    useEffect(() => {
+        if(units) {
+            var ids = []
+            units.map((item, index) => {
+                ids.push(item.id)
             })
+            setUnitId(ids)
         }
-    }
+    }, [units])
 
-    useEffect(() =>{
-        if(isMounted()) {
-            if(messagePac.action && messagePac.method === 'update' && messagePac.dataId) {
-                setMore(null)
-                setUpdate(messagePac.dataId)
-                setDeleteCityzen(null)
-            }else if(messagePac.action && messagePac.method === 'delete' && messagePac.dataId) {
-                setMore(null)
-                setUpdate(null)
-                setDeleteCityzen(messagePac.dataId)
-            }else if(messagePac.action && messagePac.method === 'multi-delete' && messagePac.dataId) {
-                console.log(selectedItem)
-                setRequest2([...selectedItem])
-            }
-        }
-        handleCloseUpdate()
-    }, [messagePac.action])
-
-    const handleCloseUpdate = () => {
-        setMessagePac({
-            message: null,
-            dataId: null,
-            action: false
-        })
-    }
-
-    useEffect(() => {
-        if(deleteCityzen && isMounted()) {
-            setRequest1(deleteCityzen)
-        }
-    }, [deleteCityzen])
-
-    useEffect(() => {
-        if(request1.value && deleteCityzen && isMounted()) {
-            const temp = [...people.filter((item) => { return item._id !== deleteCityzen})]
-            setPeople(temp)
-            setDeleteCityzen(null)
-        }
-    }, [request1])
-
-    const handleMultiOption = (e, item) => {
-        if(e.target.checked) {
-            setSelectedItem(state => [...state, item._id])
-        }else {
-            setSelectedItem(selectedItem.filter((unchecked) => item._id !== unchecked))
-        }
-    }
-
-    const handleuMultiToggle = () => {
-        if(isMulti) {
-            setSelectedItem([])
-        }   
-        setIsMulti(!isMulti)
+    const handleDownloadExcel = () => {
+        setRequest1(searchSort.search, selectedValue.key, directOrder.key, totalCityzen, unitId)
     }
 
     return (
         <div id='cityzen-table'>
             <WarningModal serverErr={serverErr} setServerErr={setServerErr}></WarningModal>
-            <ContinueModal messagePac={messagePac} setMessagePac={setMessagePac}></ContinueModal>
-            <div className= {request1.loading || request2.loading ? 'loading-wrapper active' : 'loading-wrapper'}>
+            {
+                downLoadCityzen ? <DownloadModal downLoadCityzen={downLoadCityzen} setDownLoadCityzen={setDownLoadCityzen}></DownloadModal> : null
+            }
+
+            <div className= {request1.loading ? 'loading-wrapper active' : 'loading-wrapper'}>
                 {
-                    request1.loading || request2.loading ? <Loading></Loading> : null
+                    request1.loading? <Loading></Loading> : null
                 }
             </div>
+
             <div className='popup-success' ref={successRef_}>
                 {succcesMessage ? succcesMessage : 'this is before the picture'} 
             </div>
@@ -281,25 +184,13 @@ const CitizenTable = () => {
                 directOrder={directOrder}
                 setDirectOrder={setDirectOrder}    
             ></SelectOp>
-            <div className='multi-option-wrapper'>
-                <div>
-                    <div className='option-item' onClick={() => {handleuMultiToggle()}}>
-                        <span>
-                            <i className='bx bx-select-multiple'></i>
-                        </span>
-                    </div>
-                    <div className={(isMulti && selectedItem.length) ? 'option-item' : 'option-item blur'} onClick={() => handleMultiDelete()}>
-                        <span>
-                            <i className='bx bxs-trash'></i>
-                        </span>
-                    </div>
-                    <div className='selected-number'>
-                        <span>
-                            {`(${isMulti ? selectedItem.length : ''})`}
-                        </span>
-                    </div>
-                </div>
+            <div className='download-button'>
+                <button onClick={() => handleDownloadExcel()}>
+                    <i className='bx bx-down-arrow-alt'></i>
+                    <span>Excel</span>
+                </button>
             </div>
+            
             {
                 !(request.value && !request.loading) ? <Loading></Loading>:
                     <div>
@@ -317,26 +208,18 @@ const CitizenTable = () => {
                                 people ? 
                                 people.map((item, index) => {
                                     return (
-                                        <tbody key={index} className={(item._id === more || item._id === update) ? 'selected-item' : ''}>
+                                        <tbody key={index} className={(item._id === more) ? 'selected-item' : ''}>
                                             <tr className='row-item'>
                                                 <td className='text-overflow'>{item.hoTen}</td>
                                                 <td className='text-overflow'>{item.gioiTinh}</td>
                                                 <td className='text-overflow'>{moment(item.ngaySinh).utcOffset("+0700").format("DD-MM-YYYY") }</td>
                                                 <td className='text-overflow'>{item.soCCCD}</td>
                                                 <td>
-                                                    {isMulti ? <input type='checkbox' value={item} onChange={(e) => {handleMultiOption(e, item)}}></input>: 
-                                                        <div className='table-button-container'>
-                                                            <button className='more-button' onClick={() => handleSetMore(item._id)}>
-                                                                <i className='bx bx-dots-horizontal-rounded' ></i>
-                                                            </button>
-                                                            <button className='update-button' onClick={() => handleSetUpdate(item._id)}>
-                                                                <i className='bx bx-edit-alt'></i>
-                                                            </button>
-                                                            <button className='delete-button' onClick={() => handleSetDeleteCityzen(item._id)}>
-                                                                <i className='bx bx-trash'></i>
-                                                            </button>
-                                                        </div>
-                                                    }
+                                                <div className='table-button-container'>
+                                                        <button className='more-button' onClick={() => handleSetMore(item._id)}>
+                                                            <i className='bx bx-dots-horizontal-rounded' ></i>
+                                                        </button> 
+                                                    </div>
                                                 </td>
                                             </tr>
                                             {
@@ -455,20 +338,6 @@ const CitizenTable = () => {
                                                     </tr>
                                                 : null
                                             }
-                                            {
-                                                update === item._id ? 
-                                                    <tr>
-                                                        <td colSpan='5' className='update-wrapper'>
-                                                            <div className='close-more-button'>
-                                                                <button onClick={(e) => {setUpdate(null)}}>
-                                                                    <i className='bx bxs-x-circle'></i>
-                                                                </button>
-                                                            </div>
-                                                            <UpdateCityzen setUpdate={setUpdate} setPeople={setPeople} people={people} setServerErr={setServerErr} cityzenItem={item} setSuccessMessage={setSuccessMessage} successRef_={successRef_}></UpdateCityzen>
-                                                        </td>
-                                                    </tr>
-                                                : null
-                                            }
                                         </tbody>    
                                     )                               
                                 })
@@ -483,4 +352,4 @@ const CitizenTable = () => {
     )
 }
 
-export default CitizenTable
+export default ViewCityzen

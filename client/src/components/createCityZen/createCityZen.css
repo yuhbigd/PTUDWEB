@@ -1,9 +1,17 @@
 #create-cityzen {
     padding: var(--app-padding);
+    color: var(--text-color-1);
+    background-color: var(--main-theme);
+}
+
+#create-cityzen input{
+    background-color: var(--input-back);
+    color: var(--input-text);
+    font-weight: 600;
 }
 
 #create-cityzen span{
-    color: rgb(119, 119, 119); 
+    color: var(--input-title); 
 }
 
 #create-cityzen .input-container span{
@@ -51,7 +59,7 @@
 #create-cityzen .private-information,
 #create-cityzen .parent-information,
 #create-cityzen .relate-information{
-    box-shadow: 0 0 3px 3px rgba(150, 150, 150, 0.5);
+    box-shadow: var(--box-shadow-1);
     border-radius: 4px;
     margin-bottom: 36px;
 }
@@ -127,6 +135,15 @@
     position: relative;
     height: 100px;
     width: 100%;
+}
+
+#create-cityzen .submit-button {
+    padding: 6px 16px;
+    background-color: rgb(59, 121, 255);
+    color: white;
+    outline: none;
+    border: none;
+    border-radius: 4px;
 }
 
 @media only screen and (max-width: 800px) {
