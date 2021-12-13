@@ -216,10 +216,24 @@ input[type=number] {
     background-color: var(--sub-theme-2);
 }
 
-@media only screen and (max-width: 800px) {
-    #create-unit {
-        padding: 16px;
-    }
+#create-unit button {
+    border: none;
+}
+
+#create-unit .delete-button {
+    padding: 0px 12px;
+    font-size: 2rem;
+    border-radius: 4px;
+    color: white;
+    background-color: rgb(252, 93, 81);
+}
+
+#create-unit .unit-button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 @media only screen and (max-width: 400px) {
@@ -232,9 +246,6 @@ input[type=number] {
         padding: 16px 28px;
     }
 
-    #create-unit {
-        padding: 8px;
-    }
 }
 
 

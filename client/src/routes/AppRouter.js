@@ -9,25 +9,9 @@ import * as actions from '../actions/index'
 import  './appRouter.css'
 import ChartPage from '../appPages/ChartPage';
 import ProgressPage from '../appPages/ProgressPage';
-
-// --top-nav-height: 56px;
-// --nav-item-gap: 20px;
-// --nav-margin-left: 60px;
-// --main-theme: blue;
-// --sub-theme-1: white;
-// --sub-theme-2: white;
-// --nav-back-color: black;
-// --nav-text-color: rgb(196, 196, 196);
-// --nav-mobile-back: white;
-// --nav-mobile-text: black;
-// --box-shadow-1: 0 0 3px 3px rgba(100, 100, 100, 0.6)
-// --disable-color: rgb(200, 200, 200);
-// // --active-color: rgb(20, 20, 20);
-// --close-button: rgb(30, 30, 30);
-//     --close-button-hover: rgb(200, 200, 200);
-// --loading-1: #383838;
-//     --loading-2: white;
-//     --loading-3: #2b2b2b;
+import ViewCityzenPage from '../appPages/ViewCityzenPage';
+import ThemeFunction from './ThemeFunction';
+import NoteFoundPage from '../pages/NoteFoundPage';
 
 const AppRouter = () => {
     const navigate = useNavigate()
@@ -36,24 +20,8 @@ const AppRouter = () => {
     const dispatch = useDispatch()
     const isMounted = useMountedState()
     const popupNav = useRef(null)
-    document.documentElement.style.setProperty('--text-color-1', '#FEC260');
-    document.documentElement.style.setProperty('--text-color-2', '#A12568');
-    document.documentElement.style.setProperty('--main-theme', '#2A0944');
-    document.documentElement.style.setProperty('--sub-theme-1', '#3B185F');
-    document.documentElement.style.setProperty('--sub-theme-2', '#3B185F');
-    document.documentElement.style.setProperty('--sub-theme-3', '#F43B86');
-    document.documentElement.style.setProperty('--box-shadow-1', '0 0 4px 4px #F43B86');
-    document.documentElement.style.setProperty('--disable-color', 'rgb(180, 180, 180)');
-    document.documentElement.style.setProperty('--active-color', '#FEC260');
-    document.documentElement.style.setProperty('--close-button', 'rgb(200, 200, 200)');
-    document.documentElement.style.setProperty('--close-button-hover', 'white');
-    document.documentElement.style.setProperty('--explorer-color', 'rgb(169, 169, 255)');
-    document.documentElement.style.setProperty('--loading-1', 'rgb(169, 169, 255)');
-    document.documentElement.style.setProperty('--loading-2', 'white');
-    document.documentElement.style.setProperty('--loading-3', 'rgb(169, 169, 255)');
-    document.documentElement.style.setProperty('--input-back', '#FAEDF0');
-    document.documentElement.style.setProperty('--input-text', '#292C6D');    
-    document.documentElement.style.setProperty('--span-error', '#FF5F7E');    
+    const popupThemeRef = useRef(null)
+    const [themeNum, setThemeNum] = useState( parseInt(localStorage.getItem('theme')))
     
     const [loginRequest, setLoginRequest] = useAsyncFn(async() => {
         const res = await fetch('http://localhost:3001/login', {
@@ -130,9 +98,27 @@ const AppRouter = () => {
     const handlePopupNav = () => {
         if(popupNav.current.classList.contains('active')) {
             popupNav.current.classList.remove('active')
+            popupThemeRef.current.classList.remove('active')
         }else{
             popupNav.current.classList.add('active')
         }
+    }
+
+    const handlePopupTheme = () => {
+        if(popupThemeRef.current.classList.contains('active')) {
+            popupThemeRef.current.classList.remove('active')
+        }else{
+            popupThemeRef.current.classList.add('active')
+        }
+    }
+
+    
+    ThemeFunction(themeNum)
+    const setTheme = (theme) => {
+        popupThemeRef.current.classList.remove('active')
+        ThemeFunction(theme)
+        setThemeNum(theme)
+        localStorage.setItem('theme', theme)
     }
 
     return (
@@ -144,7 +130,7 @@ const AppRouter = () => {
                             <div>
                                 <span>
                                     <Link to='/A' className='nav-app-item'>
-                                            Home  
+                                            Dashboard
                                     </Link>
                                 </span>
                             </div>
@@ -177,13 +163,40 @@ const AppRouter = () => {
                                         <li onClick={(e) => {handleLogOut(e)}}>
                                             <div>
                                                 <i className='bx bx-log-out'></i>
-                                                <span>logout</span>
+                                                <span>Logout</span>
                                             </div> 
                                         </li>
-                                        <li>
+                                        <li onClick={() => handlePopupTheme()}>
                                             <div>
-                                                <i className='bx bxs-user-account' ></i>
-                                                <span>account</span>
+                                                <i className='bx bx-palette' ></i>
+                                                <span>Theme</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <ul className='theme-popup' ref={popupThemeRef}>
+                                        <li onClick={() => {setTheme(1)}}>
+                                            <div>
+                                                <span>theme-1</span>
+                                                {themeNum === 1 ? <i className='bx bx-check'></i> : null}
+                                                
+                                            </div> 
+                                        </li>
+                                        <li onClick={() => {setTheme(2)}}>
+                                            <div>
+                                                <span>theme-2</span>
+                                                {themeNum === 2 ? <i className='bx bx-check'></i> : null}
+                                            </div>
+                                        </li> 
+                                        <li onClick={() => {setTheme(3)}}>
+                                            <div>
+                                                <span>theme-3</span>
+                                                {themeNum === 3 ? <i className='bx bx-check'></i> : null}
+                                            </div>
+                                        </li>
+                                        <li onClick={() => {setTheme(4)}}>
+                                            <div>
+                                                <span>theme-4</span>
+                                                {themeNum === 4 ? <i className='bx bx-check'></i> : null}
                                             </div>
                                         </li>
                                     </ul>
@@ -229,14 +242,10 @@ const AppRouter = () => {
                             </div>
                             <div>
                                 <div  className='nav-app-item'>
-                                    <i className='bx bx-key' ></i>
-                                    <span>
-                                        Cá nhân
-                                    </span>
+                                    
                                 </div>
                             </div>
                             <div>
-
                             </div>
                         </div>
                         <div className='nav-popup-button'  onClick={(e) => handlePopupNav(e)}>
@@ -251,6 +260,8 @@ const AppRouter = () => {
                         <Route path='/create-unit' element={<CreateUnitPage></CreateUnitPage>}></Route>
                         <Route path='/charts' element={<ChartPage></ChartPage>}></Route>
                         <Route path='/progress' element={<ProgressPage/>}></Route>
+                        <Route path='/view-cityzen' element={<ViewCityzenPage/>}></Route>
+                        <Route path='*' element={<NoteFoundPage/>}></Route>
                     </Routes>
                 </div>
             </div>     

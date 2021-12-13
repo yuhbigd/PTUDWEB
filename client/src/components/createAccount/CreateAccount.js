@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import {useMountedState, useAsyncFn} from 'react-use'
 import './createAccount.css'
@@ -17,16 +17,18 @@ const CreateAccount = () => {
         {isTimeout: false},
         {isBanned: false}
     ])
-    const [error, setError] = useState(['require 2 number', 'should not be empty', 'should not be empty'])
+    const [error, setError] = useState(['Yêu cầu 2 số', 'Không được bỏ trống', 'Không được bỏ trống'])
     const [unit, setUnit] = useState([])
     const [targetUnit, setTargetUnit] = useState(null)
     const user = useSelector(state => state.userRe)
     const [isUpdateAccount, setIsUpdateAccount] = useState(null)
     const [serverErr, setServerErr] = useState(null)
     const isMounted = useMountedState()
+    const [successMessage, setSuccessMessage] = useState(null)
+    const successRef_ = useRef(null)
 
     const [request1, setRequest1] = useAsyncFn(async(userName, name, password, timeOut, isBanned) => {
-        const res = await fetch('http://localhost:3001/account/', {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/account/`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -47,12 +49,21 @@ const CreateAccount = () => {
         if(JSON.parse(result).error) {
             setServerErr(JSON.parse(result).error)
             return
+        }else if(JSON.parse(result)) {
+            setSuccessMessage('Tạo thành công 1 tài khoản mới')
+            successRef_.current.classList.add('active')
+            setTimeout(() => {
+                if(successRef_.current) {
+                    successRef_.current.classList.remove('active') 
+                }
+            }, 4000)
         }
         return result
     })
+    
 
     const [request, setRequest] = useAsyncFn(async() => {
-        const res = await fetch('http://localhost:3001/account/children', {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/account/children`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -63,13 +74,13 @@ const CreateAccount = () => {
         const result = await res.text()
         if(JSON.parse(result).error) {
             setServerErr(JSON.parse(result).error)
-            return
+            return JSON.stringify({data: []})
         }
         return result
     })
 
     const [request2, setRequest2] = useAsyncFn(async(id) => {
-        const res = await fetch(`http://localhost:3001/country`, {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/country`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -80,7 +91,7 @@ const CreateAccount = () => {
         const result = await res.text()
         if(JSON.parse(result).error) {
             setServerErr(JSON.parse(result).error)
-            return
+            return JSON.stringify({data: []})
         }
         return result
     })
@@ -128,7 +139,7 @@ const CreateAccount = () => {
                 newState[4].isTimeout = false
                 newState[5].isBanned = false
                 setNewAccount(newState)
-                setError(['require 2 number', 'should not be empty', 'should not be empty'])
+                setError(['Yêu cầu 2 số', 'Không được bỏ trống', 'Không được bỏ trống'])
         }
     }, [request1.value])
 
@@ -151,14 +162,14 @@ const CreateAccount = () => {
 
             }else{
                 setTargetUnit(null)
-                setError(['not found', error[1], error[2]])
+                setError(['Không tìm thấy', error[1], error[2]])
             }
         }
 
         if(account.length) {
             const find = account.find((item) => item.userName === fullId)
             if(find) {
-                setError(['duplicate username', error[1], error[2]]) 
+                setError(['Tên tài khoản bị trùng', error[1], error[2]]) 
             }
         }
     }
@@ -177,7 +188,7 @@ const CreateAccount = () => {
         if(e.target.value.length) {
             setError([error[0], null, error[2]])
         }else{
-            setError([error[0], 'should not be empty', error[2]])
+            setError([error[0], 'Không được bỏ trống', error[2]])
         }
     }
 
@@ -188,7 +199,7 @@ const CreateAccount = () => {
         if(e.target.value.length) {
             setError([error[0], error[1], null])
         }else{
-            setError([error[0], error[1], 'should not be empty'])
+            setError([error[0], error[1], 'Không được bỏ trống'])
         }
     }
 
@@ -226,6 +237,9 @@ const CreateAccount = () => {
         <div id='create-account'>
             { !(request2.value && !request2.loading) || !(request.value && !request.loading) ? <Loading></Loading> :         
                 <div>
+                    <div className='popup-success' ref={successRef_}>
+                        {successMessage ? successMessage : 'this is before the picture'} 
+                    </div>
                     <div className='form-container'>
                         <form>
                             <div>
@@ -338,8 +352,8 @@ const CreateAccount = () => {
                             </thead>
                                 {account.map((item, index) => {
                                     return(
-                                        <tbody key={index}>
-                                            <tr>
+                                        <tbody key={index} className={index === isUpdateAccount ? 'selected-row' : ''}>
+                                            <tr className='row-item'>
                                                 <td>{item.userName}</td>
                                                 <td>{item.name}</td>
                                                 <td>{item.isBanned ? 'Cấm' : ''}</td>
@@ -358,7 +372,7 @@ const CreateAccount = () => {
                                                                 <i className='bx bxs-x-circle'></i>
                                                             </button>
                                                         </div>
-                                                        <UpdateAccount setIsUpdateAccount={setIsUpdateAccount} currentAcc={item} account={account} setAccount={setAccount} setServerErr={setServerErr}></UpdateAccount>
+                                                        <UpdateAccount successRef_={successRef_} setSuccessMessage={setSuccessMessage} setIsUpdateAccount={setIsUpdateAccount} currentAcc={item} account={account} setAccount={setAccount} setServerErr={setServerErr}></UpdateAccount>
                                                     </td>
                                                 </tr>
                                                 :null

@@ -79,7 +79,7 @@ const Pagination = (props) => {
             <div className='num-per-page-option' ref={pageNumRef}>
                 <div onClick={() => {handleNumPerPage()}}>
                     <div className='select-title'>
-                        <i class='bx bx-spreadsheet'></i>
+                        <i className='bx bx-spreadsheet'></i>
                         <div className='title-container'>
                             <span>{numPerPage + '/page'}</span>
                         </div>
