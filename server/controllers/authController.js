@@ -59,14 +59,14 @@ login_post = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 1000 * 60,
-      // secure: true,
-      // sameSite: "none",
+      secure: true,
+      sameSite: "none",
     });
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 3,
-      // secure: true,
-      // sameSite: "none",
+      secure: true,
+      sameSite: "none",
     });
 
     res.status(200).json({
