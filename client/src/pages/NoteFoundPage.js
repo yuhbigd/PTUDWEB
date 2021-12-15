@@ -1,10 +1,9 @@
 import React from 'react'
+import NotFound from './../components/notFound/NotFound'
 
 const NoteFoundPage = () => {
     return (
-        <div>
-            not found
-        </div>
+        <NotFound></NotFound>
     )
 }
 

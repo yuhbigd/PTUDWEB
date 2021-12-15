@@ -12,7 +12,7 @@ const Login = (props) => {
     const dispatch = useDispatch()
    
     const [loginRequest, setLoginRequest] = useAsyncFn(async(user, pass) => {
-        const res = await fetch('http://localhost:3001/login', {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/login`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -55,39 +55,46 @@ const Login = (props) => {
 
   return (
     <div id="login">
-      <div className="form-container">
-        <form>
-          <div>
-            <span>Đăng nhập</span>
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="username"
-              name="username"
-              value={username ? username : ""}
-              onChange={(e) => setUsername(e.target.value)}
-            ></input>
-          </div>
-          <div>
-            <input
-              type="password"
-              placeholder="password"
-              name="password"
-              value={password ? password : ""}
-              onChange={(e) => setPassword(e.target.value)}
-            ></input>
-          </div>
-          <button onClick={(e) => handleLoginOnclick(e)}>Login</button>
-          <div className="pop-err">
-            <span>
-              {loginRequest.value ? (
-                <div>{JSON.parse(loginRequest.value).error}</div>
-              ) : null}
-            </span>
-          </div>
-        </form>
-      </div>
+        <div className="wall-image">
+            <img src="https://photo-cms-sggp.zadn.vn/Uploaded/2021/hgubgt/2021_09_23/nhaquochoi2_xyiw.jpg">
+
+            </img>
+        </div>
+        <div className="form-container">    
+            <form>
+                <div className='login-title'>
+                    <span>Đăng nhập</span>
+                </div>
+            <div>
+                <input
+                    type="text"
+                    placeholder="Tài khoản"
+                    name="username"
+                    value={username ? username : ""}
+                    onChange={(e) => setUsername(e.target.value)}
+                ></input>
+            </div>
+            <div>
+                <input
+                    type="password"
+                    placeholder="Mật khẩu"
+                    name="password"
+                    value={password ? password : ""}
+                    onChange={(e) => setPassword(e.target.value)}
+                ></input>
+            </div>
+            <div className="login-button">
+                <button onClick={(e) => handleLoginOnclick(e)}>Đăng nhập</button>
+            </div>
+            <div className="pop-err">
+                <span>
+                {loginRequest.value ? (
+                    <div>{JSON.parse(loginRequest.value).error}</div>
+                ) : null}
+                </span>
+            </div>  
+            </form>
+        </div>
     </div>
   );
 };

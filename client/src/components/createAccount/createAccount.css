@@ -1,11 +1,32 @@
 #create-account {
-    padding: var(--app-padding)
+    padding: var(--app-padding);
+    background-color: var(--main-theme);
+    color: var(--text-color-1 );
+    min-height: 100vh;
+    position: relative;
+}
+
+#create-account input {
+    background-color: var(--input-back);
+    color: var(--input-text);
+    outline: none;
+    border: 1px solid rgb(90, 90, 90);
+}
+
+#create-account input:focus {
+    border: 1px solid blue;
 }
 
 #create-account .form-container {
-    padding: 16px 32px;
-    background-color: rgb(226, 226, 226);
     border-radius: 4px;
+    display: flex;
+}
+
+#create-account .form-container > form {
+    background-color: var(--sub-theme-1);
+    box-shadow: var(--box-shadow-1);
+    border-radius: 4px;
+    padding: 16px 32px;
 }
 
 #create-account .form-container div ,
@@ -15,10 +36,10 @@
 }
 
 #create-account .update-form-container {
-    box-shadow: 0 0 3px 3px rgba(100, 100, 100, .5);
+    box-shadow: var(--box-shadow-1);
     border-radius: 4px;
     padding: 16px 32px;
-    background-color: white;
+    background-color: var(--sub-theme-1);
 }
 
 
@@ -27,8 +48,12 @@
     width: 100px;
 }
 
-#create-account span {
-    /* display: block; */
+#create-account .selected-row {
+    background-color: var(--sub-theme-1);
+}
+
+#create-account .row-item:hover {
+    background-color: var(--sub-theme-1);
 }
 
 #create-account .input-container {
@@ -43,7 +68,7 @@
 }
 
 #create-account span.input-error {
-    color: rgb(199, 3, 3);
+    color: var(--span-error);
 }
 
 #create-account span.input-ok {
@@ -65,10 +90,10 @@
     padding: 4px 14px;
     background-color: rgb(255, 164, 27);
     border-radius: 3px;
+    color: white;
 }
 
 #create-account .account-update-wrapper {
-    background-color: rgb(238, 236, 236);
     padding: 12px;
     position: relative;
 }
@@ -86,19 +111,42 @@
     background-color: transparent;
 }
 
+#create-account .popup-success{
+    position: fixed;
+    right: 0;
+    bottom: -46px;
+    left: 0;
+    height: 46px;
+    z-index: 99;
+    background-color: rgb(39, 240, 156);
+    color: black;
+    padding: 8px 16px;
+    border-radius: 4px 4px 0 0;
+    visibility: hidden;
+    font-size: 1.4rem;
+    opacity: 0.2;
+    transition: .2s ease-in-out;
+}
+
+#create-account .popup-success.active{
+    visibility: visible;
+    opacity: 1;
+    bottom: 0;
+}
+
 #create-account .close-update-button i {
     font-size: 3rem;
-    color: black;
+    color: var(--close-button);
     transition: .1s ease-in-out;
 }
 
 #create-account .close-update-button i:hover {
-    color: rgb(100, 100, 100);
+    color: var(--close-button-hover);
 }
 
 #create-account .table-container {
     margin-top: 32px;
-    box-shadow: 0 0 3px 3px rgba(100, 100, 100, .5);
+    box-shadow: var(--box-shadow-1);
     border-radius: 4px;
 }
 
@@ -129,16 +177,8 @@
     justify-content: center;
 }
 
-@media only screen and (max-width: 800px) {
-    #create-account {
-        padding: 16px;
-    }
-}
-
 @media only screen and (max-width: 400px) {
-    #create-account {
-        padding: 8px;
-    }
+    
     #create-account .form-container div ,
     #create-account .update-form-container div {
         flex-direction: column;

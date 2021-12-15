@@ -27,8 +27,9 @@ const ProvinceTable = (props) => {
         }
     }
 
+    
     const [request, setRequest] = useAsyncFn(async(id) => {
-        const res = await fetch(`http://localhost:3001/country/${id === 'root' ? '' : id}`, {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/country/${id === 'root' ? '' : id}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
