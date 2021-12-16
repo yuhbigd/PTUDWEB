@@ -12,6 +12,7 @@ const Login = (props) => {
     const dispatch = useDispatch()
    
     const [loginRequest, setLoginRequest] = useAsyncFn(async(user, pass) => {
+        const tokenCaptcha = await window.getReCaptchaToken();
         const res = await fetch(`${process.env.REACT_APP_BASE_URL}/login`, {
             method: 'POST',
             headers: {
@@ -22,7 +23,8 @@ const Login = (props) => {
                 "user": {
                     "userName": user,
                     "password": pass,
-                }
+                },
+                tokenCaptcha, 
             }),
             credentials: 'include'
         })
