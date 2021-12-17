@@ -635,14 +635,14 @@ getChildrenProgression = async (req, res) => {
     childrenUsername = children.map((childId) => {
       return { userName: childId };
     });
-    let countAccount = await User.countDocuments({
-      $or: childrenUsername,
-    });
-    if (countAccount !== children.length) {
-      throw new Error(
-        "Có tài khoản con không tồn tại. Hãy kiểm tra lại danh sách tài khoản con",
-      );
-    }
+    // let countAccount = await User.countDocuments({
+    //   $or: childrenUsername,
+    // });
+    // if (countAccount !== children.length) {
+    //   throw new Error(
+    //     "Có tài khoản con không tồn tại. Hãy kiểm tra lại danh sách tài khoản con",
+    //   );
+    // }
 
     // tao array cac dieu kien trong lenh $or cua mongodb
     let matchNoiKhai = children.map((childId) => {

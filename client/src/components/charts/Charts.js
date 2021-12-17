@@ -230,7 +230,7 @@ const Charts = () => {
             let tu15_64 = 0;
             let hon64 = 0;
             let soDan = 0;
-            console.log(data[0])
+            // console.log(data[0])
             data.map((it, index) => {
                 if (Object.keys(it).length > 10) {
                     soNam += it.soNam;
@@ -253,7 +253,7 @@ const Charts = () => {
                     })
                 }
             })
-            console.log(soDan)
+            // console.log(soDan)
             setProData({
                 nam: soNam, nu: soNu, sodan: soDan, kethon: daKetHon,
                 chuakethon: chuaKetHon, lython: lyHon, dantoc: danToc,

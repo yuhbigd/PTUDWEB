@@ -164,7 +164,7 @@ const Create = (props) => {
         }
     }, [request.value])
 
-    console.log(cityzen)
+    // console.log(cityzen)
 
     return (
         <div id='create-cityzen'>

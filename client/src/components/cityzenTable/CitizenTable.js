@@ -212,7 +212,7 @@ const CitizenTable = () => {
                 setUpdate(null)
                 setDeleteCityzen(messagePac.dataId)
             }else if(messagePac.action && messagePac.method === 'multi-delete' && messagePac.dataId) {
-                console.log(selectedItem)
+                // console.log(selectedItem)
                 setRequest2([...selectedItem])
             }
         }
