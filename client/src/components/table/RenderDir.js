@@ -8,7 +8,6 @@ const RenderDir = (props) => {
         temp.map((item, index) => {
             if(index <= level) {
                 props.setDir(state => [...state, item])
-                props.setLastLevel(level)
             }
         })
     }

@@ -247,7 +247,6 @@ const CreateUnit = () => {
                 action: false,
                 method: ''
             })
-           
         }
     }, [messagePac])
 
@@ -335,7 +334,7 @@ const CreateUnit = () => {
                                                     <button className='update-button' onClick={() => handleShowUpdate(index)}>
                                                         <i className='bx bx-pencil'></i>
                                                     </button>
-                                                    <button className='delete-button' onClick={() =>  handleShowDeleteWarning(item._id)}>
+                                                    <button className='delete-button' onClick={() =>  handleShowDeleteWarning(item.id)}>
                                                         <i className='bx bx-trash'></i>
                                                     </button>
                                                 </td>
