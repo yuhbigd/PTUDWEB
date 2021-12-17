@@ -15,7 +15,7 @@ const Progress = () => {
     const [mostReach, setMostReach] = useState(null)
     const [lowestReach, setLowestReach] = useState(null)
     const [Avarage, setAvarage] = useState(null)
-    const [theme, setTheme] = ((localStorage.getItem('theme'))) 
+    const theme = (localStorage.getItem('theme')) 
     const selectRef = useRef(null)
     const [query, setQuery] = useState({
         value: 'Theo ngày',
