@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 
 const Table = () => {
     const user = useSelector (state => state.userRe)
-    const [lastLevel, setLastLevel] = useState(0);
     const [dir, setDir] = useState([])
 
     useEffect(() => {
@@ -17,11 +16,11 @@ const Table = () => {
         <div id='app'>
             <div className='explorer-container'> 
                 <div className="like-file-surf">
-                    <RenderDir dir={dir} setDir = {setDir} setLastLevel={setLastLevel}></RenderDir>
+                    <RenderDir dir={dir} setDir = {setDir}></RenderDir>
                 </div>
                 <div className='line-break'></div>
             </div>
-            <ProvinceTable setDir={setDir} dir ={dir} setLastLevel={setLastLevel}></ProvinceTable>
+            <ProvinceTable setDir={setDir} dir ={dir}></ProvinceTable>
         </div>
     )
 }

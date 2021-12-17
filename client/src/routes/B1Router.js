@@ -3,13 +3,16 @@ import TablePage from '../appPages/TablePage';
 import { Link, Route, Routes, useNavigate} from 'react-router-dom'
 import CreateUnitPage from './../appPages/CreateUnitPage';
 import CreatAccountPage from '../appPages/CreatAccountPage';
-import CreateCityZenPage from '../appPages/CreateCityZenPage';
 import * as actions from './../actions/index'
 import  './appRouter.css'
 import {useDispatch} from 'react-redux'
 import {useAsyncFn, useMountedState} from 'react-use'
 import ChartPage from '../appPages/ChartPage';
 import ManageCityzenPage from '../appPages/ManageCityzenPage';
+import ViewCityzenPage from '../appPages/ViewCityzenPage';
+import ProgressPage from '../appPages/ProgressPage';
+import ThemeFunction from './ThemeFunction';
+import NoteFoundPage from '../pages/NoteFoundPage';
 
 const B1Router = () => {
     const navigate = useNavigate()
@@ -18,9 +21,11 @@ const B1Router = () => {
     const dispatch = useDispatch()
     const isMounted = useMountedState()
     const popupNav = useRef(null)
+    const popupThemeRef = useRef(null)
+    const [themeNum, setThemeNum] = useState(parseInt(localStorage.getItem('theme')))
 
     const [loginRequest, setLoginRequest] = useAsyncFn(async() => {
-        const res = await fetch('http://localhost:3001/login', {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/login`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -33,7 +38,7 @@ const B1Router = () => {
     })
 
     const [logOutRequest, setLogOutRequest] = useAsyncFn(async() => {
-        const res = await fetch('http://localhost:3001/logout', {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/logout`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -94,11 +99,28 @@ const B1Router = () => {
     const handlePopupNav = () => {
         if(popupNav.current.classList.contains('active')) {
             popupNav.current.classList.remove('active')
+            popupThemeRef.current.classList.remove('active')
         }else{
             popupNav.current.classList.add('active')
         }
     }
 
+    const handlePopupTheme = () => {
+        if(popupThemeRef.current.classList.contains('active')) {
+            popupThemeRef.current.classList.remove('active')
+        }else{
+            popupThemeRef.current.classList.add('active')
+        }
+    }
+
+    
+    ThemeFunction(themeNum)
+    const setTheme = (theme) => {
+        popupThemeRef.current.classList.remove('active')
+        ThemeFunction(theme)
+        setThemeNum(theme)
+        localStorage.setItem('theme', theme)
+    }
     return (
         <div id='main-container'>
             <div id='top-nav'>
@@ -107,7 +129,7 @@ const B1Router = () => {
                         <div>
                             <span>
                                 <Link to='/B1/' className='nav-app-item'>
-                                        Home  
+                                        Dashboard  
                                 </Link>
                             </span>
                         </div>
@@ -149,10 +171,37 @@ const B1Router = () => {
                                         <span>logout</span>
                                     </div> 
                                 </li>
-                                <li>
+                                <li onClick={() => handlePopupTheme()}>
                                     <div>
-                                        <i className='bx bxs-user-account' ></i>
-                                        <span>account</span>
+                                        <i className='bx bx-palette' ></i>
+                                        <span>Theme</span>
+                                    </div>
+                                </li>
+                            </ul>
+                            <ul className='theme-popup' ref={popupThemeRef}>
+                                <li onClick={() => {setTheme(1)}}>
+                                    <div>
+                                        <span>theme-1</span>
+                                        {themeNum === 1 ? <i className='bx bx-check'></i> : null}
+                                        
+                                    </div> 
+                                </li>
+                                <li onClick={() => {setTheme(2)}}>
+                                    <div>
+                                        <span>theme-2</span>
+                                        {themeNum === 2 ? <i className='bx bx-check'></i> : null}
+                                    </div>
+                                </li> 
+                                <li onClick={() => {setTheme(3)}}>
+                                    <div>
+                                        <span>theme-3</span>
+                                        {themeNum === 3 ? <i className='bx bx-check'></i> : null}
+                                    </div>
+                                </li>
+                                <li onClick={() => {setTheme(4)}}>
+                                    <div>
+                                        <span>theme-4</span>
+                                        {themeNum === 4 ? <i className='bx bx-check'></i> : null}
                                     </div>
                                 </li>
                             </ul>
@@ -197,10 +246,7 @@ const B1Router = () => {
                             </div>
                             <div>
                                 <div  className='nav-app-item'>
-                                    <i className='bx bx-key' ></i>
-                                    <span>
-                                        Cá nhân
-                                    </span>
+                                    
                                 </div>
                             </div>
                             <div>
@@ -224,6 +270,9 @@ const B1Router = () => {
                     <Route path='/create-unit' element={<CreateUnitPage></CreateUnitPage>}></Route>
                     <Route path='/charts' element={<ChartPage></ChartPage>}></Route>
                     <Route path='/manage-cityzen' element={<ManageCityzenPage></ManageCityzenPage>}></Route>
+                    <Route path='/view-cityzen' element={<ViewCityzenPage/>}></Route>
+                    <Route path='/progress' element={<ProgressPage></ProgressPage>}></Route>
+                    <Route path='*' element={<NoteFoundPage/>}></Route>
                 </Routes>
             </div>
         </div>

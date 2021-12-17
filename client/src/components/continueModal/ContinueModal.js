@@ -39,7 +39,7 @@ const ContinueModal = (props) => {
             <div className='w-modal-container' ref={overlay}>
                 <div>
                     <div>
-                        <span className='modal-title'>Warning Log</span>
+                        <span className='modal-title'>Cảnh báo</span>
                     </div>
                     <div className='modal-bound'>
                         <div className='w-modal-content'>

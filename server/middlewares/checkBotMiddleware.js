@@ -4,7 +4,6 @@ const checkBotMiddleware = async (req, res, next) => {
     let token;
 
     token = req.body.tokenCaptcha;
-
     const url = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.SECRET_CAPTCHA_KEY}&response=${token}`;
     const response = await fetch(url, {
       method: "post",

@@ -3,7 +3,7 @@ import moment from 'moment'
 import { useAsyncFn } from 'react-use'
 
 const UpdateAccount = (props) => {
-    const {currentAcc, account, setAccount, setServerErr, setIsUpdateAccount} = props
+    const {currentAcc, account, setAccount, setServerErr, setIsUpdateAccount, setSuccessMessage, successRef_} = props
     const [newAccount, setNewAccount] = useState([
         {name: currentAcc.name},
         {password: ''},
@@ -13,7 +13,7 @@ const UpdateAccount = (props) => {
     const [error, setError] = useState(['', 'should not be empty'])
 
     const [request, setRequest] = useAsyncFn(async(id, name, password, timeOut, isBanned) => {
-        const res = await fetch(`http://localhost:3001/account/${id}`, {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/account/${id}`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
@@ -33,6 +33,14 @@ const UpdateAccount = (props) => {
         if(JSON.parse(result).error) {
             setServerErr(JSON.parse(result).error)
             return
+        }else if(JSON.parse(result)) {
+            setSuccessMessage('Tạo thành công 1 tài khoản mới')
+            successRef_.current.classList.add('active')
+            setTimeout(() => {
+                if(successRef_.current) {
+                    successRef_.current.classList.remove('active') 
+                }
+            }, 4000)
         }
         return result
     })

@@ -1,0 +1,111 @@
+#progress-section {
+    padding: var(--app-padding);
+    background-color: var(--main-theme);
+    min-height: 100vh;
+    color: var(--text-color-1);
+}
+
+#progress-section .more-info-progress {
+    display: flex;
+    flex-direction: row;
+    gap: 32px 32px;
+    flex-wrap: wrap;
+}
+
+#progress-section .more-info-progress > div:first-child {
+    
+    padding: 32px 32px;
+}
+
+#progress-section .more-info-progress > div {
+    flex: 1;
+    box-shadow: var(--box-shadow-1);
+    border-radius: 8px;
+}
+
+#progress-section .line-chart-container {
+    padding: 8px 16px;
+    box-shadow: var(--box-shadow-1);
+    border-radius: 4px;
+    margin: 64px 0;
+}
+
+#progress-section .info-card-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+}
+
+#progress-section .info-card-container > div {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+#progress-section .table-container {
+    min-width: 300px;
+    height: 310px;
+    overflow-y: auto;
+}
+
+#progress-section .table-container table {
+    overflow-y: auto;
+}
+
+#progress-section .info-card-item {
+    box-shadow: var(--box-shadow-1);
+    width: 200px;
+    height: 130px;
+    padding: 16px 32px;
+    border-radius: 16px;
+    background-color: var(--sub-theme-1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
+    justify-content: center;  
+}
+
+#progress-section .info-card-item .title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+#progress-section .info-card-item .title,
+#progress-section .info-card-item .content,
+#progress-section .info-card-item .subtitle {
+    text-align: center;
+}
+
+#progress-section .info-card-item .content {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+
+@media only screen and (max-width: 600px) {
+    #progress-section .info-card-container {
+        padding: 16px 0px;
+    }
+
+    #progress-section .info-card-item {
+        width: 180px;
+        height: 130px;
+        padding: 0;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    #progress-section .info-card-container {
+        padding: 16px 0 ;
+    }
+
+    #progress-section .info-card-item {
+        width: 130px;
+        height: 80px;
+        padding: 0;
+    }
+}
+

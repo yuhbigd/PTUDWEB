@@ -25,7 +25,7 @@ const WarningModal = (props) => {
             <div className='w-modal-container' ref={overlay}>
                 <div>
                     <div>
-                        <span className='modal-title'>Warning Log</span>
+                        <span className='modal-title'>Cảnh báo</span>
                     </div>
                     <div className='modal-bound'>
                         <div className='w-modal-content'>
@@ -38,7 +38,7 @@ const WarningModal = (props) => {
                     </div>
                 </div>
                 <div>
-                    <span className='ok-button' onClick={(e) => handleSetServerErr(e)}>OK</span>
+                    <span className='verify-button' onClick={(e) => handleSetServerErr(e)}>OK</span>
                 </div>
             </div>
         </div>

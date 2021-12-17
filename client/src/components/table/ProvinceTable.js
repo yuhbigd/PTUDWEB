@@ -23,12 +23,12 @@ const ProvinceTable = (props) => {
     const provinceOnclick = (id, index, e) => {
         if(province[index].id !== props.dir[props.dir.length-1].id && province[index].count) {
                 props.setDir(state => [...state, province[index]])
-                props.setLastLevel(props.dir.length)
         }
     }
 
+    
     const [request, setRequest] = useAsyncFn(async(id) => {
-        const res = await fetch(`http://localhost:3001/country/${id === 'root' ? '' : id}`, {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/country/${id === 'root' ? '' : id}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',

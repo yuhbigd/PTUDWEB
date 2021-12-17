@@ -12,7 +12,7 @@ const marryRadialOption = {
         type: 'radialBar',
     },
     plotOptions: {
-            radialBar: {
+        radialBar: {
             hollow: {
                 margin: 0,
                 size: "70%",
@@ -20,34 +20,34 @@ const marryRadialOption = {
             },
             track: {
                 dropShadow: {
-                enabled: true,
-                top: 2,
-                left: 0,
-                blur: 4,
-                opacity: 0.15
+                    enabled: true,
+                    top: 2,
+                    left: 0,
+                    blur: 4,
+                    opacity: 0.15
                 }
             },
             dataLabels: {
                 name: {
-                offsetY: -10,
-                color: "#fff",
-                fontSize: "13px"
+                    offsetY: -10,
+                    color: "#fff",
+                    fontSize: "13px"
                 },
                 value: {
-                color: "#fff",
-                fontSize: "30px",
-                show: true
+                    color: "#fff",
+                    fontSize: "30px",
+                    show: true
                 }
             }
-            }
+        }
     },
     fill: {
         type: "gradient",
         gradient: {
-        shade: "dark",
-        type: "vertical",
-        gradientToColors: ["#87D4F9"],
-        stops: [0, 100]
+            shade: "dark",
+            type: "vertical",
+            gradientToColors: ["#87D4F9"],
+            stops: [0, 100]
         }
     },
     stroke: {
@@ -58,15 +58,17 @@ const marryRadialOption = {
 
 const Charts = () => {
     const data = useSelector(state => state.multiRe)
-    const theme = (localStorage.getItem('theme')) 
-    
+    let theme = (localStorage.getItem('theme'))
+    if (!theme) {
+        theme = "1";
+    }
     const isMounted = useMountedState()
     const [proData, setProData] = useState({
-        nam: 0, nu: 0, sodan: 0, kethon: 0, 
+        nam: 0, nu: 0, sodan: 0, kethon: 0,
         chuakethon: 0, lython: 0, dantoc: null,
         tongiao: null, quoctich: null, tu0_15: 0, tu16_64: 0,
-        hon65: 0 
-    })    
+        hon65: 0
+    })
 
     const [keyValue, setKeyValue] = useState(null)
     const [option, setOption] = useState(null)
@@ -76,16 +78,16 @@ const Charts = () => {
     const [ageBar, setAgeBar] = useState(null)
     const [agePie, setAgePie] = useState(null)
     const [marryBar, setMarryBar] = useState(null)
-    
+
     useEffect(() => {
         var foreColor
-        if(parseInt(theme) === 1 || parseInt(theme) === 3) {
+        if (parseInt(theme) === 1 || parseInt(theme) === 3) {
             foreColor = 'black'
-        }else if(parseInt(theme) === 2 ) {
+        } else if (parseInt(theme) === 2) {
             foreColor = 'white'
-        }else {
+        } else {
             foreColor = 'black'
-       }
+        }
         setGenderBar({
             chart: {
                 type: 'basic-bar',
@@ -100,7 +102,7 @@ const Charts = () => {
             },
             dataLabels: {
                 enabled: false
-                },
+            },
             xaxis: {
                 categories: ['Nam', 'Nữ'],
             },
@@ -112,10 +114,10 @@ const Charts = () => {
                 offsetY: 0,
                 floating: false,
                 style: {
-                  fontSize:  '14px',
-                  fontWeight:  'bold',
-                  fontFamily:  undefined,
-                  color:  '#263238'
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    fontFamily: undefined,
+                    color: '#263238'
                 },
             },
             grid: {
@@ -134,18 +136,18 @@ const Charts = () => {
                 responsive: [{
                     breakpoint: 480,
                     options: {
-                    chart: {
-                        width: 200
-                    },
-                    legend: {
-                        position: 'bottom'
-                    }
+                        chart: {
+                            width: 200
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
                     }
                 }],
                 grid: {
                     borderColor: foreColor,
                 }
-        })
+            })
         setAgeBar({
             chart: {
                 type: 'basic-bar',
@@ -160,7 +162,7 @@ const Charts = () => {
             },
             dataLabels: {
                 enabled: false
-                },
+            },
             xaxis: {
                 categories: ['(0-15)', '(16-64)', '>65'],
             },
@@ -178,19 +180,19 @@ const Charts = () => {
             responsive: [{
                 breakpoint: 480,
                 options: {
-                chart: {
-                    width: 200
-                },
-                legend: {
-                    position: 'bottom'
-                }
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
                 }
             }],
             grid: {
                 borderColor: foreColor,
             }
         })
-        setMarryBar( {
+        setMarryBar({
             chart: {
                 type: 'basic-bar',
                 height: 350,
@@ -204,18 +206,18 @@ const Charts = () => {
             },
             dataLabels: {
                 enabled: false
-                },
+            },
             xaxis: {
                 categories: ['Đã kết hôn', 'Chưa kết hôn', 'Ly hôn'],
             },
             grid: {
                 borderColor: foreColor,
-            }   
+            }
         })
     }, [theme])
 
     useEffect(() => {
-        if(data.length){
+        if (data.length) {
             let soNam = 0;
             let soNu = 0;
             let daKetHon = 0;
@@ -227,9 +229,10 @@ const Charts = () => {
             let nhoHon15 = 0;
             let tu15_64 = 0;
             let hon64 = 0;
-            let soDan = 0;  
+            let soDan = 0;
+            console.log(data[0])
             data.map((it, index) => {
-                if(Object.keys(it).length > 10) {
+                if (Object.keys(it).length > 10) {
                     soNam += it.soNam;
                     soNu += it.soNu
                     daKetHon += it.daKetHon
@@ -252,20 +255,20 @@ const Charts = () => {
             })
             console.log(soDan)
             setProData({
-                nam: soNam, nu: soNu, sodan: soDan, kethon: daKetHon, 
+                nam: soNam, nu: soNu, sodan: soDan, kethon: daKetHon,
                 chuakethon: chuaKetHon, lython: lyHon, dantoc: danToc,
                 tongiao: tonGiao, quoctich: quocTich, tu0_15: nhoHon15, tu16_64: tu15_64,
                 hon65: hon64
             })
         }
-    },[data])
-    
+    }, [data])
+
     useEffect(() => {
-        if(proData.tongiao) {
+        if (proData.tongiao) {
             let tongiaoKey = []
             let tongiaoValue = []
             Object.keys(proData.tongiao).map((key) => {
-                if( proData.tongiao[key]) {
+                if (proData.tongiao[key]) {
                     tongiaoKey = [...tongiaoKey, key]
                     tongiaoValue = [...tongiaoValue, proData.tongiao[key]]
                 }
@@ -273,7 +276,7 @@ const Charts = () => {
             let dantocKey = []
             let dantocValue = []
             Object.keys(proData.dantoc).map((key) => {
-                if(proData.dantoc[key]) {
+                if (proData.dantoc[key]) {
                     dantocKey = [...dantocKey, key]
                     dantocValue = [...dantocValue, proData.dantoc[key]]
                 }
@@ -281,11 +284,11 @@ const Charts = () => {
             let quoctichKey = []
             let quoctichValue = []
             Object.keys(proData.quoctich).map((key) => {
-                if(proData.quoctich[key]) {
+                if (proData.quoctich[key]) {
                     quoctichKey = [...quoctichKey, key]
                     quoctichValue = [...quoctichValue, proData.quoctich[key]]
                 }
-            })  
+            })
 
             setKeyValue({
                 tongiaoKey: [...tongiaoKey],
@@ -297,16 +300,16 @@ const Charts = () => {
             })
 
             var foreColor
-            if(parseInt(theme) === 1 || parseInt(theme) === 3) {
+            if (parseInt(theme) === 1 || parseInt(theme) === 3) {
                 foreColor = 'black'
-            }else if(parseInt(theme) === 2 ) {
+            } else if (parseInt(theme) === 2) {
                 foreColor = 'white'
-            }else {
+            } else {
                 foreColor = 'black'
             }
 
             setOption({
-                tongiaoBarOptions:{
+                tongiaoBarOptions: {
                     chart: {
                         type: 'basic-bar',
                         height: 350,
@@ -320,7 +323,7 @@ const Charts = () => {
                     },
                     dataLabels: {
                         enabled: false
-                        },
+                    },
                     xaxis: {
                         categories: [...tongiaoKey],
                     },
@@ -328,7 +331,7 @@ const Charts = () => {
                         borderColor: foreColor,
                     }
                 },
-                tongiaoPieOptions:{
+                tongiaoPieOptions: {
                     chart: {
                         width: 380,
                         type: 'pie',
@@ -338,19 +341,19 @@ const Charts = () => {
                     responsive: [{
                         breakpoint: 480,
                         options: {
-                        chart: {
-                            width: 200
-                        },
-                        legend: {
-                            position: 'bottom'
-                        }
+                            chart: {
+                                width: 200
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
                         }
                     }],
                     grid: {
                         borderColor: foreColor,
                     }
                 },
-                ethnicBarOptions:{
+                ethnicBarOptions: {
                     chart: {
                         type: 'basic-bar',
                         height: 350,
@@ -364,7 +367,7 @@ const Charts = () => {
                     },
                     dataLabels: {
                         enabled: false
-                        },
+                    },
                     xaxis: {
                         categories: [...dantocKey],
                     },
@@ -382,19 +385,19 @@ const Charts = () => {
                     responsive: [{
                         breakpoint: 480,
                         options: {
-                        chart: {
-                            width: 200
-                        },
-                        legend: {
-                            position: 'bottom'
-                        }
+                            chart: {
+                                width: 200
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
                         }
                     }],
                     grid: {
                         borderColor: foreColor,
                     }
                 },
-                nationBarOptions:{
+                nationBarOptions: {
                     chart: {
                         type: 'basic-bar',
                         height: 350,
@@ -408,7 +411,7 @@ const Charts = () => {
                     },
                     dataLabels: {
                         enabled: false
-                        },
+                    },
                     xaxis: {
                         categories: [...quoctichKey],
                     },
@@ -426,12 +429,12 @@ const Charts = () => {
                     responsive: [{
                         breakpoint: 480,
                         options: {
-                        chart: {
-                            width: 200
-                        },
-                        legend: {
-                            position: 'bottom'
-                        }
+                            chart: {
+                                width: 200
+                            },
+                            legend: {
+                                position: 'bottom'
+                            }
                         }
                     }],
                     grid: {
@@ -439,43 +442,43 @@ const Charts = () => {
                     }
                 }
             })
-        }  
+        }
     }, [proData])
-    
+
     useEffect(() => {
-        if(option && isMounted()) {
+        if (option && isMounted()) {
             setItem([
                 // nam nu
                 [
-                    {options: genderBar, series: [{data:[proData.nam, proData.nu]}], type:"bar"},
-                    {options: genderPie, series: [proData.nam, proData.nu], type:"pie"},
-                    {tite: 'Tỷ lệ Nam, Nữ'}
+                    { options: genderBar, series: [{ data: [proData.nam, proData.nu] }], type: "bar" },
+                    { options: genderPie, series: [proData.nam, proData.nu], type: "pie" },
+                    { tite: 'Tỷ lệ Nam, Nữ' }
                 ],
                 [
-                    {options: ageBar, series: [{data:[proData.tu0_15, proData.tu16_64, proData.hon65]}], type:"bar"},
-                    {options: agePie, series: [proData.tu0_15, proData.tu16_64, proData.hon65], type:'donut'},
-                    {tite: 'Tỷ lệ các nhóm tuổi'}
+                    { options: ageBar, series: [{ data: [proData.tu0_15, proData.tu16_64, proData.hon65] }], type: "bar" },
+                    { options: agePie, series: [proData.tu0_15, proData.tu16_64, proData.hon65], type: 'donut' },
+                    { tite: 'Tỷ lệ các nhóm tuổi' }
                 ],
                 [
-                    {options: marryBar, series: [{data:[proData.kethon, proData.chuakethon, proData.lython]}], type:"bar"},
-                    {options: marryRadialOption, series: [parseInt(100*proData.lython/proData.sodan)], type:'radialBar'},
-                    {tite: 'Tỷ lệ kết hôn'}
+                    { options: marryBar, series: [{ data: [proData.kethon, proData.chuakethon, proData.lython] }], type: "bar" },
+                    { options: marryRadialOption, series: [parseInt(100 * proData.lython / proData.sodan)], type: 'radialBar' },
+                    { tite: 'Tỷ lệ kết hôn' }
                 ],
                 [
-                    {options: option.tongiaoBarOptions, series: [{data:[...keyValue.tongiaoValue]}], type:"bar"},
-                    {options: option.tongiaoPieOptions, series: [...keyValue.tongiaoValue], type:'pie'},
-                    {tite: 'Tỷ lệ tôn giáo'}
+                    { options: option.tongiaoBarOptions, series: [{ data: [...keyValue.tongiaoValue] }], type: "bar" },
+                    { options: option.tongiaoPieOptions, series: [...keyValue.tongiaoValue], type: 'pie' },
+                    { tite: 'Tỷ lệ tôn giáo' }
                 ],
                 [
-                    {options: option.ethnicBarOptions, series: [{data:[...keyValue.dantocValue]}], type:"bar"},
-                    {options: option.ethnicPieOptions, series: [...keyValue.dantocValue], type:'donut'},
-                    {tite: 'Tỷ lệ dân tộc'}
+                    { options: option.ethnicBarOptions, series: [{ data: [...keyValue.dantocValue] }], type: "bar" },
+                    { options: option.ethnicPieOptions, series: [...keyValue.dantocValue], type: 'donut' },
+                    { tite: 'Tỷ lệ dân tộc' }
                 ],
                 [
-                    {options: option.nationBarOptions, series: [{data:[...keyValue.quoctichValue]}], type:"bar"},
-                    {options: option.nationPieOptions, series: [...keyValue.quoctichValue], type:'pie'},
-                    {tite: 'Tỷ lệ quốc tịch'}
-                ],      
+                    { options: option.nationBarOptions, series: [{ data: [...keyValue.quoctichValue] }], type: "bar" },
+                    { options: option.nationPieOptions, series: [...keyValue.quoctichValue], type: 'pie' },
+                    { tite: 'Tỷ lệ quốc tịch' }
+                ],
             ])
         }
     }, [option])
@@ -483,19 +486,19 @@ const Charts = () => {
     return (
         <div id='chart-session'>
             {
-                keyValue && option && theme ?
-                <div>
-                    {
-                        item.map((i, index) => {
-                            return(
+                keyValue && option ?
+                    <div >
+                        {
+                            item.map((i, index) => {
+                                return (
                                     <FadeInSection i={i} key={index}></FadeInSection>
-                            )
-                        })
-                    }
-                </div>
-                :<Loading></Loading>
+                                )
+                            })
+                        }
+                    </div>
+                    : <Loading></Loading>
             }
-            
+
         </div>
     )
 }

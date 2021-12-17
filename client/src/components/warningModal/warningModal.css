@@ -53,14 +53,14 @@
     border-radius: 6px;
 }
 
-#warning-modal-overlay .ok-button{
+#warning-modal-overlay .ok-button, #warning-modal-overlay .verify-button{
     padding: 8px 32px;
     background-color: blue;
     color: white;
     border-radius: 18px/20px;
 }
 
-#warning-modal-overlay .ok-button:hover {
+#warning-modal-overlay .ok-button:hover, #warning-modal-overlay .verify-button:hover{
     cursor: pointer;
     background-color: rgb(43, 137, 245)
 }

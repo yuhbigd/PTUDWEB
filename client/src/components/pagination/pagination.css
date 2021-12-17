@@ -89,16 +89,16 @@
 }
 
 #pagination-section .num-per-page-option.active .select-title{
-    border: 1px solid blue;
+    border: 1px solid var(--explorer-color);
 }
 
 #pagination-section .select-title:hover {
-    border: 1px solid rgb(0, 0, 0);
+    border: 1px solid var(--select-hover);
     cursor: pointer;
 }
 
 #pagination-section .num-per-page-option.active .select-title:hover{
-    border: 1px solid blue;
+    border: 1px solid var(--explorer-color);
 }
 
 #pagination-section i.bx-spreadsheet{
@@ -122,9 +122,9 @@
 #pagination-section .select-title span {
     text-align: center;
     transition: .1s ease-out;
-    background-color: white;
+    background-color: var(--main-theme);
     padding: 4px 8px;
-    color: black;
+    color: var(--text-color-1);
     position: absolute;
     top: 6px;
     left: 40px;
@@ -132,16 +132,41 @@
 
 #pagination-section .num-per-page-option.active .select-title span{
     font-size: 1.1rem;
-    color: blue;
+    color: var(--explorer-color);
     transform: translate(-20%, -70%);
 }
 
 #pagination-section {
     display: flex;
-    margin-top: 48px;
+    margin-top: 200px;
     gap: 12px;
-    margin-left: 12px;
     flex-direction: column;
 }
 
+#pagination-container .redir.disabled{
+    background-color: var(--disable-color);
+}
 
+
+@media only screen and (max-width: 600px) {
+    #pagination-container .pagi-button{
+        width: 28px;
+        height: 28px;
+        /* border-radius: 50%; */
+        background-color: rgb(16, 177, 252);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    #pagination-container .redir {
+        height: 24px;
+        display: flex;
+        align-items: center;
+        padding: 0 8px;
+        background-color: aqua;
+        border-radius: 16px/20px;
+        font-size: 2rem;
+    }
+}

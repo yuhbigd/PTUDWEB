@@ -1,11 +1,13 @@
 #cityzen-table {
     padding: var(--app-padding);
     padding-bottom: 400px;
-}
-
+    background-color: var(--main-theme);
+    color: var(--text-color-1);
+    min-height: 100vh;
+}   
 
 #cityzen-table .table {
-    box-shadow: 0 0 4px 4px rgba(134, 134, 134, 0.6);
+    box-shadow: var(--box-shadow-1);
     border-radius: 4px;
     margin-top: 24px;
 }
@@ -73,7 +75,7 @@
 }
 
 #cityzen-table .option-item:hover > span {
-    background-color: rgb(200, 200, 200);
+    background-color: var(--sub-theme-1);
     cursor: pointer;
 
 }
@@ -147,17 +149,17 @@
 
 #select-option .select-option.active .select-title,
 #select-option .direct-option.active .select-title {
-    border: 1px solid blue;
+    border: 1px solid var(--explorer-color);
 }
 
 #select-option .select-title:hover {
-    border: 1px solid rgb(0, 0, 0);
+    border: 1px solid var(--select-hover);
     cursor: pointer;
 }
 
 #select-option .select-option.active .select-title:hover,
 #select-option .direct-option.active .select-title:hover {
-    border: 1px solid blue;
+    border: 1px solid var(--explorer-color);
 }
 
 #select-option i.bx-sort-alt-2{
@@ -182,9 +184,9 @@
 #select-option .select-title span {
     text-align: center;
     transition: .1s ease-out;
-    background-color: white;
+    background-color: var(--main-theme);
     padding: 4px 8px;
-    color: black;
+    color: var(--text-color-1);
     position: absolute;
     top: 6px;
     left: 40px;
@@ -193,7 +195,7 @@
 #select-option .select-option.active .select-title span,
 #select-option .direct-option.active .select-title span {
     font-size: 1.1rem;
-    color: blue;
+    color: var(--explorer-color);
     transform: translate(-20%, -70%);
 }
 
@@ -218,6 +220,7 @@
     box-shadow: 0 0 3px 3px rgba(151, 151, 151, 0.6);
     border-radius: 15px;
     gap: 4px;
+    color: rgb(24, 24, 24);
 }
 
 #cityzen-table .search-table-container i {
@@ -238,7 +241,7 @@
 }
 
 #more-info-section .more-info-container {
-    box-shadow: 0 0 3px 3px rgba(134, 134, 134, 0.6);
+    
     padding: 16px;
     display: flex;
     flex-direction: row;
@@ -270,7 +273,7 @@
 }
 
 #more-info-section .card-container {
-    box-shadow: 0 0 4px 4px rgba(134, 134, 134, 0.6);
+    box-shadow: var(--box-shadow-1);
     border-radius: 4px;
     width: 360px;
 }
@@ -293,16 +296,17 @@
     position: absolute;
     right: 8px;
     top: 8px;
+
 }
 
 #more-info-section .close-more-button i{
     font-size: 3rem;
-    color: black;
+    color: var(--close-button);
     transition: .1s ease-in-out;
 }
 
 #more-info-section .close-more-button i:hover{
-    color: rgb(100, 100, 100);
+    color: var(--close-button-hover);
 }
 
 #cityzen-table .update-wrapper {
@@ -311,13 +315,27 @@
 
 #cityzen-table .update-wrapper .close-more-button{
     position: absolute;
-    top: 8px;
-    right: 4px;
+    top: 4px;
+    right: 0px;
+}
+
+#cityzen-table .selected-item{
+    background-color: var(--sub-theme-1);
+}
+
+#cityzen-table .row-item:hover {
+    background-color: var(--sub-theme-1);
 }
 
 #cityzen-table .update-wrapper .close-more-button i {
     font-size: 3rem;
+    color: var(--close-button);
 }
+
+#cityzen-table .update-wrapper .close-more-button i:hover {
+    color: var(--close-button-hover);
+}
+
 
 #cityzen-table .table-button-container {
     display: flex;
@@ -349,6 +367,26 @@
     background-color: rgb(252, 93, 81);
 }
 
+#cityzen-table .download-button {
+    display: flex; 
+    justify-content: flex-end;
+}
+
+#cityzen-table .download-button > button {
+    background-color: var(--sub-theme-1);
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+#cityzen-table .download-button > button i {
+    font-size: 1.5rem
+}
+
+#cityzen-table .download-button > button:hover span {
+    text-decoration: underline;
+} 
 
 @media only screen and (max-width: 500px) {
     #select-option .select-option .popup-select {

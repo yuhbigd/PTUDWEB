@@ -42,7 +42,7 @@ const CitizenTable = () => {
     const [totalPage, setTotalPage] = useState(null)
 
     const [request, setRequest] = useAsyncFn(async(search, order, direction, numPerPage, currentPage) => {
-        const res1 = await fetch(`http://localhost:3001/residents?detail=1&searchString=${search}&isCount=1`, {
+        const res1 = await fetch(`${process.env.REACT_APP_BASE_URL}/residents?detail=1&searchString=${search}&isCount=1`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -53,7 +53,7 @@ const CitizenTable = () => {
         const result1 = await res1.text()
         setTotalPage(parseInt(JSON.parse(result1).count / numPerPage) + 1)
 
-        const res = await fetch(`http://localhost:3001/residents?detail=1&searchString=${search}&order=${order}&direction=${direction}&pageNum=${currentPage}&numPerPage=${numPerPage}`, {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/residents?detail=1&searchString=${search}&order=${order}&direction=${direction}&pageNum=${currentPage}&numPerPage=${numPerPage}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -70,7 +70,7 @@ const CitizenTable = () => {
     })
 
     const [request1, setRequest1] = useAsyncFn(async(_id) => {
-        const res = await fetch(`http://localhost:3001/residents/${_id}`, {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/residents/${_id}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -96,7 +96,7 @@ const CitizenTable = () => {
     })
 
     const [request2, setRequest2] = useAsyncFn(async(ids) => {
-        const res = await fetch(`http://localhost:3001/residents`, {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/residents`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -317,8 +317,8 @@ const CitizenTable = () => {
                                 people ? 
                                 people.map((item, index) => {
                                     return (
-                                        <tbody key={index}>
-                                            <tr>
+                                        <tbody key={index} className={(item._id === more || item._id === update) ? 'selected-item' : ''}>
+                                            <tr className='row-item'>
                                                 <td className='text-overflow'>{item.hoTen}</td>
                                                 <td className='text-overflow'>{item.gioiTinh}</td>
                                                 <td className='text-overflow'>{moment(item.ngaySinh).utcOffset("+0700").format("DD-MM-YYYY") }</td>
