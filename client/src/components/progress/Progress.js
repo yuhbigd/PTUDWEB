@@ -15,7 +15,7 @@ const Progress = () => {
     const [mostReach, setMostReach] = useState(null)
     const [lowestReach, setLowestReach] = useState(null)
     const [Avarage, setAvarage] = useState(null)
-    const [theme, setTheme] = ((localStorage.getItem('theme'))) 
+    const theme = (localStorage.getItem('theme')) 
     const selectRef = useRef(null)
     const [query, setQuery] = useState({
         value: 'Theo ngày',
@@ -229,37 +229,38 @@ const Progress = () => {
         }
         setRequest1(ids, query.key)
         // find most, find least, find total, find, avarage
-        var most = {
-            num: unitId[0].soDan,
-            name: unitId[0].name
-        };
-        var least = {
-            num: unitId[0].soDan,
-            name: unitId[0].name
-        };
-        var avarage = 0;
-        var total = 0;
-        unitId.map((item, index) => {
-            total += item.soDan;
-            if(most.num < item.soDan) {
-                most = {
-                    num: item.soDan,
-                    name: item.name
+        if(unitId.length) {
+            var most = {
+                num: unitId[0].soDan,
+                name: unitId[0].name
+            };
+            var least = {
+                num: unitId[0].soDan,
+                name: unitId[0].name
+            };
+            var avarage = 0;
+            var total = 0;
+            unitId.map((item, index) => {
+                total += item.soDan;
+                if(most.num < item.soDan) {
+                    most = {
+                        num: item.soDan,
+                        name: item.name
+                    }
                 }
-            }
-            if(least.num > item.soDan) {
-                least = {
-                    num: item.soDan,
-                    name: item.name
+                if(least.num > item.soDan) {
+                    least = {
+                        num: item.soDan,
+                        name: item.name
+                    }
                 }
-            }
-        })
-        avarage = 1.0*total/ids.length
-        setAvarage(avarage)
-        setMostReach(most)
-        setLowestReach(least)
-        setTotal(total)
-    
+            })
+            avarage = 1.0*total/ids.length
+            setAvarage(avarage)
+            setMostReach(most)
+            setLowestReach(least)
+            setTotal(total)
+        }
     }, [unitId, query])
 
     const handleSelectOpClick = () => {

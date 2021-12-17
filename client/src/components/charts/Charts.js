@@ -58,7 +58,7 @@ const marryRadialOption = {
 
 const Charts = () => {
     const data = useSelector(state => state.multiRe)
-    const [theme, setTheme] = ((localStorage.getItem('theme'))) 
+    const theme = (localStorage.getItem('theme')) 
     
     const isMounted = useMountedState()
     const [proData, setProData] = useState({
