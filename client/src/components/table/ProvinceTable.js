@@ -23,7 +23,6 @@ const ProvinceTable = (props) => {
     const provinceOnclick = (id, index, e) => {
         if(province[index].id !== props.dir[props.dir.length-1].id && province[index].count) {
                 props.setDir(state => [...state, province[index]])
-                props.setLastLevel(props.dir.length)
         }
     }
 

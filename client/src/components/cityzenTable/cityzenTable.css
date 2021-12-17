@@ -220,6 +220,7 @@
     box-shadow: 0 0 3px 3px rgba(151, 151, 151, 0.6);
     border-radius: 15px;
     gap: 4px;
+    color: rgb(24, 24, 24);
 }
 
 #cityzen-table .search-table-container i {
