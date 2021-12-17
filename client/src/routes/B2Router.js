@@ -95,6 +95,7 @@ const B2Router = () => {
         if(popupNav.current.classList.contains('active')) {
             popupNav.current.classList.remove('active')
             popupThemeRef.current.classList.remove('active')
+
         }else{
             popupNav.current.classList.add('active')
         }
