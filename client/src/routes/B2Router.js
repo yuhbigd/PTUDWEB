@@ -20,7 +20,7 @@ const B2Router = () => {
     const [themeNum, setThemeNum] = useState(parseInt(localStorage.getItem('theme')))
 
     const [loginRequest, setLoginRequest] = useAsyncFn(async() => {
-        const res = await fetch('http://localhost:3001/login', {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/login`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -33,7 +33,7 @@ const B2Router = () => {
     })
 
     const [logOutRequest, setLogOutRequest] = useAsyncFn(async() => {
-        const res = await fetch('http://localhost:3001/logout', {
+        const res = await fetch(`${process.env.REACT_APP_BASE_URL}/logout`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',

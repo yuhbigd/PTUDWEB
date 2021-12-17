@@ -347,7 +347,6 @@ async function postUpdate(doc, dataNeedToRemove) {
       });
     }
   });
-
   let caNuocUpdate = TkCaNuoc.findOneAndUpdate(
     { id: "0" },
     { $set: updateCaNuocValue },
