@@ -58,7 +58,7 @@ const { checkUser } = require("./middlewares/authMiddleWare");
     next();
   });
   const corsOptions = {
-    origin: "https://anhcll.xyz",
+    origin: "http://localhost:4200",
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     credentials: true,
   };

@@ -23,6 +23,7 @@ createToken = async function (user) {
   );
   return { token, refreshToken };
 };
+// test
 signup_get = async (req, res) => {
   res.send("signup");
 };

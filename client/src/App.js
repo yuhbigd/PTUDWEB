@@ -7,6 +7,10 @@ import NoteFoundPage from './pages/NoteFoundPage'
 import B2Router from './routes/B2Router'
 
 const App = () => {
+    let theme = localStorage.getItem("theme");
+    if(!theme) {
+        localStorage.setItem("theme","1");
+    }
     return (
         <Router>
             <div>

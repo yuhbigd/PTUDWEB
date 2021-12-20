@@ -48,7 +48,7 @@ account_post = async (req, res) => {
     ) {
       throw new Error("Tài khoản không hợp lệ");
     }
-    // kiem tra xem noi nay co ton tai ko
+    // tao ra ten tai khoan tu tai khoan cap tren
     let data;
     let finalName;
     if (parent.tier === 0) {
@@ -877,17 +877,17 @@ account_getChildrenOfChild = async (req, res) => {
 //cai nay de cuoi lam
 //
 //
-account_delete = async (req, res) => {
-  let parent = req.user;
-  let subUser = await getChildrenAndUnitOfIt("", "tinhs");
-  res.json({
-    subUser,
-  });
-};
+// account_delete = async (req, res) => {
+//   let parent = req.user;
+//   let subUser = await getChildrenAndUnitOfIt("", "tinhs");
+//   res.json({
+//     subUser,
+//   });
+// };
 module.exports = {
   account_post,
   account_put,
-  account_delete,
+  // account_delete,
   account_get,
   account_getChildren,
   account_getChild,
