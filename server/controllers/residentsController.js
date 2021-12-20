@@ -86,6 +86,7 @@ postResident = async (req, res) => {
     if (sanitize(soCCCD)) {
       dataInsert.soCCCD = sanitize(soCCCD);
     }
+    dataInsert.ngayKhai = moment();
     const resident = await Resident.create(dataInsert);
     if (!resident) {
       throw new Error("Có lỗi xảy ra trên server");

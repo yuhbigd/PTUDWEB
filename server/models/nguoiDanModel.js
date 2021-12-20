@@ -107,7 +107,6 @@ const residentSchema = new mongoose.Schema({
   },
   ngayKhai: {
     type: Date,
-    default: new Date(),
     index: true,
   },
   noiKhai: {
@@ -117,6 +116,7 @@ const residentSchema = new mongoose.Schema({
   },
 });
 residentSchema.pre("save", async function (next) {
+  
   if (!this.honNhan) {
     throw new Error("không thể bỏ trống ô hôn nhân");
   }

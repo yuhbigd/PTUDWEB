@@ -12,7 +12,6 @@ router.get(
   "/children/:id/children",
   accountController.account_getChildrenOfChild,
 );
-router.delete("/:id", accountController.account_delete);
 router.get("/progression", accountController.getProgression);
 router.post("/progression/children", accountController.getChildrenProgression);
 router.get("/progression/:id", accountController.getChildProgression);
